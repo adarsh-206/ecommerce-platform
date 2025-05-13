@@ -16,9 +16,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0">
-              <span className="text-2xl font-bold text-indigo-600">
-                ShopEase
-              </span>
+              <span className="text-2xl font-bold text-indigo-600">E-Shop</span>
             </Link>
             <nav className="hidden md:ml-10 md:flex md:space-x-8">
               <Link

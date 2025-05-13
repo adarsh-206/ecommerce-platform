@@ -161,7 +161,7 @@ export default function Footer() {
         </div>
         <div className="mt-8 border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between">
           <p className="text-gray-400">
-            © 2025 ShopEase, Inc. All rights reserved.
+            © 2025 <Link href="/admin">E-Shop</Link>, Inc. All rights reserved.
           </p>
           <div className="flex mt-4 md:mt-0 space-x-6">
             <a href="#" className="text-gray-400 hover:text-white">
