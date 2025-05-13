@@ -140,21 +140,22 @@ export default function Footer() {
             </div>
             <div className="mt-6">
               <h4 className="text-md font-semibold mb-2">
-                Subscribe to our newsletter
+                For Bulk Orders & Business Inquiries
               </h4>
-              <form className="flex">
+              <div className="flex">
                 <input
-                  type="email"
-                  placeholder="Your email"
-                  className="px-4 py-2 w-full text-gray-900 rounded-l"
+                  type="text"
+                  value="care@gmail.com"
+                  readOnly
+                  className="px-4 py-2 w-full text-gray-900 bg-gray-100 rounded-l cursor-text"
                 />
-                <button
-                  type="submit"
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-r hover:bg-indigo-700"
+                <a
+                  href="mailto:care@gmail.com"
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-r hover:bg-indigo-700 flex items-center justify-center whitespace-nowrap"
                 >
-                  Subscribe
-                </button>
-              </form>
+                  Contact Us
+                </a>
+              </div>
             </div>
           </div>
         </div>

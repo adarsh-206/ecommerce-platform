@@ -9,21 +9,28 @@ export default function FeaturedCategories() {
       href: "/categories/clothing",
     },
     {
-      name: "Electronics",
-      image: "https://www.matric.com/hubfs/classes%20of%20electronics.jpg",
-      href: "/categories/electronics",
+      name: "Accessories",
+      image:
+        "https://img.freepik.com/free-photo/top-view-accessoires-travel-with-women-clothing-concept-white-mobilephone-watch-bag-hat-map-camera-necklace-trousers-sunglasses-white-wood-table_1921-106.jpg?semt=ais_hybrid&w=740",
+      href: "/categories/accessories",
     },
     {
-      name: "Home & Garden",
+      name: "Headwear",
+      image:
+        "https://c8.alamy.com/comp/2C44AWK/headwear-hats-men-and-women-elegant-headwear-modern-and-retro-caps-stylish-hats-and-caps-fashion-accessories-vector-illustration-icons-set-2C44AWK.jpg",
+      href: "/categories/headwear",
+    },
+    {
+      name: "Pet Products",
+      image:
+        "https://img.freepik.com/free-photo/pet-accessories-still-life-with-chew-bone-toys_23-2148949561.jpg",
+      href: "/categories/pet-products",
+    },
+    {
+      name: "Home & Living",
       image:
         "https://m.media-amazon.com/images/I/51khQ-xSjQL._AC_UF894,1000_QL80_.jpg",
-      href: "/categories/home",
-    },
-    {
-      name: "Beauty",
-      image:
-        "https://media.istockphoto.com/id/1296705483/photo/make-up-products-prsented-on-white-podiums-on-pink-pastel-background.jpg?s=612x612&w=0&k=20&c=j3Vfpo81L5I2g0uJ5tArBC3l_fcPtPAcLzzT4pq5BLY=",
-      href: "/categories/beauty",
+      href: "/categories/home-living",
     },
   ];
 
@@ -33,7 +40,7 @@ export default function FeaturedCategories() {
         <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-12">
           Featured Categories
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {categories.map((category) => (
             <Link key={category.name} href={category.href} className="group">
               <div className="relative overflow-hidden rounded-lg shadow-md">

@@ -28,22 +28,28 @@ export default function Header() {
                 Clothing
               </Link>
               <Link
-                href="/categories/electronics"
+                href="/categories/accessories"
                 className="text-gray-500 hover:text-gray-900"
               >
-                Electronics
+                Accessories
               </Link>
               <Link
-                href="/categories/home"
+                href="/categories/headware"
                 className="text-gray-500 hover:text-gray-900"
               >
-                Home & Garden
+                Headware
               </Link>
               <Link
-                href="/categories/beauty"
+                href="/categories/pet-products"
                 className="text-gray-500 hover:text-gray-900"
               >
-                Beauty
+                Pet Products
+              </Link>
+              <Link
+                href="/categories/home-living"
+                className="text-gray-500 hover:text-gray-900"
+              >
+                Home & Living
               </Link>
             </nav>
           </div>

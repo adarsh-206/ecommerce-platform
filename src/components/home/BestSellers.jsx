@@ -4,43 +4,43 @@ import ProductCard from "@/components/product/ProductCard";
 export default function BestSellers() {
   const products = [
     {
-      id: 5,
-      name: "Athletic Sneakers",
-      price: 999,
+      id: 1,
+      name: "Oversized Cotton T-Shirt",
+      price: 499,
       image:
-        "https://runners.ae/cdn/shop/products/ON-CLOUDSURFER-SHOES-FOR-MEN-ALL-BLACK-3MD10420485_2.jpg?v=1679564843&width=580",
-      category: "Footwear",
-      rating: 4.9,
-      href: "/product/athletic-sneakers",
-    },
-    {
-      id: 6,
-      name: "Smart Watch",
-      price: 1299,
-      image: "https://m.media-amazon.com/images/I/51pipGoHHFL._SR290,290_.jpg",
-      category: "Electronics",
-      rating: 4.7,
-      href: "/product/smart-watch",
-    },
-    {
-      id: 7,
-      name: "Stainless Steel Water Bottle",
-      price: 349,
-      image:
-        "https://images.meesho.com/images/products/420914173/uh402_512.webp",
-      category: "Home & Garden",
+        "https://5.imimg.com/data5/SELLER/Default/2023/4/302455745/DP/TX/KQ/7633002/terry-cotton-oversized-t-shirts.jpg",
+      category: "Clothing",
       rating: 4.8,
-      href: "/product/stainless-steel-water-bottle",
+      href: "/product/oversized-cotton-tshirt",
     },
     {
-      id: 8,
-      name: "Vitamin C Moisturizer",
+      id: 2,
+      name: "Eco-Friendly Jute Tote",
       price: 299,
       image:
-        "https://plumgoodness.com/cdn/shop/files/VitaminCM_Nykaa_1000x1000_1_dc446057-e8d3-4954-859e-9ea3d54172d8.webp?v=1721642243",
-      category: "Beauty",
-      rating: 4.6,
-      href: "/product/vitamin-c-moisturizer",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxL6Z-YNXlPr16vH3pDXN3r7mcn6xSeGNAXA&s",
+      category: "Accessories",
+      rating: 4.7,
+      href: "/product/jute-tote-bag",
+    },
+    {
+      id: 3,
+      name: "Unisex Baseball Cap",
+      price: 199,
+      image: "https://m.media-amazon.com/images/I/514BX0olXHL._AC_UY1100_.jpg",
+      category: "Headwear",
+      rating: 4.9,
+      href: "/product/unisex-baseball-cap",
+    },
+    {
+      id: 4,
+      name: "Cute Dog Hoodie",
+      price: 399,
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsUC0Qk6oKPrETX1X5bTU4c0a6tE2EL_iQsJb9JSklJU4rHY2dlJ7m-5gYRpNSwkkyAdc&usqp=CAU",
+      category: "Pet Products",
+      rating: 4.8,
+      href: "/product/cute-dog-hoodie",
     },
   ];
 

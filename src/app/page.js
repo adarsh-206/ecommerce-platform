@@ -4,7 +4,7 @@ import FeaturedCategories from "@/components/home/FeaturedCategories";
 import NewArrivals from "@/components/home/NewArrivals";
 import BestSellers from "@/components/home/BestSellers";
 import SpecialOffers from "@/components/home/SpecialOffers";
-import Newsletter from "@/components/common/Newsletter";
+import BulkOrderCTA from "@/components/common/BulkOrderCTA";
 
 export const metadata = {
   title: "ShopEase - Online Shopping Made Easy",
@@ -19,7 +19,7 @@ export default function Home() {
       <NewArrivals />
       <BestSellers />
       <SpecialOffers />
-      <Newsletter />
+      <BulkOrderCTA />
     </MainLayout>
   );
 }
