@@ -7,7 +7,7 @@ import SpecialOffers from "@/components/home/SpecialOffers";
 import BulkOrderCTA from "@/components/common/BulkOrderCTA";
 
 export const metadata = {
-  title: "ShopEase - Online Shopping Made Easy",
+  title: "ChakaChak",
   description: "Your one-stop shop for all your shopping needs",
 };
 

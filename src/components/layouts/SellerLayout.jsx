@@ -20,7 +20,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 
-export const AdminLayout = ({ children }) => {
+export const SellerLayout = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const router = useRouter();
@@ -29,13 +29,13 @@ export const AdminLayout = ({ children }) => {
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     setIsLoggedIn(loggedIn);
     if (!loggedIn) {
-      router.push("/admin/login");
+      router.push("/seller/login");
     }
   }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
-    router.push("/admin/login");
+    router.push("/seller/login");
   };
 
   const toggleSidebar = () => {
@@ -43,10 +43,10 @@ export const AdminLayout = ({ children }) => {
   };
 
   const navItems = [
-    { name: "Dashboard", href: "/admin/dashboard", icon: Home },
-    { name: "Orders", href: "/admin/orders", icon: ShoppingCart },
-    { name: "Users", href: "/admin/customers", icon: Users },
-    { name: "Settings", href: "/admin/settings", icon: Settings },
+    { name: "Dashboard", href: "/seller/dashboard", icon: Home },
+    { name: "Products", href: "/seller/products", icon: Package },
+    { name: "Orders", href: "/seller/orders", icon: ShoppingCart },
+    { name: "Settings", href: "/seller/settings", icon: Settings },
   ];
 
   if (!isLoggedIn) {
@@ -128,10 +128,10 @@ export const AdminLayout = ({ children }) => {
               <div className="flex items-center">
                 <img
                   src="https://t3.ftcdn.net/jpg/03/62/56/24/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF.jpg"
-                  alt="Admin"
+                  alt="seller"
                   className="w-8 h-8 rounded-full border-2 border-indigo-500"
                 />
-                <span className="ml-2 font-medium text-black">Admin</span>
+                <span className="ml-2 font-medium text-black"></span>
               </div>
             </div>
           </div>
@@ -145,4 +145,4 @@ export const AdminLayout = ({ children }) => {
   );
 };
 
-export default AdminLayout;
+export default SellerLayout;

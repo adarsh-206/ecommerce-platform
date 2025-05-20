@@ -1,16 +1,15 @@
 export const metadata = {
-  title: "Admin Dashboard",
+  title: "Seller Dashboard",
   description:
     "Manage products, orders, and users for your Indian eCommerce store",
 };
 
-import { AdminLayout } from "../../layouts/AdminLayout";
+import { SellerLayout } from "../../layouts/SellerLayout";
 import {
   Package,
   ShoppingCart,
   Users,
   IndianRupee,
-  TrendingUp,
   AlertCircle,
 } from "lucide-react";
 
@@ -90,7 +89,7 @@ const LowStockItem = ({ id, name, stock, supplier }) => {
   );
 };
 
-export default function AdminDashboard() {
+export default function SellerDashboard() {
   const recentOrders = [
     {
       id: "ORD-IN1024",
@@ -124,7 +123,7 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <AdminLayout>
+    <SellerLayout>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
         <p className="text-gray-600">Welcome back to Chaka-Chak</p>
@@ -212,6 +211,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
-    </AdminLayout>
+    </SellerLayout>
   );
 }

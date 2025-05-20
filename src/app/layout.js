@@ -5,8 +5,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: {
-    default: "ShopEase - Online Shopping Made Easy",
-    template: "%s | ShopEase",
+    default: "ChakaChak",
+    template: "%s | ChakaChak",
   },
   description: "Your one-stop shop for all your shopping needs",
 };

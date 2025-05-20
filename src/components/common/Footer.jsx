@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4">About ShopEase</h3>
+            <h3 className="text-lg font-semibold mb-4">About ChakaChak</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/about" className="text-gray-300 hover:text-white">
@@ -161,7 +161,8 @@ export default function Footer() {
         </div>
         <div className="mt-8 border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between">
           <p className="text-gray-400">
-            © 2025 <Link href="/admin">E-Shop</Link>, Inc. All rights reserved.
+            © 2025 <Link href="/admin">Chaka-Chak</Link>, Inc. All rights
+            reserved.
           </p>
           <div className="flex mt-4 md:mt-0 space-x-6">
             <a href="#" className="text-gray-400 hover:text-white">
