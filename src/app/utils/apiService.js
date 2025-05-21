@@ -9,13 +9,17 @@ const instance = axios.create({
 instance.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401) {
-      if (typeof window !== "undefined") {
-        window.location.href = "/";
-      } else {
-        redirect("/");
-      }
-    }
+    const isUnauthorized = err.response?.status === 401;
+    const isLoginRequest = err.config?.url?.includes("/login");
+
+    // if (isUnauthorized && !isLoginRequest) {
+    //   if (typeof window !== "undefined") {
+    //     window.location.href = "/";
+    //   } else {
+    //     redirect("/");
+    //   }
+    // }
+
     return Promise.reject(err);
   }
 );
@@ -36,6 +40,8 @@ const getHeaders = (useAuth, isFormData) => {
   }
   return headers;
 };
+
+console.log("get headers:--", getHeaders(true, false));
 
 const apiService = {
   get: (url, useAuth = false) =>

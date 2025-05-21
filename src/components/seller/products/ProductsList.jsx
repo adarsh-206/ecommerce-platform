@@ -27,17 +27,38 @@ export default function ProductsList({ products, onEdit, onDelete }) {
     setSortConfig({ key, direction });
   };
 
+  const getProductValue = (product, key) => {
+    switch (key) {
+      case "name":
+        return product.name;
+      case "category":
+        return product.category;
+      case "price":
+        return product.priceBySize && product.priceBySize.length > 0
+          ? product.priceBySize[0].amount
+          : 0;
+      case "stock":
+        return product.stock && product.stock.quantity
+          ? product.stock.quantity
+          : 0;
+      default:
+        return product[key];
+    }
+  };
+
   const sortedProducts = [...products].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key]) {
+    const aValue = getProductValue(a, sortConfig.key);
+    const bValue = getProductValue(b, sortConfig.key);
+
+    if (aValue < bValue) {
       return sortConfig.direction === "ascending" ? -1 : 1;
     }
-    if (a[sortConfig.key] > b[sortConfig.key]) {
+    if (aValue > bValue) {
       return sortConfig.direction === "ascending" ? 1 : -1;
     }
     return 0;
   });
 
-  // Calculate pagination
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = sortedProducts.slice(
@@ -133,13 +154,13 @@ export default function ProductsList({ products, onEdit, onDelete }) {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {currentProducts.map((product) => (
-              <tr key={product.id} className="hover:bg-gray-50">
+              <tr key={product._id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="h-10 w-10 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden relative">
-                      {product.main_image ? (
+                      {product.images && product.images.main ? (
                         <Image
-                          src={product.main_image}
+                          src={product.images.main.url}
                           alt={product.name}
                           width={40}
                           height={40}
@@ -161,50 +182,64 @@ export default function ProductsList({ products, onEdit, onDelete }) {
                         {product.name}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {product.short_desc}
+                        {product.description && product.description.short}
                       </div>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">
-                    {product.category.charAt(0).toUpperCase() +
-                      product.category.slice(1).replace("-", " ")}
+                    {product.category}
                   </div>
                   <div className="text-sm text-gray-500">
-                    {product.subcategory.charAt(0).toUpperCase() +
-                      product.subcategory.slice(1).replace("-", " ")}
+                    {product.subCategory}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">
-                    ₹{product.price.toFixed(2)}
+                    {product.priceBySize && product.priceBySize.length > 0 ? (
+                      <>
+                        {product.priceBySize[0].currency}{" "}
+                        {product.priceBySize[0].amount.toFixed(2)}
+                      </>
+                    ) : (
+                      "N/A"
+                    )}
                   </div>
-                  {product.sale_price && (
-                    <div className="text-sm text-green-600">
-                      ₹{product.sale_price.toFixed(2)}
-                    </div>
-                  )}
+                  <div className="text-sm text-gray-500">
+                    {product.priceBySize && product.priceBySize.length > 0 && (
+                      <>Size: {product.priceBySize[0].size}</>
+                    )}
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                     ${
-                      product.stock > 50
+                      product.stock &&
+                      product.stock.quantity >
+                        product.stock.lowStockThreshold * 2
                         ? "bg-green-100 text-green-800"
-                        : product.stock > 10
+                        : product.stock &&
+                          product.stock.quantity >
+                            product.stock.lowStockThreshold
                         ? "bg-yellow-100 text-yellow-800"
                         : "bg-red-100 text-red-800"
                     }`}
                   >
-                    {product.stock}
+                    {product.stock ? product.stock.quantity : "N/A"}
                   </span>
+                  {product.stock &&
+                    product.stock.quantity <=
+                      product.stock.lowStockThreshold && (
+                      <div className="text-xs text-red-600 mt-1">Low stock</div>
+                    )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <button
                     className="text-indigo-600 hover:text-indigo-900 mr-3"
                     onClick={() =>
-                      window.open(`/products/${product.id}`, "_blank")
+                      window.open(`/products/${product._id}`, "_blank")
                     }
                   >
                     <Eye className="h-5 w-5" />
@@ -223,7 +258,7 @@ export default function ProductsList({ products, onEdit, onDelete }) {
                           "Are you sure you want to delete this product?"
                         )
                       ) {
-                        onDelete(product.id);
+                        onDelete(product._id);
                       }
                     }}
                   >
@@ -236,7 +271,6 @@ export default function ProductsList({ products, onEdit, onDelete }) {
         </table>
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-4">
           <div className="flex flex-1 justify-between sm:hidden">

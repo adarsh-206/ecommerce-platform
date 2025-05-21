@@ -2,27 +2,40 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Eye, EyeOff, LogIn, ShoppingBag } from "lucide-react";
+import { Eye, EyeOff, LogIn } from "lucide-react";
 import { useRouter } from "next/navigation";
+import apiService from "@/app/utils/apiService";
 
 export default function SellerLogin() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: "",
+    email_or_phone: "",
     password: "",
   });
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setError(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("Login submitted:", formData);
-    router.push("/seller/dashboard");
+    try {
+      const response = await apiService.post("/login", formData);
+      if (response?.status === 200) {
+        localStorage.setItem("token", response.data.token);
+        router.push("/seller/dashboard");
+      }
+    } catch (err) {
+      if (err.response && err.response.data) {
+        setError(err.response.data.detail || "Login failed. Please try again.");
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    }
   };
 
   return (
@@ -39,7 +52,6 @@ export default function SellerLogin() {
               <p className="mt-4 text-indigo-100">
                 Log in to manage your dashboard, inventory, and sales easily.
               </p>
-
               <div className="mt-6 text-center">
                 <img
                   src="/seller/seller_login.png"
@@ -62,22 +74,28 @@ export default function SellerLogin() {
               </div>
 
               <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+                {error && (
+                  <div className="rounded-md bg-red-100 p-3 text-sm text-red-700">
+                    {error}
+                  </div>
+                )}
+
                 <div>
                   <label
-                    htmlFor="email"
+                    htmlFor="email_or_phone"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Email Address
+                    Email or Phone
                   </label>
                   <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
+                    type="text"
+                    id="email_or_phone"
+                    name="email_or_phone"
+                    value={formData.email_or_phone}
                     onChange={handleChange}
                     required
                     className="mt-1 block w-full rounded-2xl border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-                    placeholder="your@email.com"
+                    placeholder="Enter phone or email address"
                   />
                 </div>
 

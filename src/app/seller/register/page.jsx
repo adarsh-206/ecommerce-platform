@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { Eye, EyeOff, UserPlus, Check, ChevronDown } from "lucide-react";
+import categories from "@/constants/categories";
+import apiService from "@/app/utils/apiService";
+import { useRouter } from "next/navigation";
 
 export default function SellerRegister() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [formData, setFormData] = useState({
@@ -18,22 +22,8 @@ export default function SellerRegister() {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
   const dropdownRef = useRef(null);
-
-  const categories = [
-    "Electronics",
-    "Fashion",
-    "Home & Garden",
-    "Beauty & Personal Care",
-    "Food & Grocery",
-    "Health & Wellness",
-    "Books & Stationery",
-    "Sports & Outdoors",
-    "Toys & Games",
-    "Art & Collectibles",
-    "Handcrafted",
-    "Jewelry",
-  ];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -82,8 +72,26 @@ export default function SellerRegister() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
-    // TODO: call your registration API
-    console.log("Registration submitted:", formData);
+
+    const sellerData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      storeName: formData.storeName,
+      productCategories: formData.selectedCategories,
+      password: formData.password,
+      role: "seller",
+    };
+
+    apiService
+      .post("/register", sellerData)
+      .then((response) => {
+        router.push("/seller/dashboard");
+      })
+      .catch((error) => {
+        setApiError(error.response.data.error || "Something went wrong!");
+      });
   };
 
   return (

@@ -34,7 +34,7 @@ export const SellerLayout = ({ children }) => {
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("token");
     router.push("/seller/login");
   };
 
@@ -58,7 +58,7 @@ export const SellerLayout = ({ children }) => {
       <div
         className={`${
           isSidebarOpen ? "w-64" : "w-20"
-        } bg-indigo-800 text-white transition-all duration-300 ease-in-out`}
+        } bg-indigo-800 text-white transition-all duration-300 ease-in-out relative`}
       >
         <div className="flex items-center justify-between p-4 border-b border-indigo-600">
           <h1 className={`font-bold text-xl ${!isSidebarOpen && "hidden"}`}>
@@ -92,15 +92,17 @@ export const SellerLayout = ({ children }) => {
             ))}
           </ul>
         </nav>
-        <div className="absolute bottom-0 w-full p-4">
+        <div className="absolute bottom-0 w-full">
           <button
             onClick={handleLogout}
-            className={`flex items-center p-2 hover:bg-indigo-700 rounded-md w-full ${
-              !isSidebarOpen && "justify-center"
-            }`}
+            className={`
+              w-full flex items-center p-4 hover:bg-indigo-700 cursor-pointer ${
+                !isSidebarOpen ? "justify-center" : ""
+              }
+            `}
           >
             <LogOut size={20} />
-            <span className={`ml-2 ${!isSidebarOpen && "hidden"}`}>Logout</span>
+            <span className={`ml-4 ${!isSidebarOpen && "hidden"}`}>Logout</span>
           </button>
         </div>
       </div>
