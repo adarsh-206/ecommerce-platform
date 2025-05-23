@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 import apiService from "@/app/utils/apiService";
 
 export default function SellerLogin() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email_or_phone: "",
