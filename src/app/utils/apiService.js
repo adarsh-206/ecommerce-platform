@@ -41,8 +41,6 @@ const getHeaders = (useAuth, isFormData) => {
   return headers;
 };
 
-console.log("get headers:--", getHeaders(true, false));
-
 const apiService = {
   get: (url, useAuth = false) =>
     instance.get(url, { headers: getHeaders(useAuth, false) }),

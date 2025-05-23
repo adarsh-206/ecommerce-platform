@@ -8,8 +8,8 @@ export default function AdminDashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    if (!isLoggedIn) {
+    const token = localStorage.getItem("token");
+    if (!token) {
       router.push("/admin");
     }
   }, []);
