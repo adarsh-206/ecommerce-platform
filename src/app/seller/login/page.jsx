@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, LogIn } from "lucide-react";
-import { redirect } from "next/navigation";
 import apiService from "@/app/utils/apiService";
 
 export default function SellerLogin() {
@@ -24,13 +23,10 @@ export default function SellerLogin() {
     e.preventDefault();
     try {
       const response = await apiService.post("/login", formData);
-      console.log("response", response.data);
 
       if (response?.status === 200) {
-        console.log("hello from inside");
-
         localStorage.setItem("token", response.data.token);
-        redirect("/seller/dashboard");
+        window.location.href = "/seller/dashboard";
       }
     } catch (err) {
       if (err.response && err.response.data) {
