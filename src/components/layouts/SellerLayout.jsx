@@ -25,13 +25,13 @@ export const SellerLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    const loggedIn = localStorage.getItem("token") === "true";
-    setIsLoggedIn(loggedIn);
-    if (!loggedIn) {
-      router.push("/seller/login");
-    }
-  }, [router]);
+  // useEffect(() => {
+  //   const loggedIn = localStorage.getItem("token") === "true";
+  //   setIsLoggedIn(loggedIn);
+  //   if (!loggedIn) {
+  //     router.push("/seller/login");
+  //   }
+  // }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
