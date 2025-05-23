@@ -26,7 +26,7 @@ export const AdminLayout = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const loggedIn = localStorage.getItem("token") === "true";
     setIsLoggedIn(loggedIn);
     if (!loggedIn) {
       router.push("/admin/login");
@@ -34,7 +34,7 @@ export const AdminLayout = ({ children }) => {
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("token");
     router.push("/admin/login");
   };
 

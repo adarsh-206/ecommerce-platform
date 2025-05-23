@@ -26,7 +26,7 @@ export const SellerLayout = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const loggedIn = localStorage.getItem("token") === "true";
     setIsLoggedIn(loggedIn);
     if (!loggedIn) {
       router.push("/seller/login");

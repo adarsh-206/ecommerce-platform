@@ -13,7 +13,7 @@ const AdminLogin = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (username === "admin" && password === "admin") {
-      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("token", "true");
       router.push("/admin/dashboard");
     } else {
       setError("Invalid credentials. Try username: admin, password: admin");
