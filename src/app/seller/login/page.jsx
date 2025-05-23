@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, LogIn } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import apiService from "@/app/utils/apiService";
 
 export default function SellerLogin() {
