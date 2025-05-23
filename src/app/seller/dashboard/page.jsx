@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import SellerDashboard from "@/components/seller/dashboard/SellerDashboard";
 
 // Rename this function to avoid conflict
-export default function SellerDashboardPage() {
+export default function AdminDashboardPage() {
   const router = useRouter();
 
   // useEffect(() => {
