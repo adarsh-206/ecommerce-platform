@@ -7,12 +7,12 @@ import SellerDashboard from "@/components/seller/dashboard/SellerDashboard";
 export default function AdminDashboardPage() {
   const router = useRouter();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/admin");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     router.push("/admin");
+  //   }
+  // }, []);
 
   return <SellerDashboard />;
 }
