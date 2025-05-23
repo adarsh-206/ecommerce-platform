@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, LogIn } from "lucide-react";
-import { useRouter } from "next/router";
+import { redirect } from "next/navigation";
 import apiService from "@/app/utils/apiService";
 
 export default function SellerLogin() {
@@ -31,7 +31,7 @@ export default function SellerLogin() {
         console.log("hello from inside");
 
         localStorage.setItem("token", response.data.token);
-        router.push("/seller/dashboard");
+        redirect("/seller/dashboard");
       }
     } catch (err) {
       if (err.response && err.response.data) {
