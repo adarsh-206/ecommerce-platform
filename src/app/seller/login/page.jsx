@@ -25,7 +25,11 @@ export default function SellerLogin() {
     e.preventDefault();
     try {
       const response = await apiService.post("/login", formData);
+      console.log("response", response.data);
+
       if (response?.status === 200) {
+        console.log("hello from inside");
+
         localStorage.setItem("token", response.data.token);
         router.push("/seller/dashboard");
       }
