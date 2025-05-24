@@ -3,21 +3,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Users,
   Package,
   ShoppingCart,
-  DollarSign,
   Settings,
   LogOut,
   Menu,
   Bell,
   Search,
   Home,
-  Box,
-  Truck,
-  BarChart2,
-  Tag,
-  MessageSquare,
 } from "lucide-react";
 
 export const SellerLayout = ({ children }) => {
@@ -25,13 +18,14 @@ export const SellerLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const loggedIn = localStorage.getItem("token") === "true";
-  //   setIsLoggedIn(loggedIn);
-  //   if (!loggedIn) {
-  //     router.push("/seller/login");
-  //   }
-  // }, [router]);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/seller/login");
+    } else {
+      setIsLoggedIn(true);
+    }
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
