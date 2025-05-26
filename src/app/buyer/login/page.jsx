@@ -76,7 +76,10 @@ export default function BuyerLogin() {
     setLoginError("");
 
     try {
-      const response = await apiService.post("/login", form);
+      const response = await apiService.post("/login", {
+        ...form,
+        role: "buyer",
+      });
 
       if (response.data && response.data.token) {
         localStorage.setItem("token", response.data.token);

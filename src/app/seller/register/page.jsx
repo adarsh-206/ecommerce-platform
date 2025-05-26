@@ -44,9 +44,9 @@ export default function SellerRegister() {
 
   const toggleCategory = (category) => {
     setFormData((prev) => {
-      const selected = prev.selectedCategories.includes(category)
-        ? prev.selectedCategories.filter((c) => c !== category)
-        : [...prev.selectedCategories, category];
+      const selected = prev.selectedCategories.includes(category.id)
+        ? prev.selectedCategories.filter((c) => c !== category.id)
+        : [...prev.selectedCategories, category.id];
       return { ...prev, selectedCategories: selected };
     });
     setErrors((e) => ({ ...e, selectedCategories: undefined }));
@@ -73,13 +73,17 @@ export default function SellerRegister() {
     e.preventDefault();
     if (!validate()) return;
 
+    console.log(formData.selectedCategories);
+
     const sellerData = {
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
       phone: formData.phone,
       storeName: formData.storeName,
-      productCategories: formData.selectedCategories,
+      productCategories: formData.selectedCategories.map((cat) =>
+        typeof cat === "object" ? cat.id : cat
+      ),
       password: formData.password,
       role: "seller",
     };
@@ -87,6 +91,7 @@ export default function SellerRegister() {
     apiService
       .post("/register", sellerData)
       .then((response) => {
+        localStorage.setItem("token", response.data.token);
         router.push("/seller/dashboard");
       })
       .catch((error) => {
@@ -264,9 +269,9 @@ export default function SellerRegister() {
                     </button>
                     {showCategoryDropdown && (
                       <div className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-xl bg-white shadow-xl ring-1 ring-black ring-opacity-5">
-                        {categories.map((cat) => (
+                        {categories.map((cat, i) => (
                           <div
-                            key={cat}
+                            key={i}
                             onClick={() => toggleCategory(cat)}
                             className={`
                 flex cursor-pointer items-center px-4 py-2 text-sm transition-colors duration-100
@@ -285,7 +290,7 @@ export default function SellerRegister() {
                               readOnly
                               className="h-5 w-5 rounded border-gray-300 text-indigo-600"
                             />
-                            <span className="ml-3">{cat}</span>
+                            <span className="ml-3">{cat.name}</span>
                           </div>
                         ))}
                       </div>

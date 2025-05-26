@@ -24,18 +24,18 @@ export default function SellerLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await apiService.post("/login", formData);
-      console.log("response", response.data);
+      const response = await apiService.post("/login", {
+        ...formData,
+        role: "seller",
+      });
 
       if (response?.status === 200) {
-        console.log("hello from inside");
-
         localStorage.setItem("token", response.data.token);
         router.push("/seller/dashboard");
       }
     } catch (err) {
       if (err.response && err.response.data) {
-        setError(err.response.data.detail || "Login failed. Please try again.");
+        setError(err.response.data.error || "Login failed. Please try again.");
       } else {
         setError("Something went wrong. Please try again.");
       }
@@ -98,7 +98,7 @@ export default function SellerLogin() {
                     value={formData.email_or_phone}
                     onChange={handleChange}
                     required
-                    className="mt-1 block w-full rounded-2xl border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                    className="mt-1 block w-full rounded-2xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                     placeholder="Enter phone or email address"
                   />
                 </div>
@@ -118,7 +118,7 @@ export default function SellerLogin() {
                       value={formData.password}
                       onChange={handleChange}
                       required
-                      className="block w-full rounded-2xl border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                      className="block w-full rounded-2xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
                       placeholder="••••••••"
                     />
                     <button
