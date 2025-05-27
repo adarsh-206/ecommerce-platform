@@ -667,7 +667,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                 onClick={handleSubmit}
                 className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
               >
-                {product ? "Update Product" : "Create Product"}
+                {product ? "Update Product" : "Create Products"}
               </button>
             )}
           </div>

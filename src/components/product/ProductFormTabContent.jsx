@@ -566,7 +566,6 @@ const ProductFormTabContent = ({
                   htmlFor="main-image-upload"
                   className="cursor-pointer flex flex-col items-center"
                 >
-                  {console.log("image preview", form)}
                   {form.images?.main?.preview ? (
                     <div className="relative">
                       <img

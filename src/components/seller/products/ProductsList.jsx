@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import categories from "@/constants/categories";
 
 export default function ProductsList({ products, onEdit, onDelete }) {
   const [sortConfig, setSortConfig] = useState({
@@ -30,19 +31,21 @@ export default function ProductsList({ products, onEdit, onDelete }) {
   const getProductValue = (product, key) => {
     switch (key) {
       case "name":
-        return product.name;
+        return product.name || "";
       case "category":
-        return product.category;
+        return product.category || "";
       case "price":
         return product.priceBySize && product.priceBySize.length > 0
-          ? product.priceBySize[0].amount
+          ? product.priceBySize[0].sellingPrice || 0
           : 0;
       case "stock":
-        return product.stock && product.stock.quantity
-          ? product.stock.quantity
+        return product.stock && typeof product.stock === "object"
+          ? product.stock.quantity || 0
+          : typeof product.stock === "number"
+          ? product.stock
           : 0;
       default:
-        return product[key];
+        return product[key] || "";
     }
   };
 
@@ -61,10 +64,12 @@ export default function ProductsList({ products, onEdit, onDelete }) {
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+
   const currentProducts = sortedProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
+
   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -82,6 +87,46 @@ export default function ProductsList({ products, onEdit, onDelete }) {
       );
     }
     return <ArrowUpDown className="h-4 w-4 ml-1 text-gray-400" />;
+  };
+
+  const getStockStatus = (product) => {
+    let stockQuantity = 0;
+    let lowStockThreshold = 10; // default threshold
+
+    if (product.stock) {
+      if (typeof product.stock === "object") {
+        stockQuantity = product.stock.quantity || 0;
+        lowStockThreshold = product.stock.lowStockThreshold || 10;
+      } else if (typeof product.stock === "number") {
+        stockQuantity = product.stock;
+      }
+    }
+
+    if (stockQuantity === 0) {
+      return {
+        className: "bg-red-100 text-red-800",
+        label: "Out of Stock",
+        showLowStock: true,
+      };
+    } else if (stockQuantity <= lowStockThreshold) {
+      return {
+        className: "bg-red-100 text-red-800",
+        label: stockQuantity.toString(),
+        showLowStock: true,
+      };
+    } else if (stockQuantity <= lowStockThreshold * 2) {
+      return {
+        className: "bg-yellow-100 text-yellow-800",
+        label: stockQuantity.toString(),
+        showLowStock: false,
+      };
+    } else {
+      return {
+        className: "bg-green-100 text-green-800",
+        label: stockQuantity.toString(),
+        showLowStock: false,
+      };
+    }
   };
 
   if (products.length === 0) {
@@ -153,120 +198,144 @@ export default function ProductsList({ products, onEdit, onDelete }) {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {currentProducts.map((product) => (
-              <tr key={product._id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div className="h-10 w-10 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden relative">
-                      {product.images && product.images.main ? (
-                        <Image
-                          src={product.images.main.url}
-                          alt={product.name}
-                          width={40}
-                          height={40}
-                          className="object-cover"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = "https://via.placeholder.com/40";
-                          }}
-                          unoptimized
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">
-                          N/A
+            {currentProducts.map((product) => {
+              const stockStatus = getStockStatus(product);
+
+              return (
+                <tr key={product._id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="h-10 w-10 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden relative">
+                        {product.images && product.images.main ? (
+                          <Image
+                            src={product.images.main.url}
+                            alt={product.name}
+                            width={40}
+                            height={40}
+                            className="object-cover"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = "https://via.placeholder.com/40";
+                            }}
+                            unoptimized
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            N/A
+                          </div>
+                        )}
+                      </div>
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-gray-900">
+                          {product.name}
                         </div>
+                        <div className="text-sm text-gray-500">
+                          {product.description && product.description.short}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {categories.find((c) => c.id == product.category)?.name ||
+                        ""}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {categories
+                        .find((c) => c.id == product.category)
+                        ?.subcategories.find(
+                          (sc) => sc.id == product.subCategory
+                        )?.name || ""}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {product?.priceBySize &&
+                      product?.priceBySize?.length > 0 ? (
+                        <div className="space-y-1">
+                          <div className="font-semibold">
+                            ₹
+                            {product.priceBySize[0]?.sellingPrice?.toFixed(2) ||
+                              "0.00"}
+                          </div>
+                          {product.priceBySize[0]?.originalPrice &&
+                            product.priceBySize[0].originalPrice !==
+                              product.priceBySize[0].sellingPrice && (
+                              <div className="text-xs text-gray-500 line-through">
+                                ₹
+                                {product.priceBySize[0].originalPrice.toFixed(
+                                  2
+                                )}
+                              </div>
+                            )}
+                          {product.priceBySize[0]?.discountPercentage > 0 && (
+                            <div className="text-xs text-green-600 font-medium">
+                              {product.priceBySize[0].discountPercentage}% OFF
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        "N/A"
                       )}
                     </div>
-                    <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">
-                        {product.name}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {product.description && product.description.short}
-                      </div>
+                    <div className="text-sm text-gray-500">
+                      {product.priceBySize &&
+                        product.priceBySize.length > 0 && (
+                          <>Size: {product.priceBySize[0].size}</>
+                        )}
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">
-                    {product.category}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {product.subCategory}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">
-                    {product.priceBySize && product.priceBySize.length > 0 ? (
-                      <>
-                        {product.priceBySize[0].currency}{" "}
-                        {product.priceBySize[0].amount.toFixed(2)}
-                      </>
-                    ) : (
-                      "N/A"
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${stockStatus.className}`}
+                    >
+                      {stockStatus.label}
+                    </span>
+                    {stockStatus.showLowStock && (
+                      <div className="text-xs text-red-600 mt-1">
+                        {product.stock &&
+                        ((typeof product.stock === "object" &&
+                          product.stock.quantity === 0) ||
+                          (typeof product.stock === "number" &&
+                            product.stock === 0))
+                          ? "Out of stock"
+                          : "Low stock"}
+                      </div>
                     )}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {product.priceBySize && product.priceBySize.length > 0 && (
-                      <>Size: {product.priceBySize[0].size}</>
-                    )}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                    ${
-                      product.stock &&
-                      product.stock.quantity >
-                        product.stock.lowStockThreshold * 2
-                        ? "bg-green-100 text-green-800"
-                        : product.stock &&
-                          product.stock.quantity >
-                            product.stock.lowStockThreshold
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {product.stock ? product.stock.quantity : "N/A"}
-                  </span>
-                  {product.stock &&
-                    product.stock.quantity <=
-                      product.stock.lowStockThreshold && (
-                      <div className="text-xs text-red-600 mt-1">Low stock</div>
-                    )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button
-                    className="text-indigo-600 hover:text-indigo-900 mr-3"
-                    onClick={() =>
-                      window.open(`/products/${product._id}`, "_blank")
-                    }
-                  >
-                    <Eye className="h-5 w-5" />
-                  </button>
-                  <button
-                    className="text-indigo-600 hover:text-indigo-900 mr-3"
-                    onClick={() => onEdit(product)}
-                  >
-                    <Edit className="h-5 w-5" />
-                  </button>
-                  <button
-                    className="text-red-600 hover:text-red-900"
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          "Are you sure you want to delete this product?"
-                        )
-                      ) {
-                        onDelete(product._id);
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button
+                      className="text-indigo-600 hover:text-indigo-900 mr-3"
+                      onClick={() =>
+                        window.open(`/products/${product._id}`, "_blank")
                       }
-                    }}
-                  >
-                    <Trash2 className="h-5 w-5" />
-                  </button>
-                </td>
-              </tr>
-            ))}
+                    >
+                      <Eye className="h-5 w-5" />
+                    </button>
+                    <button
+                      className="text-indigo-600 hover:text-indigo-900 mr-3"
+                      onClick={() => onEdit(product)}
+                    >
+                      <Edit className="h-5 w-5" />
+                    </button>
+                    <button
+                      className="text-red-600 hover:text-red-900"
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to delete this product?"
+                          )
+                        ) {
+                          onDelete(product._id);
+                        }
+                      }}
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

@@ -73,8 +73,6 @@ export default function SellerRegister() {
     e.preventDefault();
     if (!validate()) return;
 
-    console.log(formData.selectedCategories);
-
     const sellerData = {
       firstName: formData.firstName,
       lastName: formData.lastName,

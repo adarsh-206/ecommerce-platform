@@ -5,7 +5,13 @@ import ReactDOM from "react-dom";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import ProductFormTabContent from "./ProductFormTabContent";
 
-export default function ProductModal({ product, categories, onClose, onSave }) {
+export default function ProductModal({
+  product,
+  categories,
+  onClose,
+  onSave,
+  loading,
+}) {
   const [currentTab, setCurrentTab] = useState(0);
   const [form, setForm] = useState({
     name: "",
@@ -197,7 +203,6 @@ export default function ProductModal({ product, categories, onClose, onSave }) {
   const isTabValid = (tabIndex) => {
     const tab = tabs[tabIndex];
 
-    // Define optional fields that don't need validation
     const optionalFields = [
       "brand",
       "sizes",
@@ -210,34 +215,34 @@ export default function ProductModal({ product, categories, onClose, onSave }) {
     ];
 
     return tab.fields.every((field) => {
-      // Skip validation for optional fields
-      if (optionalFields.includes(field)) {
-        return true;
-      }
+      if (optionalFields.includes(field)) return true;
 
-      // Required field validations
+      let isValid = true;
+
       switch (field) {
         case "name":
-          return form.name && form.name.trim().length >= 3;
+          isValid = form.name && form.name.trim().length >= 3;
+          break;
 
         case "description":
-          return (
+          isValid =
             form.description.short &&
             form.description.short.trim() &&
             form.description.long &&
-            form.description.long.trim()
-          );
+            form.description.long.trim();
+          break;
 
         case "category":
-          return !!form.category;
+          isValid = !!form.category;
+          break;
 
         case "subCategory":
-          // Only required if subcategories exist for the selected category
           const subcategories = getSubcategories();
-          return subcategories.length === 0 || !!form.subCategory;
+          isValid = subcategories.length === 0 || !!form.subCategory;
+          break;
 
         case "priceBySize":
-          return (
+          isValid =
             form.priceBySize.length > 0 &&
             form.priceBySize.every(
               (p) =>
@@ -245,25 +250,33 @@ export default function ProductModal({ product, categories, onClose, onSave }) {
                 p.size.trim() &&
                 p.originalPrice > 0 &&
                 p.sellingPrice > 0
-            )
-          );
+            );
+          break;
 
         case "stock":
-          return (
-            typeof form.stock.quantity === "number" && form.stock.quantity >= 0
-          );
+          isValid =
+            typeof form.stock.quantity === "number" && form.stock.quantity >= 0;
+          break;
 
         case "images":
-          return form.images.main.url && form.images.main.url.trim();
+          isValid = form.images.main;
+          break;
 
         default:
-          return true;
+          isValid = true;
       }
+
+      if (!isValid) {
+        console.warn(`Tab ${tabIndex} - Invalid field: ${field}`);
+      }
+
+      return isValid;
     });
   };
 
   const canProceed = () =>
     currentTab < tabs.length - 1 && isTabValid(currentTab);
+
   const canSubmit = () =>
     currentTab === tabs.length - 1 &&
     tabs.every((_, index) => isTabValid(index));
@@ -273,18 +286,16 @@ export default function ProductModal({ product, categories, onClose, onSave }) {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        if (type === "main") {
-          setForm((prev) => ({
-            ...prev,
-            images: {
-              ...prev.images,
-              main: {
-                file: file,
-                preview: e.target.result,
-              },
+        setForm((prev) => ({
+          ...prev,
+          images: {
+            ...prev.images,
+            [type]: {
+              file: file,
+              preview: e.target.result,
             },
-          }));
-        }
+          },
+        }));
       };
       reader.readAsDataURL(file);
     }
@@ -452,14 +463,40 @@ export default function ProductModal({ product, categories, onClose, onSave }) {
             ) : (
               <button
                 type="submit"
-                disabled={!canSubmit()}
-                className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-                  canSubmit()
+                disabled={loading || !canSubmit()}
+                className={`px-6 py-2 rounded-lg font-medium transition-colors flex items-center justify-center ${
+                  !loading && canSubmit()
                     ? "bg-green-600 text-white hover:bg-green-700"
                     : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
               >
-                {product ? "Update Product" : "Create Product"}
+                {loading ? (
+                  // Simple spinner - you can replace this with an SVG or CSS spinner
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    ></path>
+                  </svg>
+                ) : product ? (
+                  "Update Product"
+                ) : (
+                  "Create Products"
+                )}
               </button>
             )}
           </div>
