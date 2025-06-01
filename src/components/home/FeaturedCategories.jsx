@@ -1,111 +1,132 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, Sparkles, TrendingUp } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 export default function FeaturedCategories() {
-  const [hoverIndex, setHoverIndex] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState({});
+  const [loadedImages, setLoadedImages] = useState({});
 
   const categories = [
     {
       name: "Clothing",
-      description: "Discover our latest fashion collection",
-      image:
-        "https://images.pexels.com/photos/325876/pexels-photo-325876.jpeg?cs=srgb&dl=pexels-pixabay-325876.jpg&fm=jpg",
-      href: "/categories/clothing",
+      href: "/featured_categories/clothing",
+      images: [
+        "/featured_categories/clothing/tshirt_1.jpg",
+        "/featured_categories/clothing/tshirt_2.jpg",
+        "/featured_categories/clothing/tshirt_3.jpg",
+        "/featured_categories/clothing/tshirt_4.jpg",
+      ],
     },
     {
       name: "Accessories",
-      description: "Complete your look with stylish accessories",
-      image:
-        "https://img.freepik.com/free-photo/top-view-accessoires-travel-with-women-clothing-concept-white-mobilephone-watch-bag-hat-map-camera-necklace-trousers-sunglasses-white-wood-table_1921-106.jpg?semt=ais_hybrid&w=740",
-      href: "/categories/accessories",
+      href: "/featured_categories/accessories",
+      images: [
+        "/featured_categories/accessories/acc_1.jpg",
+        "/featured_categories/accessories/acc_2.jpg",
+        "/featured_categories/accessories/acc_3.jpg",
+        "/featured_categories/accessories/acc_4.jpg",
+      ],
     },
     {
       name: "Headwear",
-      description: "Top off your style with premium headwear",
-      image:
-        "https://c8.alamy.com/comp/2C44AWK/headwear-hats-men-and-women-elegant-headwear-modern-and-retro-caps-stylish-hats-and-caps-fashion-accessories-vector-illustration-icons-set-2C44AWK.jpg",
-      href: "/categories/headwear",
+      href: "/featured_categories/headwear",
+      images: [
+        "/featured_categories/headwear/head_1.jpg",
+        "/featured_categories/headwear/head_2.jpg",
+        "/featured_categories/headwear/head_3.jpg",
+      ],
     },
     {
       name: "Pet Products",
-      description: "Spoil your furry friends with the best",
-      image:
-        "https://img.freepik.com/free-photo/pet-accessories-still-life-with-chew-bone-toys_23-2148949561.jpg",
-      href: "/categories/pet-products",
+      href: "/featured_categories/pet-products",
+      images: [
+        "/featured_categories/pet-products/pet_1.jpg",
+        "/featured_categories/pet-products/pet_2.jpg",
+      ],
     },
     {
       name: "Home & Living",
-      description: "Transform your space with our collection",
-      image:
-        "https://m.media-amazon.com/images/I/51khQ-xSjQL._AC_UF894,1000_QL80_.jpg",
-      href: "/categories/home-living",
+      href: "/featured_categories/home-living",
+      images: [
+        "/featured_categories/home-living/home_1.jpg",
+        "/featured_categories/home-living/home_2.jpg",
+        "/featured_categories/home-living/home_3.jpg",
+      ],
     },
   ];
 
+  // Preload all images
+  useEffect(() => {
+    const imageMap = {};
+
+    categories.forEach((category, catIndex) => {
+      imageMap[catIndex] = [];
+      category.images.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+        imageMap[catIndex].push(img);
+      });
+    });
+
+    setLoadedImages(imageMap);
+  }, []);
+
+  useEffect(() => {
+    const intervals = categories.map((category, categoryIndex) =>
+      setInterval(() => {
+        setCurrentImageIndex((prev) => ({
+          ...prev,
+          [categoryIndex]:
+            ((prev[categoryIndex] || 0) + 1) % category.images.length,
+        }));
+      }, 4000 + categoryIndex * 700)
+    );
+
+    return () => intervals.forEach(clearInterval);
+  }, []);
+
   return (
-    <section className="py-16 bg-gradient-to-r from-gray-50 to-white">
+    <section className="py-20 bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-center mb-10">
-          <TrendingUp className="h-6 w-6 text-indigo-500 mr-3" />
-          <h2 className="text-3xl font-bold text-gray-900">
-            Shop Our Top Categories
+        <div className="flex items-center justify-center mb-16">
+          <Sparkles className="h-8 w-8 text-amber-600 mr-4" />
+          <h2 className="text-4xl font-bold text-amber-800">
+            Featured Categories
           </h2>
         </div>
 
-        <div className="relative">
-          <div className="flex space-x-6 justify-between mb-8">
-            {categories.map((category, index) => (
-              <Link
-                key={category.name}
-                href={category.href}
-                className="group relative block w-1/5"
-                onMouseEnter={() => setHoverIndex(index)}
-                onMouseLeave={() => setHoverIndex(null)}
-              >
-                <div className="aspect-square relative overflow-hidden rounded-lg shadow-md transition-all duration-300 group-hover:shadow-xl">
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20 opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
-
-                  <div className="absolute inset-0 flex flex-col justify-end p-4">
-                    <h3 className="text-lg font-bold text-white mb-1">
-                      {category.name}
-                    </h3>
-
-                    <p
-                      className={`text-gray-200 text-sm line-clamp-2 mb-2 transform transition-all duration-300 ${
-                        hoverIndex === index
-                          ? "opacity-100 translate-y-0"
-                          : "opacity-0 translate-y-2"
-                      }`}
-                    >
-                      {category.description}
-                    </p>
-
-                    <div
-                      className={`flex items-center justify-between transform transition-all duration-300 ${
-                        hoverIndex === index
-                          ? "opacity-100 translate-y-0"
-                          : "opacity-0 translate-y-2"
-                      }`}
-                    >
-                      <span className="text-sm font-medium text-white">
-                        Shop Now
-                      </span>
-                      <span className="bg-white rounded-full p-1 text-indigo-500">
-                        <ArrowRight className="h-3 w-3" />
-                      </span>
-                    </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-12">
+          {categories.map((category, index) => (
+            <Link
+              key={category.name}
+              href={category.href}
+              className="group flex flex-col items-center"
+            >
+              <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 mb-6">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-200 via-orange-200 to-rose-200 p-1 shadow-lg">
+                  <div className="w-full h-full rounded-full overflow-hidden bg-white shadow-inner relative">
+                    {category.images.map((src, imgIndex) => (
+                      <img
+                        key={imgIndex}
+                        src={src}
+                        alt={`${category.name} ${imgIndex}`}
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+                          (currentImageIndex[index] || 0) === imgIndex
+                            ? "opacity-100"
+                            : "opacity-0"
+                        }`}
+                      />
+                    ))}
                   </div>
                 </div>
-              </Link>
-            ))}
-          </div>
+              </div>
+
+              <h3 className="text-lg md:text-xl font-semibold text-amber-800 hover:text-orange-700 transition-colors duration-300 text-center">
+                {category.name}
+              </h3>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

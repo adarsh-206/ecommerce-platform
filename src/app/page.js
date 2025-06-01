@@ -3,8 +3,8 @@ import HeroBanner from "@/components/home/HeroBanner";
 import FeaturedCategories from "@/components/home/FeaturedCategories";
 import NewArrivals from "@/components/home/NewArrivals";
 import BestSellers from "@/components/home/BestSellers";
-import SpecialOffers from "@/components/home/SpecialOffers";
 import BulkOrderCTA from "@/components/common/BulkOrderCTA";
+import PromoFeatures from "@/components/home/PromoFeatures";
 
 export const metadata = {
   title: "ChakaChak",
@@ -18,8 +18,8 @@ export default function Home() {
       <FeaturedCategories />
       <NewArrivals />
       <BestSellers />
-      <SpecialOffers />
       <BulkOrderCTA />
+      <PromoFeatures />
     </MainLayout>
   );
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ProductCard from "@/components/product/ProductCard";
+import { Sparkles, ArrowRight } from "lucide-react";
 
 export default function NewArrivals() {
   const products = [
@@ -44,20 +45,24 @@ export default function NewArrivals() {
   ];
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-20 bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-extrabold text-gray-900">
-            New Arrivals
-          </h2>
+        <div className="flex justify-between items-center mb-12">
+          <div className="flex items-center">
+            <Sparkles className="h-8 w-8 text-amber-600 mr-4" />
+            <h2 className="text-4xl font-extrabold text-amber-800">
+              New Arrivals
+            </h2>
+          </div>
           <Link
             href="/new-arrivals"
-            className="text-indigo-600 hover:text-indigo-500 font-medium"
+            className="group flex items-center px-6 py-3 bg-gradient-to-r from-amber-100 to-orange-100 rounded-full text-amber-800 hover:text-orange-700 font-semibold transition-all duration-300 hover:shadow-lg hover:scale-105"
           >
-            View All <span aria-hidden="true">→</span>
+            View All
+            <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

@@ -81,8 +81,6 @@ export default function SellerProductsPage() {
   };
 
   const closeModal = () => {
-    console.log("hello close the modal");
-
     setSelectedProduct(null);
     setModalOpen(false);
   };

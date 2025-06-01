@@ -5,7 +5,6 @@ export default function SearchBar() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle search logic
   };
 
   return (
@@ -15,12 +14,12 @@ export default function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search products..."
-        className="w-64 py-2 pl-10 pr-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700"
+        className="w-64 py-2.5 pl-10 pr-4 rounded-xl border-2 border-amber-200 bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-300 text-amber-900 placeholder-amber-600 transition-all duration-200 hover:shadow-md"
       />
 
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <svg
-          className="h-5 w-5 text-gray-400"
+          className="h-5 w-5 text-amber-600"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
