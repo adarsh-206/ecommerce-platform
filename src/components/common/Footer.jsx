@@ -2,10 +2,9 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50 text-amber-900">
+    <footer className="text-sm bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50 text-amber-900">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* About Section */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-lg font-bold mb-4 text-amber-700">
               About ChakaChak
@@ -25,8 +24,6 @@ export default function Footer() {
               )}
             </ul>
           </div>
-
-          {/* Customer Service */}
           <div>
             <h3 className="text-lg font-bold mb-4 text-amber-700">
               Customer Service
@@ -46,8 +43,6 @@ export default function Footer() {
               )}
             </ul>
           </div>
-
-          {/* Policy */}
           <div>
             <h3 className="text-lg font-bold mb-4 text-amber-700">Policy</h3>
             <ul className="space-y-2">
@@ -68,14 +63,11 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-
-          {/* Connect With Us */}
           <div>
             <h3 className="text-lg font-bold mb-4 text-amber-700">
               Connect With Us
             </h3>
             <div className="flex space-x-5">
-              {/* Social Icons */}
               {[
                 {
                   name: "Facebook",
@@ -114,7 +106,9 @@ export default function Footer() {
               ))}
             </div>
             <p className="mt-6 text-sm text-amber-700">
-              &copy; {new Date().getFullYear()} ChakaChak. All rights reserved.
+              &copy; {new Date().getFullYear()} ChakaChak.
+              <br />
+              All rights reserved.
             </p>
           </div>
         </div>
