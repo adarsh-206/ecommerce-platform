@@ -150,7 +150,6 @@ export default function CategoryProducts({ category }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       <Header />
-
       <div className="flex">
         <div className="hidden lg:block">
           <Sidebar />
@@ -170,18 +169,18 @@ export default function CategoryProducts({ category }) {
                     <Filter className="w-5 h-5 text-amber-600" />
                   </button>
 
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
-                      <Sparkles className="h-4 w-4 text-white" />
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
+                      <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <h1 className="text-xl font-semibold text-gray-800">
+                    <div className="flex items-center space-x-1 sm:space-x-2">
+                      <h1 className="text-base sm:text-xl font-semibold text-gray-800">
                         {selectedSubcategory
                           ? selectedSubcategory.name
                           : category?.name}
                       </h1>
                       {selectedSubcategory && (
-                        <p className="text-sm text-amber-600 font-medium">
+                        <p className="text-xs sm:text-sm text-amber-600 font-medium">
                           in {category?.name}
                         </p>
                       )}
@@ -232,13 +231,13 @@ export default function CategoryProducts({ category }) {
                 </div>
               ) : (
                 <div className="text-center py-20">
-                  <div className="w-32 h-32 mx-auto mb-8 rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center shadow-lg">
-                    <Sparkles className="w-16 h-16 text-amber-400" />
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-8 rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center shadow-lg">
+                    <Sparkles className="w-12 h-12 sm:w-16 sm:h-16 text-amber-400" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
                     No products found
                   </h3>
-                  <p className="text-gray-600 mb-8 text-lg max-w-md mx-auto leading-relaxed">
+                  <p className="text-sm sm:text-lg text-gray-600 mb-8 max-w-md mx-auto leading-relaxed">
                     {selectedSubcategory
                       ? `We couldn't find any products in ${selectedSubcategory.name}. Try browsing other categories or check back later.`
                       : `No products are currently available in ${category?.name}. New items are added regularly!`}
@@ -246,9 +245,9 @@ export default function CategoryProducts({ category }) {
                   {selectedSubcategory && (
                     <button
                       onClick={clearSubcategoryFilter}
-                      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                      className="inline-flex items-center px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-sm sm:text-base"
                     >
-                      <ShoppingBag className="w-5 h-5 mr-2" />
+                      <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Browse All {category?.name}
                     </button>
                   )}
