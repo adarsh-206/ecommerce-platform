@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-lg font-bold mb-4 text-amber-700">
-              About ChakaChak
+              About Chaka-Chak
             </h3>
             <ul className="space-y-2">
               {["About Us", "Careers", "News & Blog", "Help"].map(
@@ -108,7 +108,7 @@ export default function Footer() {
             <p className="mt-6 text-sm text-amber-700">
               &copy; {new Date().getFullYear()}{" "}
               <Link href="/seller/login" className="hover:text-amber-900">
-                ChakaChak
+                Chaka-Chak
               </Link>
               .
               <br />
