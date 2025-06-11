@@ -2,61 +2,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
+import categories from "@/constants/categories";
 
 export default function FeaturedCategories() {
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [loadedImages, setLoadedImages] = useState({});
   const [currentSlide, setCurrentSlide] = useState(0);
   const [itemsPerSlide, setItemsPerSlide] = useState(2);
-
-  const categories = [
-    {
-      name: "Clothing",
-      href: "/featured_categories/clothing",
-      images: [
-        "/featured_categories/clothing/tshirt_1.jpg",
-        "/featured_categories/clothing/tshirt_2.jpg",
-        "/featured_categories/clothing/tshirt_3.jpg",
-        "/featured_categories/clothing/tshirt_4.jpg",
-      ],
-    },
-    {
-      name: "Accessories",
-      href: "/featured_categories/accessories",
-      images: [
-        "/featured_categories/accessories/acc_1.jpg",
-        "/featured_categories/accessories/acc_2.jpg",
-        "/featured_categories/accessories/acc_3.jpg",
-        "/featured_categories/accessories/acc_4.jpg",
-      ],
-    },
-    {
-      name: "Headwear",
-      href: "/featured_categories/headwear",
-      images: [
-        "/featured_categories/headwear/head_1.jpg",
-        "/featured_categories/headwear/head_2.jpg",
-        "/featured_categories/headwear/head_3.jpg",
-      ],
-    },
-    {
-      name: "Pet Products",
-      href: "/featured_categories/pet-products",
-      images: [
-        "/featured_categories/pet-products/pet_1.jpg",
-        "/featured_categories/pet-products/pet_2.jpg",
-      ],
-    },
-    {
-      name: "Home & Living",
-      href: "/featured_categories/home-living",
-      images: [
-        "/featured_categories/home-living/home_1.jpg",
-        "/featured_categories/home-living/home_2.jpg",
-        "/featured_categories/home-living/home_3.jpg",
-      ],
-    },
-  ];
 
   useEffect(() => {
     const imageMap = {};
@@ -116,7 +68,7 @@ export default function FeaturedCategories() {
 
   const CategoryCard = ({ category, index }) => (
     <Link
-      href={category.href}
+      href={category.slug}
       className="group flex flex-col items-center min-w-0 flex-shrink-0"
     >
       <div className="relative w-32 h-32 xs:w-24 xs:h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 mb-3 md:mb-6">
@@ -170,7 +122,7 @@ export default function FeaturedCategories() {
                       .slice(slideIndex * 2, slideIndex * 2 + 2)
                       .map((category, index) => (
                         <CategoryCard
-                          key={category.name}
+                          key={category.id}
                           category={category}
                           index={slideIndex * 2 + index}
                         />
@@ -182,13 +134,9 @@ export default function FeaturedCategories() {
           </div>
         </div>
 
-        <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 lg:gap-12">
+        <div className="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-12">
           {categories.map((category, index) => (
-            <CategoryCard
-              key={category.name}
-              category={category}
-              index={index}
-            />
+            <CategoryCard key={category.id} category={category} index={index} />
           ))}
         </div>
       </div>

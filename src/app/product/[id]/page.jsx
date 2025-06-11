@@ -28,7 +28,7 @@ export default function ProductInfoPage() {
   // Helper function to get category name by ID
   const getCategoryName = (categoryId) => {
     // First check if it's a main category
-    const mainCategory = categories.find((cat) => cat.id === categoryId);
+    const mainCategory = categories.find((cat) => cat.id == categoryId);
     if (mainCategory) {
       return mainCategory.name;
     }
@@ -36,14 +36,14 @@ export default function ProductInfoPage() {
     // Then check subcategories
     for (const category of categories) {
       const subCategory = category.subcategories.find(
-        (sub) => sub.id === categoryId
+        (sub) => sub.id == categoryId
       );
       if (subCategory) {
         return subCategory.name;
       }
     }
 
-    return "Unknown Category";
+    return "";
   };
 
   useEffect(() => {
@@ -247,7 +247,7 @@ export default function ProductInfoPage() {
                   )}
                   {product.featured && (
                     <div className="absolute top-4 right-4 bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold pointer-events-none">
-                      Featured
+                      {product?.featured}
                     </div>
                   )}
                   <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm pointer-events-none">
