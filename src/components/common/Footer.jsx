@@ -106,7 +106,11 @@ export default function Footer() {
               ))}
             </div>
             <p className="mt-6 text-sm text-amber-700">
-              &copy; {new Date().getFullYear()} ChakaChak.
+              &copy; {new Date().getFullYear()}{" "}
+              <Link href="/seller/login" className="hover:text-amber-900">
+                ChakaChak
+              </Link>
+              .
               <br />
               All rights reserved.
             </p>

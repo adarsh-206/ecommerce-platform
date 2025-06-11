@@ -2,9 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import categories from "@/constants/categories";
 
 export default function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false);
+  const productLink = product?.id ? `/product/${product.id}` : "#";
+
+  const categoryObj = categories.find((cat) => cat.id == product.category);
+  const categoryName = categoryObj?.name || "";
 
   return (
     <div
@@ -12,7 +17,7 @@ export default function ProductCard({ product }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link href={product.href} className="block">
+      <Link href={productLink} className="block">
         <div className="relative h-64 overflow-hidden">
           <img
             src={product.image}
@@ -31,9 +36,9 @@ export default function ProductCard({ product }) {
 
       <div className="p-5">
         <span className="text-sm font-medium text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
-          {product.category}
+          {categoryName}
         </span>
-        <Link href={product.href} className="block">
+        <Link href={productLink} className="block">
           <h3 className="text-lg font-semibold text-amber-800 mt-3 hover:text-orange-700 transition-colors duration-300 line-clamp-2">
             {product.name}
           </h3>

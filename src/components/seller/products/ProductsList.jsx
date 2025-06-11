@@ -80,8 +80,8 @@ export default function ProductsList({ products, onEdit, onDelete }) {
         <ArrowUpDown
           className={`h-4 w-4 ml-1 ${
             sortConfig.direction === "ascending"
-              ? "text-indigo-600"
-              : "text-indigo-400"
+              ? "text-rose-600"
+              : "text-rose-400"
           }`}
         />
       );
@@ -91,42 +91,46 @@ export default function ProductsList({ products, onEdit, onDelete }) {
 
   const getStockStatus = (product) => {
     let stockQuantity = 0;
-    let lowStockThreshold = 10; // default threshold
+    let lowStockThreshold = 10;
 
-    if (product.stock) {
+    if (product?.stock) {
       if (typeof product.stock === "object") {
-        stockQuantity = product.stock.quantity || 0;
-        lowStockThreshold = product.stock.lowStockThreshold || 10;
+        stockQuantity = parseInt(product.stock.quantity) || 0;
+        lowStockThreshold = parseInt(product.stock.lowStockThreshold) || 10;
       } else if (typeof product.stock === "number") {
-        stockQuantity = product.stock;
+        stockQuantity = parseInt(product.stock);
       }
     }
 
-    if (stockQuantity === 0) {
+    if (stockQuantity <= 0) {
       return {
         className: "bg-red-100 text-red-800",
         label: "Out of Stock",
         showLowStock: true,
       };
-    } else if (stockQuantity <= lowStockThreshold) {
+    }
+
+    if (stockQuantity <= lowStockThreshold) {
       return {
         className: "bg-red-100 text-red-800",
-        label: stockQuantity.toString(),
+        label: `${stockQuantity} left`,
         showLowStock: true,
       };
-    } else if (stockQuantity <= lowStockThreshold * 2) {
+    }
+
+    if (stockQuantity <= lowStockThreshold * 1.5) {
       return {
         className: "bg-yellow-100 text-yellow-800",
-        label: stockQuantity.toString(),
-        showLowStock: false,
-      };
-    } else {
-      return {
-        className: "bg-green-100 text-green-800",
-        label: stockQuantity.toString(),
+        label: `${stockQuantity} in stock`,
         showLowStock: false,
       };
     }
+
+    return {
+      className: "bg-green-100 text-green-800",
+      label: `${stockQuantity} in stock`,
+      showLowStock: false,
+    };
   };
 
   if (products.length === 0) {
@@ -230,7 +234,14 @@ export default function ProductsList({ products, onEdit, onDelete }) {
                           {product.name}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {product.description && product.description.short}
+                          {product.description?.short &&
+                            product.description.short
+                              .split(" ")
+                              .slice(0, 5)
+                              .join(" ") +
+                              (product.description.short.split(" ").length > 5
+                                ? "..."
+                                : "")}
                         </div>
                       </div>
                     </div>
@@ -305,7 +316,7 @@ export default function ProductsList({ products, onEdit, onDelete }) {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button
-                      className="text-indigo-600 hover:text-indigo-900 mr-3"
+                      className="text-rose-600 hover:text-rose-900 mr-3"
                       onClick={() =>
                         window.open(`/products/${product._id}`, "_blank")
                       }
@@ -313,7 +324,7 @@ export default function ProductsList({ products, onEdit, onDelete }) {
                       <Eye className="h-5 w-5" />
                     </button>
                     <button
-                      className="text-indigo-600 hover:text-indigo-900 mr-3"
+                      className="text-rose-600 hover:text-rose-900 mr-3"
                       onClick={() => onEdit(product)}
                     >
                       <Edit className="h-5 w-5" />
@@ -401,7 +412,7 @@ export default function ProductsList({ products, onEdit, onDelete }) {
                     onClick={() => paginate(number + 1)}
                     className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
                       currentPage === number + 1
-                        ? "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        ? "z-10 bg-rose-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600"
                         : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                     }`}
                   >

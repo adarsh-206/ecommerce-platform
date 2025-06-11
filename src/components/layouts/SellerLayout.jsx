@@ -12,6 +12,7 @@ import {
   Search,
   Home,
 } from "lucide-react";
+import BrandLogo from "../common/BrandLogo";
 
 export const SellerLayout = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -52,15 +53,15 @@ export const SellerLayout = ({ children }) => {
       <div
         className={`${
           isSidebarOpen ? "w-64" : "w-20"
-        } bg-indigo-800 text-white transition-all duration-300 ease-in-out relative`}
+        } bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50 text-amber-800 transition-all duration-300 ease-in-out relative`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-indigo-600">
+        <div className="flex items-center justify-between p-4 border-b border-amber-200">
           <h1 className={`font-bold text-xl ${!isSidebarOpen && "hidden"}`}>
-            Chaka-Chak
+            <BrandLogo />
           </h1>
           <button
             onClick={toggleSidebar}
-            className="p-1 rounded-md hover:bg-indigo-700"
+            className="p-1 rounded-md hover:bg-amber-100"
           >
             <Menu size={24} />
           </button>
@@ -72,8 +73,8 @@ export const SellerLayout = ({ children }) => {
                 <Link
                   href={item.href}
                   className={`
-                    flex items-center p-4 hover:bg-indigo-700 ${
-                      router.pathname === item.href ? "bg-indigo-700" : ""
+                    flex items-center p-4 hover:bg-amber-100 ${
+                      router.pathname === item.href ? "bg-amber-100" : ""
                     }
                   `}
                 >
@@ -90,7 +91,7 @@ export const SellerLayout = ({ children }) => {
           <button
             onClick={handleLogout}
             className={`
-              w-full flex items-center p-4 hover:bg-indigo-700 cursor-pointer ${
+              w-full flex items-center p-4 hover:bg-amber-100 cursor-pointer ${
                 !isSidebarOpen ? "justify-center" : ""
               }
             `}
@@ -102,7 +103,7 @@ export const SellerLayout = ({ children }) => {
       </div>
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="bg-white shadow-sm z-10">
+        <header className="bg-gradient-to-r from-rose-50 via-orange-50 to-rose-50 z-10 border-b border-amber-200">
           <div className="px-4 py-3 flex justify-between items-center">
             <div className="flex items-center gap-4">
               <div className="relative">
@@ -112,7 +113,7 @@ export const SellerLayout = ({ children }) => {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="pl-10 pr-4 py-2 text-gray-500 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="pl-10 pr-4 py-2 text-gray-500 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
             </div>
@@ -125,7 +126,7 @@ export const SellerLayout = ({ children }) => {
                 <img
                   src="https://t3.ftcdn.net/jpg/03/62/56/24/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF.jpg"
                   alt="seller"
-                  className="w-8 h-8 rounded-full border-2 border-indigo-500"
+                  className="w-8 h-8 rounded-full border-2 border-amber-500"
                 />
                 <span className="ml-2 font-medium text-black"></span>
               </div>

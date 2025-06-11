@@ -2,9 +2,19 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Eye, EyeOff, LogIn } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  LogIn,
+  ShoppingBag,
+  Mail,
+  Phone,
+  Lock,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import apiService from "@/app/utils/apiService";
+import BrandLogo from "@/components/common/BrandLogo";
+import Image from "next/image";
 
 export default function SellerLogin() {
   const router = useRouter();
@@ -14,6 +24,7 @@ export default function SellerLogin() {
     password: "",
   });
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,6 +34,7 @@ export default function SellerLogin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await apiService.post("/login", {
         ...formData,
@@ -39,126 +51,195 @@ export default function SellerLogin() {
       } else {
         setError("Something went wrong. Please try again.");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white">
-      <div className="container mx-auto px-4 py-6">
-        <Link href="/" className="flex items-center space-x-2">
-          <span className="text-xl font-bold text-indigo-600">Chaka-Chak</span>
-        </Link>
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-100/20 via-orange-100/20 to-rose-100/20 opacity-30"></div>
 
-        <div className="mt-16 flex flex-col overflow-hidden rounded-xl bg-white shadow-xl lg:flex-row">
-          <div className="hidden bg-indigo-600 px-8 py-12 text-white lg:flex lg:w-1/2 lg:flex-col lg:justify-center">
-            <div className="max-w-md">
-              <h2 className="text-3xl font-bold">Welcome Back, Seller!</h2>
-              <p className="mt-4 text-indigo-100">
-                Log in to manage your dashboard, inventory, and sales easily.
-              </p>
-              <div className="mt-6 text-center">
-                <img
-                  src="/seller/seller_login.png"
-                  alt="Seller Dashboard Preview"
-                  className="mx-auto object-cover"
-                />
+      <div className="relative z-10 container mx-auto px-4 py-6">
+        <div className="mb-8">
+          <BrandLogo />
+        </div>
+
+        <div className="flex items-center justify-center min-h-[calc(100vh-120px)]">
+          <div className="w-full max-w-6xl">
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+              <div className="flex flex-col lg:flex-row">
+                <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-amber-600 via-orange-600 to-rose-600 p-12 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                  <div className="relative z-10 flex flex-col justify-center text-white max-w-md mx-auto">
+                    <div className="mb-8">
+                      <h2 className="text-4xl font-bold mb-4 leading-tight">
+                        Welcome Back,{" "}
+                        <span className="text-amber-200">Seller!</span>
+                      </h2>
+                      <p className="text-xl text-white/90 leading-relaxed">
+                        Access your powerful dashboard to manage inventory,
+                        track sales, and grow your business with ease.
+                      </p>
+                    </div>
+
+                    <div className="mt-12 text-center">
+                      <div className="w-full mx-auto flex items-center justify-center">
+                        <Image
+                          src="/seller/seller_login.png"
+                          alt="Seller Login Illustration"
+                          width={400}
+                          height={400}
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-center p-8 lg:p-12 lg:w-1/2">
+                  <div className="w-full max-w-md">
+                    <div className="text-center mb-10">
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl mb-6">
+                        <LogIn className="h-8 w-8 text-amber-600" />
+                      </div>
+                      <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                        Seller Login
+                      </h1>
+                      <p className="text-gray-600 text-lg">
+                        Sign in to manage your store
+                      </p>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      {error && (
+                        <div className="rounded-2xl bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 p-4">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0">
+                              <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                            </div>
+                            <div className="ml-3">
+                              <p className="text-sm font-medium text-red-800">
+                                {error}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="email_or_phone"
+                          className="block text-sm font-semibold text-gray-700 mb-2"
+                        >
+                          Email or Phone
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <Mail className="h-5 w-5 text-gray-400" />
+                          </div>
+                          <input
+                            type="text"
+                            id="email_or_phone"
+                            name="email_or_phone"
+                            value={formData.email_or_phone}
+                            onChange={handleChange}
+                            required
+                            className="block w-full pl-12 pr-4 py-4 text-gray-900 bg-gray-50/50 border border-gray-200 rounded-2xl placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 hover:bg-gray-50"
+                            placeholder="Enter your email or phone number"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="password"
+                          className="block text-sm font-semibold text-gray-700 mb-2"
+                        >
+                          Password
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <Lock className="h-5 w-5 text-gray-400" />
+                          </div>
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            id="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                            className="block w-full pl-12 pr-12 py-4 text-gray-900 bg-gray-50/50 border border-gray-200 rounded-2xl placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 hover:bg-gray-50"
+                            placeholder="Enter your password"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                          >
+                            {showPassword ? (
+                              <EyeOff className="h-5 w-5" />
+                            ) : (
+                              <Eye className="h-5 w-5" />
+                            )}
+                          </button>
+                        </div>
+
+                        <div className="text-right mt-3">
+                          <Link
+                            href="/seller/forgot-password"
+                            className="text-sm font-semibold text-amber-600 hover:text-orange-600 transition-colors duration-200"
+                          >
+                            Forgot password?
+                          </Link>
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full flex items-center justify-center px-6 py-4 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white font-semibold rounded-2xl shadow-lg hover:from-amber-700 hover:via-orange-700 hover:to-rose-700 focus:outline-none focus:ring-4 focus:ring-amber-500/25 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      >
+                        {isLoading ? (
+                          <div className="flex items-center">
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3"></div>
+                            Signing In...
+                          </div>
+                        ) : (
+                          <>
+                            <LogIn className="h-5 w-5 mr-3" />
+                            Sign In to Dashboard
+                          </>
+                        )}
+                      </button>
+
+                      {/* <div className="relative my-8">
+                        <div className="absolute inset-0 flex items-center">
+                          <div className="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                          <span className="px-4 bg-white text-gray-500 font-medium">
+                            New to selling?
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-center">
+                        <p className="text-gray-600 mb-4">
+                          Start your journey as a seller today
+                        </p>
+                        <Link
+                          href="/seller/register"
+                          className="inline-flex items-center px-6 py-3 border-2 border-amber-600 text-amber-600 font-semibold rounded-2xl hover:bg-amber-600 hover:text-white transition-all duration-300 transform hover:scale-105"
+                        >
+                          <ShoppingBag className="h-5 w-5 mr-2" />
+                          Create Seller Account
+                        </Link>
+                      </div> */}
+                    </form>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center px-8 py-12 lg:w-1/2">
-            <div className="w-full max-w-md">
-              <div className="text-center">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Seller Login
-                </h1>
-                <p className="mt-2 text-gray-600">
-                  Sign in to manage your store
-                </p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-                {error && (
-                  <div className="rounded-md bg-red-100 p-3 text-sm text-red-700">
-                    {error}
-                  </div>
-                )}
-
-                <div>
-                  <label
-                    htmlFor="email_or_phone"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Email or Phone
-                  </label>
-                  <input
-                    type="text"
-                    id="email_or_phone"
-                    name="email_or_phone"
-                    value={formData.email_or_phone}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 block w-full rounded-2xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-                    placeholder="Enter phone or email address"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Password
-                  </label>
-                  <div className="relative mt-1">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      id="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      required
-                      className="block w-full rounded-2xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-                      placeholder="••••••••"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                    >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
-                  </div>
-                  <div className="mt-2 text-right">
-                    <Link
-                      href="/seller/forgot-password"
-                      className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="flex w-full items-center justify-center rounded-2xl bg-indigo-600 py-2 px-4 font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  <LogIn size={18} className="mr-2" />
-                  Sign In
-                </button>
-
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">
-                    Don't have a seller account?{" "}
-                    <Link
-                      href="/seller/register"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Register now
-                    </Link>
-                  </p>
-                </div>
-              </form>
             </div>
           </div>
         </div>

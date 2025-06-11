@@ -214,7 +214,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
       <div className="w-full max-w-4xl bg-white rounded-lg p-6 shadow relative h-[90vh] overflow-auto">
-        <h2 className="text-2xl font-bold text-indigo-600 mb-4 text-center">
+        <h2 className="text-2xl font-bold text-rose-600 mb-4 text-center">
           {product ? "Edit Product" : "Add Product"}
         </h2>
 
@@ -223,7 +223,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
             <div
               key={stepNum}
               className={`flex-1 h-2 rounded ${
-                step >= stepNum ? "bg-indigo-600" : "bg-gray-300"
+                step >= stepNum ? "bg-rose-600" : "bg-gray-300"
               }`}
             />
           ))}
@@ -232,7 +232,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
         <div className="space-y-6">
           {step === 1 && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-indigo-700">
+              <h3 className="text-lg font-semibold text-rose-700">
                 Basic Information
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -241,7 +241,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Product Name"
                   />
                 </div>
@@ -250,7 +250,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     name="brand"
                     value={formData.brand}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Brand"
                   />
                 </div>
@@ -259,7 +259,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     name="description.short"
                     value={formData.description.short}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Short Description"
                   />
                 </div>
@@ -269,7 +269,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     value={formData.description.long}
                     onChange={handleChange}
                     rows={4}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Long Description"
                   />
                 </div>
@@ -278,7 +278,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                   >
                     <option value="">Select Category</option>
                     {categories.map((cat) => (
@@ -293,7 +293,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     name="subCategory"
                     value={formData.subCategory}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                   >
                     <option value="">Select Subcategory</option>
                     {subcategories.map((sub) => (
@@ -309,7 +309,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
 
           {step === 2 && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-indigo-700">
+              <h3 className="text-lg font-semibold text-rose-700">
                 Pricing & Stock
               </h3>
               <div className="space-y-4">
@@ -324,7 +324,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                         onChange={(e) =>
                           handlePriceSizeChange(index, "size", e.target.value)
                         }
-                        className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                        className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                         placeholder="Size"
                       />
                       <input
@@ -337,7 +337,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                             e.target.value
                           )
                         }
-                        className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                        className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                         placeholder="Original Price"
                       />
                       <input
@@ -350,7 +350,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                             e.target.value
                           )
                         }
-                        className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                        className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                         placeholder="Purchase Price"
                       />
                       <input
@@ -363,7 +363,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                             e.target.value
                           )
                         }
-                        className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                        className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                         placeholder="Selling Price"
                       />
                       <button
@@ -379,7 +379,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                 <button
                   type="button"
                   onClick={addPriceSize}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700"
                 >
                   Add Price Option
                 </button>
@@ -392,7 +392,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     type="number"
                     value={formData.stock.quantity}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Stock Quantity"
                   />
                 </div>
@@ -402,7 +402,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     type="number"
                     value={formData.stock.lowStockThreshold}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Low Stock Threshold"
                   />
                 </div>
@@ -412,14 +412,14 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
 
           {step === 3 && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-indigo-700">Images</h3>
+              <h3 className="text-lg font-semibold text-rose-700">Images</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <input
                     name="images.main.url"
                     value={formData.images.main.url}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Main Image URL"
                   />
                 </div>
@@ -428,14 +428,14 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     name="images.main.altText"
                     value={formData.images.main.altText}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Main Image Alt Text"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-indigo-700 font-medium">
+                <label className="text-rose-700 font-medium">
                   Extra Images (Max 5)
                 </label>
                 {formData.images.extras.map((img, index) => (
@@ -448,7 +448,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                       onChange={(e) =>
                         handleExtraImageChange(index, "url", e.target.value)
                       }
-                      className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                      className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                       placeholder="Image URL"
                     />
                     <input
@@ -456,7 +456,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                       onChange={(e) =>
                         handleExtraImageChange(index, "altText", e.target.value)
                       }
-                      className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                      className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                       placeholder="Alt Text"
                     />
                     <button
@@ -472,7 +472,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                   <button
                     type="button"
                     onClick={addExtraImage}
-                    className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                    className="mt-2 px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700"
                   >
                     Add Extra Image
                   </button>
@@ -483,7 +483,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
 
           {step === 4 && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-indigo-700">
+              <h3 className="text-lg font-semibold text-rose-700">
                 Additional Details
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -492,7 +492,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     name="tags"
                     value={formData.tags}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Tags (comma separated)"
                   />
                 </div>
@@ -501,7 +501,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     name="sizes"
                     value={formData.sizes}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Sizes (comma separated)"
                   />
                 </div>
@@ -510,7 +510,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     name="colors"
                     value={formData.colors}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Colors (comma separated)"
                   />
                 </div>
@@ -523,7 +523,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     type="number"
                     value={formData.weight.value}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Weight"
                   />
                 </div>
@@ -532,7 +532,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     name="weight.unit"
                     value={formData.weight.unit}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                   >
                     <option value="g">Grams</option>
                     <option value="kg">Kilograms</option>
@@ -546,7 +546,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     type="number"
                     value={formData.dimensions.width}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Width"
                   />
                 </div>
@@ -556,7 +556,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     type="number"
                     value={formData.dimensions.height}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Height"
                   />
                 </div>
@@ -566,7 +566,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     type="number"
                     value={formData.dimensions.depth}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                     placeholder="Depth"
                   />
                 </div>
@@ -575,7 +575,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                     name="dimensions.unit"
                     value={formData.dimensions.unit}
                     onChange={handleChange}
-                    className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                   >
                     <option value="cm">Centimeters</option>
                     <option value="in">Inches</option>
@@ -584,7 +584,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
               </div>
 
               <div>
-                <label className="text-indigo-700 font-medium">
+                <label className="text-rose-700 font-medium">
                   Custom Attributes
                 </label>
                 {formData.attributes.map((attr, index) => (
@@ -597,7 +597,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                       onChange={(e) =>
                         handleAttributeChange(index, "key", e.target.value)
                       }
-                      className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                      className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                       placeholder="Attribute Name"
                     />
                     <input
@@ -605,7 +605,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                       onChange={(e) =>
                         handleAttributeChange(index, "value", e.target.value)
                       }
-                      className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                      className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                       placeholder="Attribute Value"
                     />
                     <button
@@ -620,7 +620,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                 <button
                   type="button"
                   onClick={addAttribute}
-                  className="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="mt-2 px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700"
                 >
                   Add Attribute
                 </button>
@@ -631,7 +631,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
                   name="featured"
                   value={formData.featured}
                   onChange={handleChange}
-                  className="w-full border border-indigo-300 rounded px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border border-rose-300 rounded px-3 py-2 focus:ring-2 focus:ring-rose-500"
                 >
                   <option value="">Not Featured</option>
                   <option value="New Arrival">New Arrival</option>
@@ -655,7 +655,7 @@ export default function ProductForm({ product, categories, onSave, onCancel }) {
               <button
                 type="button"
                 onClick={() => setStep((prev) => Math.min(prev + 1, 4))}
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                className="px-4 py-2 bg-rose-600 text-white rounded hover:bg-rose-700"
               >
                 Next
               </button>

@@ -8,6 +8,7 @@ import UserMenu from "./UserMenu";
 import MobileMenu from "./MobileMenu";
 import { ShoppingBag, Search, X, Menu, ChevronDown } from "lucide-react";
 import apiService from "@/app/utils/apiService";
+import BrandLogo from "./BrandLogo";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -59,11 +60,7 @@ export default function Header() {
         <div className="flex justify-between items-center">
           {/* Logo Area */}
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 mr-8">
-              <span className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-amber-700 via-orange-700 to-rose-700 drop-shadow-sm">
-                Chaka-Chak
-              </span>
-            </Link>
+            <BrandLogo />
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex space-x-1">

@@ -15,17 +15,17 @@ import {
 
 const DashboardCard = ({ title, value, icon: Icon, color }) => {
   const colorMap = {
-    indigo: {
-      bg: "bg-indigo-100",
-      text: "text-indigo-600",
+    amber: {
+      bg: "bg-amber-100",
+      text: "text-amber-600",
     },
-    purple: {
-      bg: "bg-purple-100",
-      text: "text-purple-600",
+    orange: {
+      bg: "bg-orange-100",
+      text: "text-orange-600",
     },
-    blue: {
-      bg: "bg-blue-100",
-      text: "text-blue-600",
+    yellow: {
+      bg: "bg-yellow-100",
+      text: "text-yellow-600",
     },
     green: {
       bg: "bg-green-100",
@@ -34,7 +34,7 @@ const DashboardCard = ({ title, value, icon: Icon, color }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 transition hover:shadow-xl">
+    <div className="bg-white rounded-xl shadow p-6 transition hover:shadow-md border border-rose-200">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-gray-600 text-sm">{title}</p>
@@ -51,8 +51,8 @@ const DashboardCard = ({ title, value, icon: Icon, color }) => {
 const RecentOrder = ({ id, customer, date, status, amount }) => {
   const statusColors = {
     completed: "bg-green-100 text-green-700",
-    processing: "bg-blue-100 text-blue-700",
-    shipped: "bg-indigo-100 text-indigo-700",
+    processing: "bg-orange-100 text-orange-700",
+    shipped: "bg-amber-100 text-amber-700",
     cancelled: "bg-red-100 text-red-700",
     pending: "bg-yellow-100 text-yellow-700",
   };
@@ -135,21 +135,21 @@ export default function SellerDashboard() {
           value="2,304"
           icon={ShoppingCart}
           trend="+10.5%"
-          color="indigo"
+          color="amber"
         />
         <DashboardCard
           title="Total Products"
           value="1,120"
           icon={Package}
           trend="+6.3%"
-          color="purple"
+          color="orange"
         />
         <DashboardCard
           title="Customers"
           value="5,674"
           icon={Users}
           trend="+15.8%"
-          color="blue"
+          color="yellow"
         />
         <DashboardCard
           title="Revenue"
@@ -161,7 +161,7 @@ export default function SellerDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="lg:col-span-2 bg-white rounded-xl shadow-lg border border-rose-200 overflow-hidden">
           <div className="p-6 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-800">
               Recent Orders
@@ -186,13 +186,13 @@ export default function SellerDashboard() {
             </table>
           </div>
           <div className="p-4 border-t border-gray-100 bg-gray-50">
-            <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+            <button className="text-amber-600 hover:text-amber-800 text-sm font-medium">
               View all orders →
             </button>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg">
+        <div className="bg-white rounded-xl shadow-lg border border-rose-200">
           <div className="p-6 border-b border-gray-200 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-800">
               Low Stock Alert
@@ -205,7 +205,7 @@ export default function SellerDashboard() {
             ))}
           </div>
           <div className="p-4 border-t border-gray-100 bg-gray-50">
-            <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+            <button className="text-amber-600 hover:text-amber-800 text-sm font-medium">
               View inventory →
             </button>
           </div>

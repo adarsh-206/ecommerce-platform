@@ -28,7 +28,7 @@ export default function SellerProductsPage() {
 
     return {
       ...product,
-      name: product.name || "Unnamed Product",
+      name: product.name || "NA",
       price: typeof product.price === "number" ? product.price : 0,
       originalPrice:
         typeof product.originalPrice === "number"
@@ -37,12 +37,6 @@ export default function SellerProductsPage() {
       category: product.category || "",
       subCategory: product.subCategory || "",
       description: product.description || "",
-      stock:
-        product.stock &&
-        typeof product.stock === "object" &&
-        typeof product.stock.quantity === "number"
-          ? product.stock.quantity
-          : 0,
       images: product.images || { main: null, extras: [] },
     };
   };
@@ -218,14 +212,14 @@ export default function SellerProductsPage() {
           <h1 className="text-2xl font-bold text-black">Products Management</h1>
           <button
             onClick={openAddModal}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md flex items-center"
+            className="bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 hover:from-amber-500 hover:via-orange-500 hover:to-rose-500 text-white px-4 py-2 rounded-md flex items-center shadow-md transition"
           >
             <PlusCircle className="w-5 h-5 mr-2" />
             Add New Product
           </button>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="bg-white border border-rose-200 rounded-lg shadow-md p-6 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -234,7 +228,7 @@ export default function SellerProductsPage() {
               <input
                 type="text"
                 placeholder="Search products..."
-                className="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900 placeholder-gray-400"
+                className="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 text-gray-900 placeholder-gray-400"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e?.target?.value || "")}
               />
@@ -243,7 +237,7 @@ export default function SellerProductsPage() {
             <div className="flex items-center text-gray-700">
               <Filter className="h-5 w-5 text-gray-600 mr-2" />
               <select
-                className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-800"
+                className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-rose-500 text-gray-800"
                 value={filterCategory}
                 onChange={(e) => {
                   const value = e?.target?.value || "all";
@@ -266,7 +260,7 @@ export default function SellerProductsPage() {
             {filterCategory !== "all" && (
               <div>
                 <select
-                  className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                  className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-rose-500 text-gray-900"
                   value={filterSubcategory}
                   onChange={(e) =>
                     setFilterSubcategory(e?.target?.value || "all")
@@ -287,7 +281,7 @@ export default function SellerProductsPage() {
 
           {isLoading ? (
             <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-700"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-700"></div>
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="text-center text-gray-500 py-20">

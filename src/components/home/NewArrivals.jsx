@@ -2,59 +2,49 @@
 import Link from "next/link";
 import ProductCard from "@/components/product/ProductCard";
 import { Sparkles, ArrowRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import apiService from "@/app/utils/apiService";
 
 export default function NewArrivals() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [products, setProducts] = useState([]);
+  const isMounted = useRef(false);
+  const cachedData = useRef(null);
 
-  const products = [
-    {
-      id: 1,
-      name: "Unisex Cotton T-Shirt",
-      price: 399,
-      image:
-        "https://cms.cloudinary.vpsvc.com/image/upload/c_scale,dpr_auto,f_auto,q_70,w_auto:50:550/India%20LOB/Category%20Images/Premium-Men_s-Cotton-T-Shirt_Category-image_1x1",
-      category: "Clothing",
-      rating: 4.6,
-      href: "/product/unisex-cotton-tshirt",
-    },
-    {
-      id: 2,
-      name: "Printed Tote Bag",
-      price: 249,
-      image: "https://m.media-amazon.com/images/I/61rorcTqRLL._AC_UY1100_.jpg",
-      category: "Accessories",
-      rating: 4.3,
-      href: "/product/printed-tote-bag",
-    },
-    {
-      id: 3,
-      name: "Classic Baseball Cap",
-      price: 199,
-      image: "https://m.media-amazon.com/images/I/819D7Z-kFfL._AC_UY1000_.jpg",
-      category: "Headwear",
-      rating: 4.4,
-      href: "/product/classic-baseball-cap",
-    },
-    {
-      id: 4,
-      name: "Pet Bandana – Small",
-      price: 299,
-      image:
-        "https://images.meesho.com/images/products/425269760/3vjhn_512.webp",
-      category: "Pet Products",
-      rating: 4.5,
-      href: "/product/pet-bandana-small",
-    },
-  ];
+  const getProducts = async () => {
+    if (cachedData.current) {
+      setProducts(cachedData.current);
+      return;
+    }
+    try {
+      const data = await apiService.get("/buyer/products/new-arrival");
+      const result = data?.data || [];
+      cachedData.current = result;
+      if (isMounted.current) {
+        setProducts(result);
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   useEffect(() => {
+    isMounted.current = true;
+    getProducts();
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (products.length === 0) return;
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % products.length);
     }, 3000);
-
     return () => clearInterval(interval);
-  }, [products.length]);
+  }, [products]);
+
+  if (products.length === 0) return null;
 
   return (
     <section className="py-20 bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50">
@@ -79,9 +69,7 @@ export default function NewArrivals() {
           <div className="overflow-hidden rounded-xl">
             <div
               className="flex transition-transform duration-500 ease-in-out"
-              style={{
-                transform: `translateX(-${currentSlide * 100}%)`,
-              }}
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {products.map((product) => (
                 <div key={product.id} className="w-full flex-shrink-0 px-2">

@@ -266,9 +266,9 @@ export default function ProductModal({
           isValid = true;
       }
 
-      if (!isValid) {
-        console.warn(`Tab ${tabIndex} - Invalid field: ${field}`);
-      }
+      // if (!isValid) {
+      //   console.warn(`Tab ${tabIndex} - Invalid field: ${field}`);
+      // }
 
       return isValid;
     });
@@ -346,6 +346,37 @@ export default function ProductModal({
     }
   };
 
+  const handleTabNav = () => {
+    if (currentTab === 1) {
+      for (let i = 0; i < form.priceBySize.length; i++) {
+        const p = form.priceBySize[i];
+
+        if (!p.size.trim()) {
+          alert("Size/Variant is required.");
+          return;
+        }
+
+        if (p.originalPrice < 0 || p.purchasePrice < 0 || p.sellingPrice < 0) {
+          alert("Negative prices are not allowed.");
+          return;
+        }
+
+        if (p.sellingPrice < p.purchasePrice) {
+          alert("Selling price cannot be less than purchase price.");
+          return;
+        }
+
+        if (p.sellingPrice > p.originalPrice) {
+          alert("Selling price cannot be more than original price.");
+          return;
+        }
+      }
+    }
+
+    // Proceed to next tab if validation passes
+    setCurrentTab(currentTab + 1);
+  };
+
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="relative bg-white rounded-lg shadow-lg w-full max-w-4xl flex flex-col">
@@ -369,7 +400,7 @@ export default function ProductModal({
               onClick={() => setCurrentTab(index)}
               className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                 currentTab === index
-                  ? "text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50"
+                  ? "text-rose-600 border-b-2 border-rose-600 bg-rose-50"
                   : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
               } ${
                 !isTabValid(index) && index < currentTab ? "text-red-500" : ""
@@ -434,7 +465,7 @@ export default function ProductModal({
                     key={index}
                     className={`w-2 h-2 rounded-full ${
                       index === currentTab
-                        ? "bg-indigo-600"
+                        ? "bg-rose-600"
                         : index < currentTab
                         ? isTabValid(index)
                           ? "bg-green-500"
@@ -449,11 +480,11 @@ export default function ProductModal({
             {currentTab < tabs.length - 1 ? (
               <button
                 type="button"
-                onClick={() => setCurrentTab(currentTab + 1)}
+                onClick={handleTabNav}
                 disabled={!canProceed()}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
                   canProceed()
-                    ? "bg-indigo-600 text-white hover:bg-indigo-700"
+                    ? "bg-rose-600 text-white hover:bg-rose-700"
                     : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
               >

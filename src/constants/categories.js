@@ -21,6 +21,7 @@ const categories = [
       { id: 204, name: "Belts" },
       { id: 205, name: "Sunglasses" },
       { id: 206, name: "Hats & Caps" },
+      { id: 207, name: "Mugs" },
     ],
   },
   {

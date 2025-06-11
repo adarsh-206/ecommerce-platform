@@ -62,7 +62,7 @@ const ProductFormTabContent = ({
                 onChange={handleChange}
                 required
                 minLength={3}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 placeholder="Enter the product name (min 3 characters)"
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -80,7 +80,7 @@ const ProductFormTabContent = ({
                 onChange={handleChange}
                 maxLength={255}
                 rows={2}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 placeholder="Brief product summary for search results and cards"
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -97,7 +97,7 @@ const ProductFormTabContent = ({
                 value={form.description.long}
                 onChange={handleChange}
                 rows={3}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 placeholder="Detailed product description with features and benefits"
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -118,7 +118,7 @@ const ProductFormTabContent = ({
                     setForm((f) => ({ ...f, subCategory: "" }));
                   }}
                   required
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 >
                   <option value="">Select category</option>
                   {categories.map((cat) => (
@@ -141,7 +141,7 @@ const ProductFormTabContent = ({
                     name="subCategory"
                     value={form.subCategory}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                   >
                     <option value="">Select subcategory</option>
                     {getSubcategories().map((subcat) => (
@@ -166,7 +166,7 @@ const ProductFormTabContent = ({
                 name="brand"
                 value={form.brand}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 placeholder="Product brand or manufacturer"
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -203,7 +203,7 @@ const ProductFormTabContent = ({
                         onChange={(e) =>
                           handlePriceChange(i, "size", e.target.value)
                         }
-                        className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                       />
                     </div>
                     <div>
@@ -215,7 +215,7 @@ const ProductFormTabContent = ({
                         onChange={(e) =>
                           handlePriceChange(i, "currency", e.target.value)
                         }
-                        className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                       >
                         <option value="INR">INR</option>
                         <option value="USD">USD</option>
@@ -236,7 +236,7 @@ const ProductFormTabContent = ({
                         onChange={(e) =>
                           handlePriceChange(i, "originalPrice", e.target.value)
                         }
-                        className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                       />
                       <p className="text-xs text-gray-500 mt-1">
                         MRP or list price
@@ -255,7 +255,7 @@ const ProductFormTabContent = ({
                         onChange={(e) =>
                           handlePriceChange(i, "purchasePrice", e.target.value)
                         }
-                        className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                       />
                       <p className="text-xs text-gray-500 mt-1">
                         Your cost price
@@ -274,7 +274,7 @@ const ProductFormTabContent = ({
                         onChange={(e) =>
                           handlePriceChange(i, "sellingPrice", e.target.value)
                         }
-                        className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                       />
                       <p className="text-xs text-gray-500 mt-1">
                         Customer pays this
@@ -295,7 +295,7 @@ const ProductFormTabContent = ({
               <button
                 type="button"
                 onClick={addPriceSize}
-                className="text-indigo-600 hover:text-indigo-800 font-medium text-sm"
+                className="text-rose-600 hover:text-rose-800 font-medium text-sm"
               >
                 + Add another size/variant
               </button>
@@ -317,7 +317,7 @@ const ProductFormTabContent = ({
                   name="stock.quantity"
                   value={form.stock.quantity}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                   placeholder="0"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -334,7 +334,7 @@ const ProductFormTabContent = ({
                   name="stock.lowStockThreshold"
                   value={form.stock.lowStockThreshold}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                   placeholder="5"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -358,7 +358,7 @@ const ProductFormTabContent = ({
                       onClick={() => handleColorToggle(color.value)}
                       className={`w-6 h-6 rounded-full border-2 transition-all ${
                         form.colors?.includes(color.value)
-                          ? "border-indigo-500 ring-2 ring-indigo-200"
+                          ? "border-rose-500 ring-2 ring-rose-200"
                           : "border-gray-300"
                       } ${
                         color.value === "white" ? "ring-1 ring-gray-200" : ""
@@ -411,7 +411,7 @@ const ProductFormTabContent = ({
                     name="weight.value"
                     value={form.weight.value}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                     placeholder="0.00"
                   />
                 </div>
@@ -419,7 +419,7 @@ const ProductFormTabContent = ({
                   name="weight.unit"
                   value={form.weight.unit}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 >
                   <option value="g">g</option>
                   <option value="kg">kg</option>
@@ -445,7 +445,7 @@ const ProductFormTabContent = ({
                   value={form.dimensions.width}
                   onChange={handleChange}
                   placeholder="Width"
-                  className="border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 />
                 <input
                   type="number"
@@ -455,7 +455,7 @@ const ProductFormTabContent = ({
                   value={form.dimensions.height}
                   onChange={handleChange}
                   placeholder="Height"
-                  className="border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 />
                 <input
                   type="number"
@@ -465,13 +465,13 @@ const ProductFormTabContent = ({
                   value={form.dimensions.depth}
                   onChange={handleChange}
                   placeholder="Depth"
-                  className="border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 />
                 <select
                   name="dimensions.unit"
                   value={form.dimensions.unit}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 >
                   <option value="cm">cm</option>
                   <option value="in">in</option>
@@ -491,7 +491,7 @@ const ProductFormTabContent = ({
                 name="tags"
                 value={form.tags.join(", ")}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 placeholder="organic, handmade, eco-friendly, premium"
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -515,7 +515,7 @@ const ProductFormTabContent = ({
                     onChange={(e) =>
                       handleAttributeChange(i, "key", e.target.value)
                     }
-                    className="flex-1 border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="flex-1 border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                   />
                   <input
                     type="text"
@@ -524,7 +524,7 @@ const ProductFormTabContent = ({
                     onChange={(e) =>
                       handleAttributeChange(i, "value", e.target.value)
                     }
-                    className="flex-1 border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="flex-1 border border-gray-300 rounded px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                   />
                   <button
                     type="button"
@@ -538,7 +538,7 @@ const ProductFormTabContent = ({
               <button
                 type="button"
                 onClick={addAttribute}
-                className="text-indigo-600 hover:text-indigo-800 font-medium text-sm"
+                className="text-rose-600 hover:text-rose-800 font-medium text-sm"
               >
                 + Add attribute
               </button>
@@ -554,7 +554,7 @@ const ProductFormTabContent = ({
               <label className="block font-medium mb-2 text-gray-700">
                 Main Product Image <span className="text-red-500">*</span>
               </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-400 transition-colors">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-rose-400 transition-colors">
                 <input
                   type="file"
                   accept="image/*"
@@ -573,7 +573,7 @@ const ProductFormTabContent = ({
                         alt="Main product"
                         className="w-32 h-32 object-cover rounded-lg shadow-md"
                       />
-                      <div className="mt-2 text-sm text-indigo-600 hover:text-indigo-800">
+                      <div className="mt-2 text-sm text-rose-600 hover:text-rose-800">
                         Click to change image
                       </div>
                     </div>
@@ -594,7 +594,7 @@ const ProductFormTabContent = ({
                           />
                         </svg>
                       </div>
-                      <div className="text-indigo-600 hover:text-indigo-800 font-medium">
+                      <div className="text-rose-600 hover:text-rose-800 font-medium">
                         Upload Main Image
                       </div>
                       <div className="text-xs text-gray-500 mt-1">
@@ -617,7 +617,7 @@ const ProductFormTabContent = ({
               <div className="grid grid-cols-3 gap-4">
                 {[0, 1, 2].map((index) => (
                   <div key={index} className="relative">
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-indigo-400 transition-colors aspect-square flex items-center justify-center">
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-rose-400 transition-colors aspect-square flex items-center justify-center">
                       <input
                         type="file"
                         accept="image/*"
@@ -664,7 +664,7 @@ const ProductFormTabContent = ({
                                 />
                               </svg>
                             </div>
-                            <div className="text-xs text-indigo-600 hover:text-indigo-800 font-medium text-center">
+                            <div className="text-xs text-rose-600 hover:text-rose-800 font-medium text-center">
                               Upload Image {index + 1}
                             </div>
                           </>
@@ -690,7 +690,7 @@ const ProductFormTabContent = ({
                   name="featured"
                   value={form.featured}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
                 >
                   <option value="">Not Featured</option>
                   <option value="New Arrival">New Arrival</option>
