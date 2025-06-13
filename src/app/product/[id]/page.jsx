@@ -5,6 +5,8 @@ import Header from "@/components/common/Header";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import categories from "@/constants/categories";
+import COLOR_NAMES from "@/constants/color";
+import { ZoomIn } from "lucide-react";
 
 export default function ProductInfoPage() {
   const params = useParams();
@@ -16,6 +18,7 @@ export default function ProductInfoPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
@@ -25,15 +28,12 @@ export default function ProductInfoPage() {
   const imageRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Helper function to get category name by ID
   const getCategoryName = (categoryId) => {
-    // First check if it's a main category
     const mainCategory = categories.find((cat) => cat.id == categoryId);
     if (mainCategory) {
       return mainCategory.name;
     }
 
-    // Then check subcategories
     for (const category of categories) {
       const subCategory = category.subcategories.find(
         (sub) => sub.id == categoryId
@@ -46,6 +46,63 @@ export default function ProductInfoPage() {
     return "";
   };
 
+  const getAllImages = () => {
+    if (!product?.images) return [];
+    const images = [];
+
+    if (product.images.main?.url) {
+      images.push({
+        url: product.images.main.url,
+        colorHex: product.images.main.colorHex,
+        type: "main",
+      });
+    }
+
+    if (product.images.extras && Array.isArray(product.images.extras)) {
+      images.push(
+        ...product.images.extras
+          .map((img, index) => ({
+            url: img.url,
+            colorHex: img.colorHex,
+            type: "extra",
+            index,
+          }))
+          .filter((img) => img.url)
+      );
+    }
+
+    return images;
+  };
+
+  const getImageIndexForColor = (colorHex) => {
+    const images = getAllImages();
+    const imageIndex = images.findIndex(
+      (img) =>
+        img.colorHex && img.colorHex.toLowerCase() === colorHex.toLowerCase()
+    );
+    return imageIndex !== -1 ? imageIndex : 0;
+  };
+
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
+    const imageIndex = getImageIndexForColor(color);
+    setSelectedImage(imageIndex);
+  };
+
+  const handleImageSelect = (index) => {
+    const images = getAllImages();
+    setSelectedImage(index);
+
+    if (images[index]?.colorHex) {
+      const matchingColor = product.colors.find(
+        (color) => color.toLowerCase() === images[index].colorHex.toLowerCase()
+      );
+      if (matchingColor) {
+        setSelectedColor(matchingColor);
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -53,10 +110,17 @@ export default function ProductInfoPage() {
         const data = await apiService.get(`/buyer/get-product/${productId}`);
         setProduct(data?.data);
 
-        // Set default size selection
         if (data?.data?.priceBySize && data.data.priceBySize.length > 0) {
           setSelectedSize(data.data.priceBySize[0].size);
         }
+
+        if (data?.data?.colors && data.data.colors.length > 0) {
+          const firstColor = data.data.colors[0];
+          setSelectedColor(firstColor);
+          const imageIndex = getImageIndexForColor(firstColor);
+          setSelectedImage(imageIndex);
+        }
+
         setError(null);
       } catch (err) {
         setError("Failed to load product details");
@@ -76,30 +140,10 @@ export default function ProductInfoPage() {
     return product.priceBySize.find((p) => p.size === selectedSize);
   };
 
-  const getAllImages = () => {
-    if (!product?.images) return [];
-    const images = [];
-
-    // Add main image if exists
-    if (product.images.main?.url) {
-      images.push(product.images.main.url);
-    }
-
-    // Add extra images if they exist
-    if (product.images.extras && Array.isArray(product.images.extras)) {
-      images.push(
-        ...product.images.extras.map((img) => img.url).filter(Boolean)
-      );
-    }
-
-    return images;
-  };
-
   const handleMouseMove = (e) => {
     if (!containerRef.current || !imageRef.current) return;
 
     const container = containerRef.current;
-    const image = imageRef.current;
     const rect = container.getBoundingClientRect();
 
     const x = e.clientX - rect.left;
@@ -136,12 +180,36 @@ export default function ProductInfoPage() {
 
   const nextModalImage = () => {
     const images = getAllImages();
-    setModalImageIndex((prev) => (prev + 1) % images.length);
+    const newIndex = (modalImageIndex + 1) % images.length;
+    setModalImageIndex(newIndex);
+
+    if (images[newIndex]?.colorHex) {
+      const matchingColor = product.colors.find(
+        (color) =>
+          color.toLowerCase() === images[newIndex].colorHex.toLowerCase()
+      );
+      if (matchingColor) {
+        setSelectedColor(matchingColor);
+        setSelectedImage(newIndex);
+      }
+    }
   };
 
   const prevModalImage = () => {
     const images = getAllImages();
-    setModalImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    const newIndex = (modalImageIndex - 1 + images.length) % images.length;
+    setModalImageIndex(newIndex);
+
+    if (images[newIndex]?.colorHex) {
+      const matchingColor = product.colors.find(
+        (color) =>
+          color.toLowerCase() === images[newIndex].colorHex.toLowerCase()
+      );
+      if (matchingColor) {
+        setSelectedColor(matchingColor);
+        setSelectedImage(newIndex);
+      }
+    }
   };
 
   useEffect(() => {
@@ -154,7 +222,7 @@ export default function ProductInfoPage() {
 
     document.addEventListener("keydown", handleKeyPress);
     return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [isModalOpen]);
+  }, [isModalOpen, modalImageIndex]);
 
   if (loading) {
     return (
@@ -194,7 +262,6 @@ export default function ProductInfoPage() {
     product.stock?.quantity <= (product.stock?.lowStockThreshold || 5);
   const categoryName = getCategoryName(product.category);
 
-  // Calculate max quantity available for selected size
   const getMaxQuantity = () => {
     if (priceData?.stock?.quantity) {
       return priceData.stock.quantity;
@@ -220,7 +287,6 @@ export default function ProductInfoPage() {
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Image Section */}
             <div className="space-y-4">
               {images.length > 0 && (
                 <div
@@ -233,7 +299,7 @@ export default function ProductInfoPage() {
                 >
                   <img
                     ref={imageRef}
-                    src={images[selectedImage]}
+                    src={images[selectedImage]?.url}
                     alt={product.name}
                     className={`w-full h-96 object-cover transition-transform duration-300 ease-out ${
                       isZooming ? "cursor-zoom-out" : "cursor-zoom-in"
@@ -250,8 +316,9 @@ export default function ProductInfoPage() {
                       {product?.featured}
                     </div>
                   )}
-                  <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm pointer-events-none">
+                  <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm pointer-events-none flex items-center gap-1">
                     Click to enlarge
+                    <ZoomIn className="w-4 h-4" />
                   </div>
                 </div>
               )}
@@ -261,25 +328,30 @@ export default function ProductInfoPage() {
                   {images.map((image, index) => (
                     <button
                       key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                      onClick={() => handleImageSelect(index)}
+                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 relative ${
                         selectedImage === index
                           ? "border-amber-500 shadow-lg scale-105"
                           : "border-amber-200 hover:border-amber-400"
                       }`}
                     >
                       <img
-                        src={image}
+                        src={image.url}
                         alt={`${product.name} ${index + 1}`}
                         className="w-full h-full object-cover"
                       />
+                      {image.colorHex && (
+                        <div
+                          className="absolute bottom-1 right-1 w-3 h-3 rounded-full border border-white shadow-sm"
+                          style={{ backgroundColor: image.colorHex }}
+                        ></div>
+                      )}
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Product Details Section */}
             <div className="space-y-6">
               <div>
                 <div className="flex items-center gap-2 mb-3">
@@ -326,7 +398,6 @@ export default function ProductInfoPage() {
                   </span>
                 </div>
 
-                {/* Price Display */}
                 {priceData && (
                   <div className="flex items-center space-x-4 mb-6">
                     <span className="text-3xl font-bold text-amber-800">
@@ -356,10 +427,8 @@ export default function ProductInfoPage() {
                 )}
               </div>
 
-              {/* Product Options */}
               <div className="bg-white rounded-xl p-6 shadow-lg border border-amber-200">
                 <div className="space-y-4">
-                  {/* Size Selection */}
                   {product.priceBySize && product.priceBySize.length > 0 && (
                     <div>
                       <label className="block text-sm font-semibold text-amber-800 mb-2">
@@ -371,7 +440,7 @@ export default function ProductInfoPage() {
                             key={priceItem.size}
                             onClick={() => {
                               setSelectedSize(priceItem.size);
-                              setQuantity(1); // Reset quantity when size changes
+                              setQuantity(1);
                             }}
                             className={`px-4 py-2 rounded-lg border-2 transition-all duration-300 min-w-[60px] ${
                               selectedSize === priceItem.size
@@ -396,26 +465,44 @@ export default function ProductInfoPage() {
                     </div>
                   )}
 
-                  {/* Colors */}
                   {product.colors && product.colors.length > 0 && (
                     <div>
                       <label className="block text-sm font-semibold text-amber-800 mb-2">
                         Available Colors
                       </label>
-                      <div className="flex flex-wrap gap-2">
-                        {product.colors.map((color, index) => (
-                          <div
-                            key={index}
-                            className="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-sm border border-amber-200"
-                          >
-                            {color}
-                          </div>
-                        ))}
+                      <div className="flex flex-wrap gap-3">
+                        {product.colors.map((color, index) => {
+                          const colorName =
+                            COLOR_NAMES[color.toLowerCase()] || color;
+                          const isSelected = selectedColor === color;
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => handleColorSelect(color)}
+                              className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm border-2 transition-all duration-300 ${
+                                isSelected
+                                  ? "border-amber-500 bg-amber-100 text-amber-800 shadow-md"
+                                  : "border-amber-200 bg-amber-50 text-amber-700 hover:border-amber-400"
+                              }`}
+                            >
+                              <div
+                                className={`w-5 h-5 rounded-full border-2 ${
+                                  isSelected
+                                    ? "border-amber-600"
+                                    : "border-gray-300"
+                                }`}
+                                style={{
+                                  backgroundColor: color,
+                                }}
+                              ></div>
+                              <span className="font-medium">{colorName}</span>
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
 
-                  {/* Quantity Selector */}
                   <div>
                     <label className="block text-sm font-semibold text-amber-800 mb-2">
                       Quantity {maxQuantity > 0 && `(Max: ${maxQuantity})`}
@@ -443,7 +530,6 @@ export default function ProductInfoPage() {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
                   <div className="flex space-x-3 pt-4">
                     <button
                       disabled={!isInStock || maxQuantity === 0}
@@ -483,7 +569,6 @@ export default function ProductInfoPage() {
                 </div>
               </div>
 
-              {/* Stock Status */}
               <div className="flex items-center space-x-6 text-sm">
                 {isInStock && maxQuantity > 0 ? (
                   <div
@@ -526,7 +611,6 @@ export default function ProductInfoPage() {
             </div>
           </div>
 
-          {/* Description and Details */}
           <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="bg-white rounded-2xl p-8 shadow-lg border border-amber-200">
               <h2 className="text-2xl font-bold text-amber-800 mb-6">
@@ -626,7 +710,6 @@ export default function ProductInfoPage() {
         </div>
       </div>
 
-      {/* Image Modal */}
       {isModalOpen && images.length > 0 && (
         <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
           <div className="relative max-w-7xl max-h-full p-4">
@@ -651,7 +734,7 @@ export default function ProductInfoPage() {
 
             <div className="relative">
               <img
-                src={images[modalImageIndex]}
+                src={images[modalImageIndex]?.url}
                 alt={`${product.name} ${modalImageIndex + 1}`}
                 className="max-w-full max-h-[90vh] object-contain mx-auto"
                 style={{ maxWidth: "90vw" }}

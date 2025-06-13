@@ -1,4 +1,6 @@
 import React from "react";
+import { SketchPicker } from "react-color";
+import COLOR_NAMES from "@/constants/color";
 
 const ProductFormTabContent = ({
   currentTab,
@@ -17,33 +19,23 @@ const ProductFormTabContent = ({
   handleExtraImageUpload,
   removeExtraImage,
 }) => {
-  // Predefined colors for selection
-  const availableColors = [
-    { name: "Red", value: "red", hex: "#EF4444" },
-    { name: "Blue", value: "blue", hex: "#3B82F6" },
-    { name: "Green", value: "green", hex: "#10B981" },
-    { name: "Black", value: "black", hex: "#000000" },
-    { name: "White", value: "white", hex: "#FFFFFF" },
-    { name: "Gray", value: "gray", hex: "#6B7280" },
-    { name: "Yellow", value: "yellow", hex: "#F59E0B" },
-    { name: "Purple", value: "purple", hex: "#8B5CF6" },
-    { name: "Pink", value: "pink", hex: "#EC4899" },
-    { name: "Orange", value: "orange", hex: "#F97316" },
-    { name: "Brown", value: "brown", hex: "#A16207" },
-    { name: "Navy", value: "navy", hex: "#1E40AF" },
-  ];
+  const handleColorChange = (color) => {
+    const colorHex = color.hex.toLowerCase();
 
-  const handleColorToggle = (colorValue) => {
-    const currentColors = form.colors || [];
-    let newColors;
+    setForm((prevForm) => {
+      const colors = prevForm.colors || [];
+      const updatedColors = colors.includes(colorHex)
+        ? colors
+        : [...colors, colorHex];
+      return { ...prevForm, colors: updatedColors };
+    });
+  };
 
-    if (currentColors.includes(colorValue)) {
-      newColors = currentColors.filter((color) => color !== colorValue);
-    } else {
-      newColors = [...currentColors, colorValue];
-    }
-
-    setForm((prev) => ({ ...prev, colors: newColors }));
+  const handleRemoveColor = (colorHex) => {
+    setForm((prevForm) => {
+      const updatedColors = prevForm.colors.filter((c) => c !== colorHex);
+      return { ...prevForm, colors: updatedColors };
+    });
   };
 
   const renderTabContent = () => {
@@ -343,7 +335,7 @@ const ProductFormTabContent = ({
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <label className="block font-medium mb-2 text-gray-700">
                 Available Colors
               </label>
@@ -389,6 +381,51 @@ const ProductFormTabContent = ({
                       )
                       .join(", ")}
                   </p>
+                </div>
+              )}
+            </div> */}
+
+            <div>
+              <label className="block font-medium mb-2 text-gray-700">
+                Available Colors
+              </label>
+              <p className="text-xs text-gray-500 mb-3">
+                Pick colors to add them to your product
+              </p>
+
+              <SketchPicker
+                color="#fff"
+                onChangeComplete={handleColorChange}
+                disableAlpha={true}
+                presetColors={Object.keys(COLOR_NAMES)}
+              />
+
+              {form.colors?.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium mb-2 text-gray-700">
+                    Selected Colors:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {form.colors.map((colorHex, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <div
+                          className="w-6 h-6 rounded-full border border-gray-300"
+                          style={{ backgroundColor: colorHex }}
+                          title={colorHex}
+                        />
+                        <span className="text-sm text-gray-700">
+                          {COLOR_NAMES[colorHex] || colorHex}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveColor(colorHex)}
+                          className="text-xs text-red-500"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -597,25 +634,52 @@ const ProductFormTabContent = ({
                       <div className="text-rose-600 hover:text-rose-800 font-medium">
                         Upload Main Image
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        JPG, PNG, GIF up to 10MB
-                      </div>
                     </>
                   )}
                 </label>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Primary product image shown in listings
-              </p>
+
+              {/* Color Selector for Main Image */}
+              <div className="mt-4">
+                <label className="block font-medium mb-1 text-gray-700">
+                  Link Color to Main Image
+                </label>
+                <div className="flex gap-3">
+                  {form.colors.map((colorHex, index) => (
+                    <div
+                      key={index}
+                      className={`w-8 h-8 rounded-full cursor-pointer border-2 ${
+                        form.images?.main?.colorHex === colorHex
+                          ? "border-rose-500 scale-110"
+                          : "border-gray-300"
+                      } transition-transform`}
+                      style={{ backgroundColor: colorHex }}
+                      onClick={() => {
+                        setForm((prev) => ({
+                          ...prev,
+                          images: {
+                            ...prev.images,
+                            main: {
+                              ...prev.images?.main,
+                              colorHex: colorHex,
+                            },
+                          },
+                        }));
+                      }}
+                    />
+                  ))}
+                </div>
+                {console.log("formmmmmm", form)}
+              </div>
             </div>
 
             {/* Extra Images */}
             <div>
               <label className="block font-medium mb-2 text-gray-700">
-                Additional Images (Max 3)
+                Additional Images (Max 4)
               </label>
-              <div className="grid grid-cols-3 gap-4">
-                {[0, 1, 2].map((index) => (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[0, 1, 2, 3].map((index) => (
                   <div key={index} className="relative">
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-rose-400 transition-colors aspect-square flex items-center justify-center">
                       <input
@@ -671,34 +735,41 @@ const ProductFormTabContent = ({
                         )}
                       </label>
                     </div>
+
+                    {/* Color Selector for Extra Image */}
+                    <div className="mt-2 flex justify-center gap-2">
+                      {form.colors.map((colorHex, i) => (
+                        <div
+                          key={i}
+                          className={`w-6 h-6 rounded-full cursor-pointer border-2 ${
+                            form.images?.extras?.[index]?.colorHex === colorHex
+                              ? "border-rose-500 scale-110"
+                              : "border-gray-300"
+                          } transition-transform`}
+                          style={{ backgroundColor: colorHex }}
+                          onClick={() => {
+                            setForm((prev) => {
+                              const updatedExtras = [
+                                ...(prev.images?.extras || []),
+                              ];
+                              updatedExtras[index] = {
+                                ...updatedExtras[index],
+                                colorHex: colorHex,
+                              };
+                              return {
+                                ...prev,
+                                images: {
+                                  ...prev.images,
+                                  extras: updatedExtras,
+                                },
+                              };
+                            });
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
                 ))}
-              </div>
-              <p className="text-xs text-gray-500 mt-2">
-                Additional product images to showcase different angles or
-                details
-              </p>
-            </div>
-
-            {/* Featured Status */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium mb-1 text-gray-700">
-                  Featured Status
-                </label>
-                <select
-                  name="featured"
-                  value={form.featured}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-1 focus:ring-rose-300 focus:border-rose-200"
-                >
-                  <option value="">Not Featured</option>
-                  <option value="New Arrival">New Arrival</option>
-                  <option value="Best Seller">Best Seller</option>
-                </select>
-                <p className="text-xs text-gray-500 mt-1">
-                  Special promotional status
-                </p>
               </div>
             </div>
           </div>

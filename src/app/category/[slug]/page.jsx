@@ -1,9 +1,10 @@
 "use client";
+import React from "react";
 import categories from "@/constants/categories";
 import CategoryProducts from "@/components/category/CategoryProducts";
 
 export default function CategoryPage({ params }) {
-  const { slug } = params;
+  const { slug } = React.use(params);
   const category = categories.find((cat) => cat.slug.split("/").pop() === slug);
 
   if (!category) {

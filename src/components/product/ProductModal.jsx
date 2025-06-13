@@ -35,7 +35,7 @@ export default function ProductModal({
     weight: { value: 0, unit: "g" },
     dimensions: { width: 0, height: 0, depth: 0, unit: "cm" },
     images: {
-      main: { url: "", altText: "", sizeKB: 0 },
+      main: { url: "", altText: "", sizeKB: 0, colorHex: "" },
       extras: [],
     },
     attributes: [],
@@ -80,7 +80,12 @@ export default function ProductModal({
               ],
         stock: product.stock || { quantity: 0, lowStockThreshold: 5 },
         images: {
-          main: product.images?.main || { url: "", altText: "", sizeKB: 0 },
+          main: product.images?.main || {
+            url: "",
+            altText: "",
+            sizeKB: 0,
+            colorHex: "",
+          },
           extras: product.images?.extras || [],
         },
         description: product.description || { short: "", long: "" },
@@ -281,7 +286,7 @@ export default function ProductModal({
     currentTab === tabs.length - 1 &&
     tabs.every((_, index) => isTabValid(index));
 
-  const handleImageUpload = (event, type) => {
+  const handleImageUpload = (event, type, colorHex = "") => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -293,6 +298,7 @@ export default function ProductModal({
             [type]: {
               file: file,
               preview: e.target.result,
+              colorHex: colorHex,
             },
           },
         }));
@@ -301,22 +307,26 @@ export default function ProductModal({
     }
   };
 
-  const handleExtraImageUpload = (event, index) => {
+  const handleExtraImageUpload = (event, index, colorHex = "") => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         setForm((prev) => {
-          const newExtra = [...(prev.images?.extras || [])];
-          newExtra[index] = {
+          const currentExtras = prev.images?.extras || [];
+          const newExtras = [...currentExtras];
+
+          newExtras[index] = {
             file: file,
             preview: e.target.result,
+            colorHex: colorHex, // Store color linkage
           };
+
           return {
             ...prev,
             images: {
               ...prev.images,
-              extras: newExtra,
+              extras: newExtras,
             },
           };
         });

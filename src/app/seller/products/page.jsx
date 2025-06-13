@@ -119,27 +119,40 @@ export default function SellerProductsPage() {
 
         if (!mainImage?.file) return;
 
+        console.log("product data:----", productData);
+
         const cleanProductData = {
           ...productData,
           images: {
             ...images,
             main: {
               file: mainImage.file,
+              colorHex: mainImage.colorHex,
             },
             extras: Array.isArray(extraImages)
               ? extraImages
                   .filter((img) => img?.file)
-                  .map((img) => ({ file: img.file }))
+                  .map((img) => ({ file: img.file, colorHex: img.colorHex }))
               : [],
           },
         };
 
+        console.log("cleaned product data:----", cleanProductData);
+
         const formData = new FormData();
         formData.append("data", JSON.stringify(cleanProductData));
-        formData.append("mainImage", cleanProductData.images.main.file);
 
-        cleanProductData.images.extras.forEach((imgObj) => {
+        const mainImageFile = cleanProductData.images.main.file;
+        const extraImageFiles = cleanProductData.images.extras;
+
+        console.log("Main image file:", mainImageFile);
+        console.log("Extra image files:", extraImageFiles);
+
+        formData.append("mainImage", mainImageFile);
+
+        extraImageFiles.forEach((imgObj, index) => {
           if (imgObj?.file) {
+            console.log(`Appending extra image ${index}:`, imgObj.file);
             formData.append("extraImages", imgObj.file);
           }
         });
