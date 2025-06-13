@@ -1,28 +1,54 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import categories from "@/constants/categories";
 
 export default function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false);
-  const productLink = product?.id ? `/product/${product.id}` : "#";
+  const [isDesktop, setIsDesktop] = useState(false);
+  const cardRef = useRef(null);
+  const [cardHeight, setCardHeight] = useState(0);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (cardRef.current) {
+      setCardHeight(cardRef.current.offsetHeight);
+    }
+  }, []);
+
+  const productLink = product?.id ? `/product/${product.id}` : "#";
   const categoryObj = categories.find((cat) => cat.id == product.category);
   const categoryName = categoryObj?.name || "";
+  const subCategoryObj = categoryObj?.subcategories?.find(
+    (sub) => sub.id == product.subCategory
+  );
+  const subCategoryName = subCategoryObj?.name || "";
 
   return (
     <div
-      className="group relative bg-gradient-to-br from-white via-amber-50 to-orange-50 rounded-xl shadow-lg overflow-hidden border border-amber-200 hover:shadow-2xl transition-all duration-500 hover:scale-105"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      ref={cardRef}
+      className="group relative bg-gradient-to-br from-white via-amber-50 to-orange-50 rounded-xl shadow-lg overflow-hidden border border-amber-200 hover:shadow-2xl transition-all duration-500 hover:scale-105 flex flex-col h-full"
+      onMouseEnter={() => isDesktop && setIsHovered(true)}
+      onMouseLeave={() => isDesktop && setIsHovered(false)}
+      style={{ minHeight: cardHeight }}
     >
       <Link href={productLink} className="block">
         <div className="relative h-64 overflow-hidden">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+            className={`w-full h-full object-cover transform transition-transform duration-500 ${
+              isHovered ? "scale-105" : ""
+            }`}
           />
           {isHovered && (
             <div className="absolute inset-0 bg-gradient-to-t from-amber-900/40 via-orange-800/20 to-transparent flex justify-center items-center">
@@ -34,12 +60,22 @@ export default function ProductCard({ product }) {
         </div>
       </Link>
 
-      <div className="p-5">
-        <span className="text-sm font-medium text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
-          {categoryName}
-        </span>
-        <Link href={productLink} className="block">
-          <h3 className="text-lg font-semibold text-amber-800 mt-3 hover:text-orange-700 transition-colors duration-300 line-clamp-2">
+      <div className="p-5 flex flex-col flex-grow">
+        <div className="flex flex-wrap gap-2 mb-2">
+          {categoryName && (
+            <span className="self-start text-xs font-medium text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
+              {categoryName}
+            </span>
+          )}
+          {subCategoryName && (
+            <span className="self-start text-xs font-medium text-orange-700 bg-orange-100 px-3 py-1 rounded-full">
+              {subCategoryName}
+            </span>
+          )}
+        </div>
+
+        <Link href={productLink} className="block flex-grow">
+          <h3 className="text-lg font-semibold text-amber-800 mt-1 hover:text-orange-700 transition-colors duration-300 line-clamp-2 min-h-[56px]">
             {product.name}
           </h3>
         </Link>
@@ -67,7 +103,7 @@ export default function ProductCard({ product }) {
             ₹{product.price.toFixed(2)}
           </p>
           <button
-            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-amber-200"
+            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-amber-200"
             aria-label={`Add ${product.name} to cart`}
           >
             <svg

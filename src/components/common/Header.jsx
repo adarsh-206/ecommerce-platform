@@ -6,9 +6,10 @@ import SearchBar from "./SearchBar";
 import CartIcon from "./CartIcon";
 import UserMenu from "./UserMenu";
 import MobileMenu from "./MobileMenu";
-import { ShoppingBag, Search, X, Menu, ChevronDown } from "lucide-react";
+import { ShoppingBag, Search, X, Menu } from "lucide-react";
 import apiService from "@/app/utils/apiService";
 import BrandLogo from "./BrandLogo";
+import categories from "@/constants/categories";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,23 +30,17 @@ export default function Header() {
   };
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
-
       try {
         await getUserDetails();
       } catch (err) {
         console.error("Failed to fetch user details:", err);
       }
     };
-
     fetchUser();
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -58,77 +53,21 @@ export default function Header() {
     >
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          {/* Logo Area */}
           <div className="flex items-center">
             <BrandLogo />
-
-            {/* Desktop Navigation */}
             <nav className="hidden lg:flex space-x-1">
-              <div className="group relative inline-block">
+              {categories.map((cat) => (
                 <Link
-                  href="/categories/clothing"
+                  key={cat.id}
+                  href={cat.slug}
                   className="inline-flex items-center px-4 py-2.5 text-sm font-semibold text-amber-800 hover:text-orange-700 hover:bg-amber-100/60 rounded-lg transition-all duration-200 transform hover:scale-105"
                 >
-                  Clothing
-                  <ChevronDown size={16} className="ml-1" />
+                  {cat.name}
                 </Link>
-                <div className="absolute left-0 mt-1 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
-                  <div className="bg-gradient-to-br from-white to-amber-50 rounded-xl shadow-xl ring-1 ring-amber-200 ring-opacity-50 overflow-hidden backdrop-blur-sm">
-                    <div className="p-3">
-                      <Link
-                        href="/categories/clothing/men"
-                        className="block px-4 py-3 text-sm font-medium text-amber-800 hover:bg-amber-100/70 hover:text-orange-700 rounded-lg transition-all duration-200"
-                      >
-                        Men's Clothing
-                      </Link>
-                      <Link
-                        href="/categories/clothing/women"
-                        className="block px-4 py-3 text-sm font-medium text-amber-800 hover:bg-amber-100/70 hover:text-orange-700 rounded-lg transition-all duration-200"
-                      >
-                        Women's Clothing
-                      </Link>
-                      <Link
-                        href="/categories/clothing/kids"
-                        className="block px-4 py-3 text-sm font-medium text-amber-800 hover:bg-amber-100/70 hover:text-orange-700 rounded-lg transition-all duration-200"
-                      >
-                        Kids' Clothing
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Link
-                href="/categories/accessories"
-                className="px-4 py-2.5 text-sm font-semibold text-amber-800 hover:text-orange-700 hover:bg-amber-100/60 rounded-lg transition-all duration-200 transform hover:scale-105"
-              >
-                Accessories
-              </Link>
-
-              <Link
-                href="/categories/headware"
-                className="px-4 py-2.5 text-sm font-semibold text-amber-800 hover:text-orange-700 hover:bg-amber-100/60 rounded-lg transition-all duration-200 transform hover:scale-105"
-              >
-                Headware
-              </Link>
-
-              <Link
-                href="/categories/pet-products"
-                className="px-4 py-2.5 text-sm font-semibold text-amber-800 hover:text-orange-700 hover:bg-amber-100/60 rounded-lg transition-all duration-200 transform hover:scale-105"
-              >
-                Pet Products
-              </Link>
-
-              <Link
-                href="/categories/home-living"
-                className="px-4 py-2.5 text-sm font-semibold text-amber-800 hover:text-orange-700 hover:bg-amber-100/60 rounded-lg transition-all duration-200 transform hover:scale-105"
-              >
-                Home & Living
-              </Link>
+              ))}
             </nav>
           </div>
 
-          {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
             {searchOpen ? (
               <div className="relative transition-all duration-300 w-64">
@@ -169,27 +108,19 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-4">
             <CartIcon count={3} />
-
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="inline-flex items-center justify-center p-2.5 rounded-lg text-amber-700 hover:text-orange-700 hover:bg-amber-100/60 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-500 transition-all duration-200"
               aria-expanded={mobileMenuOpen}
             >
-              <span className="sr-only">Open main menu</span>
-              {mobileMenuOpen ? (
-                <X size={24} aria-hidden="true" />
-              ) : (
-                <Menu size={24} aria-hidden="true" />
-              )}
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu, show/hide based on menu state */}
       {mobileMenuOpen && (
         <MobileMenu
           setMobileMenuOpen={setMobileMenuOpen}

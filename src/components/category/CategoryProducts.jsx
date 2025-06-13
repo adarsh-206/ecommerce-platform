@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { Sparkles, Filter, X, ShoppingBag } from "lucide-react";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
