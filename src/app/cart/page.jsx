@@ -57,14 +57,14 @@ export default function CartPage() {
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 p-12">
         <h1 className="text-2xl font-bold text-amber-800 mb-6">Your Cart</h1>
 
-        <div className="max-w-full mx-auto bg-white rounded-lg shadow-lg p-6">
+        <div className="max-w-full mx-auto bg-white rounded-lg shadow-lg p-4 sm:p-6">
           {cartItems.map((item, index) => (
             <div
               key={index}
-              className="flex items-center justify-between border-b border-amber-100 py-4"
+              className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-amber-100 py-4 gap-4"
             >
-              <div className="flex items-center space-x-4">
-                <div className="w-24 h-24 rounded-lg overflow-hidden bg-amber-50 border border-amber-200">
+              <div className="flex items-start gap-4">
+                <div className="w-24 h-24 rounded-lg overflow-hidden bg-amber-50 border border-amber-200 flex-shrink-0">
                   <Image
                     src={item.product.image}
                     alt={item.product.name}
@@ -74,23 +74,21 @@ export default function CartPage() {
                   />
                 </div>
                 <div>
-                  <h2 className="font-semibold text-amber-800">
+                  <h2 className="font-semibold text-amber-800 text-sm sm:text-base">
                     {item.product.name}
                   </h2>
-
-                  <p className="text-sm text-amber-600 flex items-center gap-2">
+                  <p className="text-xs sm:text-sm text-amber-600 flex items-center gap-2 mt-1">
                     Size: {item.size} | Color:{" "}
                     {COLOR_NAMES[item.color] ? (
                       COLOR_NAMES[item.color]
                     ) : (
                       <span
-                        className="w-5 h-5 rounded-full border border-amber-300 inline-block"
+                        className="w-4 h-4 rounded-full border border-amber-300 inline-block"
                         style={{ backgroundColor: item.color }}
                       ></span>
                     )}
                   </p>
-
-                  <p className="text-sm text-amber-700 font-semibold">
+                  <p className="text-sm text-amber-700 font-semibold mt-1">
                     ₹ {item.totalPrice}
                     <span className="line-through text-sm text-amber-400 ml-2">
                       ₹ {item.product.originalPrice}
@@ -102,28 +100,25 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-2 self-end sm:self-center">
                 <button
                   onClick={() => handleQuantityChange(item, item.quantity - 1)}
                   className="p-2 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-700"
                 >
                   <Minus size={16} />
                 </button>
-
                 <span className="font-semibold text-amber-800">
                   {item.quantity}
                 </span>
-
                 <button
                   onClick={() => handleQuantityChange(item, item.quantity + 1)}
                   className="p-2 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-700"
                 >
                   <Plus size={16} />
                 </button>
-
                 <button
                   onClick={() => handleRemoveItem(item)}
-                  className="ml-4 p-2 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-700"
+                  className="p-2 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-700 ml-2"
                 >
                   <Trash2 size={16} />
                 </button>
@@ -131,7 +126,7 @@ export default function CartPage() {
             </div>
           ))}
 
-          <div className="flex justify-between items-center mt-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-6 gap-4">
             <div>
               <p className="text-lg font-semibold text-amber-800">
                 Total: ₹ {totalPrice.toFixed(2)}
@@ -141,7 +136,7 @@ export default function CartPage() {
               </p>
             </div>
 
-            <button className="px-6 py-3 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white font-bold rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+            <button className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white font-bold rounded-lg shadow-md hover:scale-105 transition-all duration-300">
               Proceed to Checkout
             </button>
           </div>
