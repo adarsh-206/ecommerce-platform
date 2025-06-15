@@ -10,12 +10,18 @@ import { ShoppingBag, Search, X, Menu } from "lucide-react";
 import apiService from "@/app/utils/apiService";
 import BrandLogo from "./BrandLogo";
 import categories from "@/constants/categories";
+import { usePathname } from "next/navigation";
+import { useCart } from "@/context/CartContext";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [userDetails, setUserDetails] = useState({});
+  const pathname = usePathname();
+  const { cartItems } = useCart();
+
+  const cartCount = cartItems?.length;
 
   const getUserDetails = async () => {
     try {
@@ -54,7 +60,7 @@ export default function Header() {
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <BrandLogo />
+            <BrandLogo href="/" />
             <nav className="hidden lg:flex space-x-1">
               {categories.map((cat) => (
                 <Link
@@ -89,22 +95,35 @@ export default function Header() {
             )}
 
             <div className="p-1">
-              <CartIcon count={3} />
+              <CartIcon count={cartCount || 0} />
             </div>
 
             <UserMenu
               userDetails={userDetails}
               getUserDetails={getUserDetails}
             />
-
-            {!userDetails?.id && (
-              <Link
-                href="/seller/register"
-                className="ml-4 inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white text-sm font-bold rounded-xl shadow-lg hover:from-amber-700 hover:via-orange-700 hover:to-rose-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl border border-amber-500/20"
-              >
-                <span>Start Selling</span>
-                <ShoppingBag className="h-4 w-4 ml-2" />
-              </Link>
+            {!pathname.startsWith("/seller") && (
+              <>
+                {!userDetails?._id ? (
+                  <Link
+                    href="/seller"
+                    className="ml-4 inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white text-sm font-bold rounded-xl shadow-lg hover:from-amber-700 hover:via-orange-700 hover:to-rose-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl border border-amber-500/20"
+                  >
+                    <span>Start Selling</span>
+                    <ShoppingBag className="h-4 w-4 ml-2" />
+                  </Link>
+                ) : (
+                  userDetails.role === "seller" && (
+                    <Link
+                      href="/seller/dashboard"
+                      className="ml-4 inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white text-sm font-bold rounded-xl shadow-lg hover:from-amber-700 hover:via-orange-700 hover:to-rose-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl border border-amber-500/20"
+                    >
+                      <span>Continue Selling</span>
+                      <ShoppingBag className="h-4 w-4 ml-2" />
+                    </Link>
+                  )
+                )}
+              </>
             )}
           </div>
 

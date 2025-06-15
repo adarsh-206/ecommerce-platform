@@ -20,6 +20,14 @@ import {
   MessageSquare,
 } from "lucide-react";
 
+export const metadata = {
+  title: "Chaka-Chak",
+  description: "Your one-stop shop for all your shopping needs",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+  },
+};
+
 export const AdminLayout = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);

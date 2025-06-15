@@ -1,22 +1,25 @@
 "use client";
-import apiService from "@/app/utils/apiService";
 import Footer from "@/components/common/Footer";
 import Header from "@/components/common/Header";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import categories from "@/constants/categories";
 import COLOR_NAMES from "@/constants/color";
-import { ZoomIn } from "lucide-react";
+import ImageModal from "@/components/product/ImageModal";
+import ProductImageGallery from "@/components/product/ProductImageGallery";
+import { useCart } from "@/context/CartContext";
+import apiService from "@/app/utils/apiService";
+import { ShoppingCart } from "lucide-react";
 
 export default function ProductInfoPage() {
   const params = useParams();
   const productId = params.id;
+  const { addItem, updateItem, getItemQuantity } = useCart();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -24,9 +27,12 @@ export default function ProductInfoPage() {
   const [zoomStyle, setZoomStyle] = useState({});
   const [isZooming, setIsZooming] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(0);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const imageRef = useRef(null);
   const containerRef = useRef(null);
+
+  const cartQuantity = getItemQuantity(productId, selectedSize, selectedColor);
 
   const getCategoryName = (categoryId) => {
     const mainCategory = categories.find((cat) => cat.id == categoryId);
@@ -100,6 +106,25 @@ export default function ProductInfoPage() {
       if (matchingColor) {
         setSelectedColor(matchingColor);
       }
+    }
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      setIsAddingToCart(true);
+      await addItem(productId, selectedSize, selectedColor);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  const handleUpdateCartQuantity = async (newQuantity) => {
+    try {
+      await updateItem(productId, selectedSize, selectedColor, newQuantity);
+    } catch (error) {
+      console.error("Error updating cart quantity:", error);
     }
   };
 
@@ -230,8 +255,9 @@ export default function ProductInfoPage() {
         <Header />
         <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-amber-600 mx-auto"></div>
-            <p className="mt-4 text-amber-800 text-lg">Loading product...</p>
+            <div className="flex justify-center items-center">
+              <ShoppingCart className="h-24 w-24 text-amber-600 animate-bounce" />
+            </div>
           </div>
         </div>
         <Footer />
@@ -288,68 +314,21 @@ export default function ProductInfoPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="space-y-4">
-              {images.length > 0 && (
-                <div
-                  ref={containerRef}
-                  className="relative bg-white rounded-2xl shadow-lg overflow-hidden border border-amber-200 cursor-zoom-in"
-                  onMouseMove={handleMouseMove}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                  onClick={() => openModal(selectedImage)}
-                >
-                  <img
-                    ref={imageRef}
-                    src={images[selectedImage]?.url}
-                    alt={product.name}
-                    className={`w-full h-96 object-cover transition-transform duration-300 ease-out ${
-                      isZooming ? "cursor-zoom-out" : "cursor-zoom-in"
-                    }`}
-                    style={isZooming ? zoomStyle : {}}
-                  />
-                  {priceData?.discountPercentage > 0 && (
-                    <div className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold pointer-events-none">
-                      {Math.round(priceData.discountPercentage)}% OFF
-                    </div>
-                  )}
-                  {product.featured && (
-                    <div className="absolute top-4 right-4 bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold pointer-events-none">
-                      {product?.featured}
-                    </div>
-                  )}
-                  <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm pointer-events-none flex items-center gap-1">
-                    Click to enlarge
-                    <ZoomIn className="w-4 h-4" />
-                  </div>
-                </div>
-              )}
-
-              {images.length > 1 && (
-                <div className="flex space-x-3 overflow-x-auto">
-                  {images.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleImageSelect(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 relative ${
-                        selectedImage === index
-                          ? "border-amber-500 shadow-lg scale-105"
-                          : "border-amber-200 hover:border-amber-400"
-                      }`}
-                    >
-                      <img
-                        src={image.url}
-                        alt={`${product.name} ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                      {image.colorHex && (
-                        <div
-                          className="absolute bottom-1 right-1 w-3 h-3 rounded-full border border-white shadow-sm"
-                          style={{ backgroundColor: image.colorHex }}
-                        ></div>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <ProductImageGallery
+                images={images}
+                selectedImage={selectedImage}
+                handleImageSelect={handleImageSelect}
+                handleMouseMove={handleMouseMove}
+                handleMouseEnter={handleMouseEnter}
+                handleMouseLeave={handleMouseLeave}
+                openModal={openModal}
+                zoomStyle={zoomStyle}
+                isZooming={isZooming}
+                priceData={priceData}
+                product={product}
+                containerRef={containerRef}
+                imageRef={imageRef}
+              />
             </div>
 
             <div className="space-y-6">
@@ -438,10 +417,7 @@ export default function ProductInfoPage() {
                         {product.priceBySize.map((priceItem) => (
                           <button
                             key={priceItem.size}
-                            onClick={() => {
-                              setSelectedSize(priceItem.size);
-                              setQuantity(1);
-                            }}
+                            onClick={() => setSelectedSize(priceItem.size)}
                             className={`px-4 py-2 rounded-lg border-2 transition-all duration-300 min-w-[60px] ${
                               selectedSize === priceItem.size
                                 ? "border-amber-500 bg-amber-100 text-amber-800"
@@ -503,46 +479,71 @@ export default function ProductInfoPage() {
                     </div>
                   )}
 
-                  <div>
-                    <label className="block text-sm font-semibold text-amber-800 mb-2">
-                      Quantity {maxQuantity > 0 && `(Max: ${maxQuantity})`}
-                    </label>
-                    <div className="flex items-center space-x-3">
-                      <button
-                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                        className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-colors duration-300"
-                        disabled={quantity <= 1}
-                      >
-                        -
-                      </button>
-                      <span className="w-12 text-center font-semibold text-amber-800">
-                        {quantity}
-                      </span>
-                      <button
-                        onClick={() =>
-                          setQuantity(Math.min(maxQuantity, quantity + 1))
-                        }
-                        className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-colors duration-300"
-                        disabled={quantity >= maxQuantity}
-                      >
-                        +
-                      </button>
+                  {cartQuantity > 0 && (
+                    <div>
+                      <label className="block text-sm font-semibold text-amber-800 mb-2">
+                        Quantity {maxQuantity > 0 && `(Max: ${maxQuantity})`}
+                      </label>
+                      <div className="flex items-center space-x-3">
+                        <button
+                          onClick={() =>
+                            handleUpdateCartQuantity(cartQuantity - 1)
+                          }
+                          className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-colors duration-300"
+                        >
+                          -
+                        </button>
+                        <span className="w-12 text-center font-semibold text-amber-800">
+                          {cartQuantity}
+                        </span>
+                        <button
+                          onClick={() =>
+                            handleUpdateCartQuantity(cartQuantity + 1)
+                          }
+                          className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-colors duration-300"
+                          disabled={cartQuantity >= maxQuantity}
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="flex space-x-3 pt-4">
-                    <button
-                      disabled={!isInStock || maxQuantity === 0}
-                      className={`flex-1 py-3 px-6 rounded-full font-semibold shadow-lg transition-all duration-300 ${
-                        isInStock && maxQuantity > 0
-                          ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white hover:shadow-xl hover:scale-105"
-                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      }`}
-                    >
-                      {isInStock && maxQuantity > 0
-                        ? "Add to Cart"
-                        : "Out of Stock"}
-                    </button>
+                    {cartQuantity === 0 ? (
+                      <button
+                        onClick={handleAddToCart}
+                        disabled={
+                          !isInStock || maxQuantity === 0 || isAddingToCart
+                        }
+                        className={`flex-1 py-3 px-6 rounded-full font-semibold shadow-lg transition-all duration-300 ${
+                          isInStock && maxQuantity > 0 && !isAddingToCart
+                            ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white hover:shadow-xl hover:scale-105"
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        }`}
+                      >
+                        {isAddingToCart
+                          ? "Adding..."
+                          : isInStock && maxQuantity > 0
+                          ? "Add to Cart"
+                          : "Out of Stock"}
+                      </button>
+                    ) : (
+                      <div className="flex-1 flex items-center justify-center py-3 px-6 bg-green-100 text-green-800 rounded-full font-semibold">
+                        <svg
+                          className="w-5 h-5 mr-2"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        Added to Cart
+                      </div>
+                    )}
                     <button
                       onClick={() => setIsWishlisted(!isWishlisted)}
                       className={`p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105 ${
@@ -710,100 +711,16 @@ export default function ProductInfoPage() {
         </div>
       </div>
 
-      {isModalOpen && images.length > 0 && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
-          <div className="relative max-w-7xl max-h-full p-4">
-            <button
-              onClick={closeModal}
-              className="absolute top-4 m-3 right-4 z-10 bg-white text-gray-700 hover:bg-amber-400 hover:text-white transition-all duration-300 rounded-full shadow-lg p-2"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-
-            <div className="relative">
-              <img
-                src={images[modalImageIndex]?.url}
-                alt={`${product.name} ${modalImageIndex + 1}`}
-                className="max-w-full max-h-[90vh] object-contain mx-auto"
-                style={{ maxWidth: "90vw" }}
-              />
-
-              {images.length > 1 && (
-                <>
-                  <button
-                    onClick={prevModalImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-amber-300 transition-colors duration-200 bg-black bg-opacity-50 hover:bg-opacity-70 rounded-full p-2"
-                  >
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 19l-7-7 7-7"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={nextModalImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-amber-300 transition-colors duration-200 bg-black bg-opacity-50 hover:bg-opacity-70 rounded-full p-2"
-                  >
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
-                </>
-              )}
-
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm">
-                {modalImageIndex + 1} / {images.length}
-              </div>
-            </div>
-          </div>
-
-          {images.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-              {images.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setModalImageIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-colors duration-200 ${
-                    modalImageIndex === index
-                      ? "bg-amber-400"
-                      : "bg-white bg-opacity-50 hover:bg-opacity-70"
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+      <ImageModal
+        isOpen={isModalOpen}
+        images={images}
+        currentIndex={modalImageIndex}
+        onClose={closeModal}
+        onPrev={prevModalImage}
+        onNext={nextModalImage}
+        onSelectIndex={setModalImageIndex}
+        productName={product.name}
+      />
 
       <Footer />
     </div>

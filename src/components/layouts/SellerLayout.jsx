@@ -14,6 +14,14 @@ import {
 } from "lucide-react";
 import BrandLogo from "../common/BrandLogo";
 
+export const metadata = {
+  title: "Chaka-Chak",
+  description: "Your one-stop shop for all your shopping needs",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+  },
+};
+
 export const SellerLayout = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -48,6 +56,8 @@ export const SellerLayout = ({ children }) => {
     return null;
   }
 
+  const token = localStorage.getItem("token");
+
   return (
     <div className="flex h-screen bg-gray-100">
       <div
@@ -57,7 +67,11 @@ export const SellerLayout = ({ children }) => {
       >
         <div className="flex items-center justify-between p-4 border-b border-amber-200">
           <h1 className={`font-bold text-xl ${!isSidebarOpen && "hidden"}`}>
-            <BrandLogo />
+            {token ? (
+              <BrandLogo href="/seller/dashboard" />
+            ) : (
+              <BrandLogo href="/seller/login" />
+            )}
           </h1>
           <button
             onClick={toggleSidebar}

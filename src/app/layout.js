@@ -1,20 +1,23 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: {
-    default: "Chaka-Chak",
-    template: "%s | Chaka-Chak",
-  },
+  title: "Chaka-Chak",
   description: "Your one-stop shop for all your shopping needs",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

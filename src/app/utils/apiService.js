@@ -42,8 +42,11 @@ const getHeaders = (useAuth, isFormData) => {
 };
 
 const apiService = {
-  get: (url, useAuth = false) =>
-    instance.get(url, { headers: getHeaders(useAuth, false) }),
+  get: (url, params = {}, useAuth = false) =>
+    instance.get(url, {
+      headers: getHeaders(useAuth, false),
+      params,
+    }),
 
   post: (url, data, useAuth = false, isFormData = false) =>
     instance.post(url, data, { headers: getHeaders(useAuth, isFormData) }),
@@ -51,8 +54,11 @@ const apiService = {
   put: (url, data, useAuth = false, isFormData = false) =>
     instance.put(url, data, { headers: getHeaders(useAuth, isFormData) }),
 
-  delete: (url, useAuth = false) =>
-    instance.delete(url, { headers: getHeaders(useAuth, false) }),
+  patch: (url, data, useAuth = false, isFormData = false) =>
+    instance.patch(url, data, { headers: getHeaders(useAuth, isFormData) }),
+
+  delete: (url, data, useAuth = false) =>
+    instance.delete(url, data, { headers: getHeaders(useAuth, false) }),
 };
 
 export default apiService;
