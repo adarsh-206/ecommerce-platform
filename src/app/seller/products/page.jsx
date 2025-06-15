@@ -119,8 +119,6 @@ export default function SellerProductsPage() {
 
         if (!mainImage?.file) return;
 
-        console.log("product data:----", productData);
-
         const cleanProductData = {
           ...productData,
           images: {
@@ -137,22 +135,16 @@ export default function SellerProductsPage() {
           },
         };
 
-        console.log("cleaned product data:----", cleanProductData);
-
         const formData = new FormData();
         formData.append("data", JSON.stringify(cleanProductData));
 
         const mainImageFile = cleanProductData.images.main.file;
         const extraImageFiles = cleanProductData.images.extras;
 
-        console.log("Main image file:", mainImageFile);
-        console.log("Extra image files:", extraImageFiles);
-
         formData.append("mainImage", mainImageFile);
 
         extraImageFiles.forEach((imgObj, index) => {
           if (imgObj?.file) {
-            console.log(`Appending extra image ${index}:`, imgObj.file);
             formData.append("extraImages", imgObj.file);
           }
         });

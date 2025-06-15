@@ -19,15 +19,15 @@ export default function CartPage() {
     updateItem(item.product._id, item.size, item.color, 0);
   };
 
-  // Total payable price
+  // Total price (actual price paid)
   const totalPrice = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + item.totalPrice * item.quantity,
     0
   );
 
-  // Total original price (without discount)
+  // Total original price (before discount)
   const totalOriginalPrice = cartItems.reduce(
-    (sum, item) => sum + item.originalPrice * item.quantity,
+    (sum, item) => sum + item.product.originalPrice * item.quantity,
     0
   );
 
@@ -91,12 +91,12 @@ export default function CartPage() {
                   </p>
 
                   <p className="text-sm text-amber-700 font-semibold">
-                    ₹ {item.price}
+                    ₹ {item.totalPrice}
                     <span className="line-through text-sm text-amber-400 ml-2">
-                      ₹ {item.originalPrice}
+                      ₹ {item.product.originalPrice}
                     </span>
                     <span className="ml-2 text-green-600 font-semibold">
-                      {parseInt(item.discount)}% OFF
+                      {parseInt(item.product.discount)}% OFF
                     </span>
                   </p>
                 </div>

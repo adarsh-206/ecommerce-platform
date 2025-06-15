@@ -669,7 +669,6 @@ const ProductFormTabContent = ({
                     />
                   ))}
                 </div>
-                {console.log("formmmmmm", form)}
               </div>
             </div>
 

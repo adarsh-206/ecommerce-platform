@@ -14,7 +14,7 @@ import { ShoppingCart } from "lucide-react";
 export default function ProductInfoPage() {
   const params = useParams();
   const productId = params.id;
-  const { addItem, updateItem, getItemQuantity } = useCart();
+  const { addItem, updateItem, getItemQuantity, cartItems } = useCart();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
