@@ -57,7 +57,7 @@ export default function CartPage() {
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 p-12">
         <h1 className="text-2xl font-bold text-amber-800 mb-6">Your Cart</h1>
 
-        <div className="max-w-full mx-auto bg-white rounded-lg shadow-lg p-4 sm:p-6">
+        <div className="max-w-full mx-auto bg-white rounded-lg shadow-lg p-4 sm:p-2">
           {cartItems.map((item, index) => (
             <div
               key={index}
