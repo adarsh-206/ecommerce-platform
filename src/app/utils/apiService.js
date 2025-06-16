@@ -57,8 +57,11 @@ const apiService = {
   patch: (url, data, useAuth = false, isFormData = false) =>
     instance.patch(url, data, { headers: getHeaders(useAuth, isFormData) }),
 
-  delete: (url, data, useAuth = false) =>
-    instance.delete(url, data, { headers: getHeaders(useAuth, false) }),
+  delete: (url, data = {}, useAuth = false) =>
+    instance.delete(url, {
+      headers: getHeaders(useAuth, false),
+      data,
+    }),
 };
 
 export default apiService;

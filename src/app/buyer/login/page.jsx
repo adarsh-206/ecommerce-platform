@@ -296,7 +296,7 @@ export default function BuyerLogin() {
               <p className="text-gray-600">
                 Don't have an account?{" "}
                 <Link
-                  href="/register"
+                  href="/buyer/register"
                   className="font-semibold text-amber-600 hover:text-orange-700 transition-colors duration-200"
                 >
                   Sign up

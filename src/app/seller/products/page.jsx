@@ -44,7 +44,7 @@ export default function SellerProductsPage() {
   const fetchProducts = async () => {
     setIsLoading(true);
     try {
-      const data = await apiService.get("/seller/products", true);
+      const data = await apiService.get("/seller/products", {}, true);
       const productsData = data?.data;
 
       if (Array.isArray(productsData)) {

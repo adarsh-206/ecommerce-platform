@@ -10,8 +10,10 @@ import {
   EyeOff,
   AlertCircle,
   X,
+  ArrowLeft,
+  Shield,
 } from "lucide-react";
-import Link from "next/link";
+import BrandLogo from "@/components/common/BrandLogo";
 import apiService from "@/app/utils/apiService";
 
 export default function BuyerRegistration() {
@@ -23,6 +25,10 @@ export default function BuyerRegistration() {
     phone: "",
   });
 
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formStep, setFormStep] = useState(0);
@@ -43,6 +49,7 @@ export default function BuyerRegistration() {
     phone: "",
     password: "",
     confirmPassword: "",
+    otp: "",
     apiError: "",
   });
 
@@ -53,8 +60,10 @@ export default function BuyerRegistration() {
   });
 
   useEffect(() => {
-    validateForm();
-  }, [form, acceptedTerms]);
+    if (formStep === 0) {
+      validateForm();
+    }
+  }, [form, acceptedTerms, formStep]);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -149,7 +158,6 @@ export default function BuyerRegistration() {
       ...newErrors,
     }));
 
-    // For form button state, check if all fields are filled and valid, regardless of touched state
     const allFieldsFilled =
       form.fullName &&
       form.email &&
@@ -169,7 +177,6 @@ export default function BuyerRegistration() {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
 
-    // Mark field as touched when user changes it
     if (!touchedFields[name]) {
       setTouchedFields({ ...touchedFields, [name]: true });
     }
@@ -181,10 +188,7 @@ export default function BuyerRegistration() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Mark all fields as touched when submitting
+  const handleSubmit = async () => {
     setTouchedFields({
       fullName: true,
       email: true,
@@ -193,7 +197,6 @@ export default function BuyerRegistration() {
       confirmPassword: true,
     });
 
-    // Run validation one more time
     validateForm();
 
     if (!formValid) return;
@@ -202,7 +205,6 @@ export default function BuyerRegistration() {
     setErrors((prev) => ({ ...prev, apiError: "" }));
 
     try {
-      // Only send required fields to backend
       const userData = {
         fullName: form.fullName,
         email: form.email,
@@ -216,18 +218,72 @@ export default function BuyerRegistration() {
       setFormStep(1);
     } catch (error) {
       let errorMessage = "Registration failed. Please try again.";
-
-      if (error.response) {
-        if (error.response.status === 409) {
-          errorMessage = "Email or phone number already registered";
-        } else if (error.response.data && error.response.data.message) {
-          errorMessage = error.response.data.message;
-        }
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
       }
-
       setErrors((prev) => ({ ...prev, apiError: errorMessage }));
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const sendOtp = async () => {
+    setOtpLoading(true);
+    setErrors((prev) => ({ ...prev, apiError: "", otp: "" }));
+
+    try {
+      const data = {
+        phone: form.phone,
+        email: form.email,
+      };
+      await apiService.post("/otp/send", data);
+      setOtpSent(true);
+    } catch (error) {
+      let errorMessage = "Failed to send OTP. Please try again.";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      setErrors((prev) => ({ ...prev, apiError: errorMessage }));
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  const verifyOtp = async () => {
+    if (!otp || otp.length < 4) {
+      setErrors((prev) => ({ ...prev, otp: "Please enter a valid OTP" }));
+      return;
+    }
+
+    setVerifyingOtp(true);
+    setErrors((prev) => ({ ...prev, apiError: "", otp: "" }));
+
+    try {
+      const data = {
+        phone: form.phone,
+        email: form.email,
+        otp: otp,
+      };
+      await apiService.post("/otp/verify", data);
+      setFormStep(2);
+    } catch (error) {
+      let errorMessage = "Invalid OTP. Please try again.";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      setErrors((prev) => ({ ...prev, otp: errorMessage }));
+    } finally {
+      setVerifyingOtp(false);
+    }
+  };
+
+  const handleOtpChange = (e) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    if (value.length <= 6) {
+      setOtp(value);
+      if (errors.otp) {
+        setErrors((prev) => ({ ...prev, otp: "" }));
+      }
     }
   };
 
@@ -243,38 +299,46 @@ export default function BuyerRegistration() {
     setErrors({ ...errors, [field]: "" });
   };
 
+  const goBack = () => {
+    setFormStep(0);
+    setOtpSent(false);
+    setOtp("");
+    setErrors((prev) => ({ ...prev, otp: "", apiError: "" }));
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center px-6 py-12">
-      <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center shadow-2xl rounded-3xl overflow-hidden bg-white">
-        <div className="hidden md:flex flex-col items-start justify-center p-12 bg-gradient-to-br from-indigo-600 to-purple-700 text-white space-y-8 h-full">
-          <div className="flex items-center space-x-2">
-            <Link
-              href="/"
-              className="text-3xl font-extrabold tracking-tight px-4 py-2 rounded-lg"
-            >
-              Chaka-Chak
-            </Link>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 flex items-center justify-center px-6 py-12">
+      <div className="absolute top-6 left-6 z-10">
+        <BrandLogo href="/" />
+      </div>
+      <div className="max-w-6xl w-full mt-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center shadow-2xl rounded-3xl overflow-hidden bg-white">
+        <div className="hidden md:flex flex-col items-start justify-center p-12 bg-gradient-to-br from-amber-600 via-orange-600 to-rose-600 text-white space-y-8 h-full">
           <div className="space-y-8">
             <h2 className="text-5xl font-extrabold tracking-tight">
-              Join Our Exclusive Buyers Club
+              {formStep === 0 && "Join Our Exclusive Club"}
+              {formStep === 1 && "Verify Your Account"}
+              {formStep === 2 && "Welcome Aboard!"}
             </h2>
             <p className="text-lg leading-relaxed opacity-90">
-              Unlock premium deals, personalized recommendations, and a seamless
-              shopping experience designed just for you.
+              {formStep === 0 &&
+                "Unlock premium deals, personalized recommendations, and a seamless shopping experience designed just for you."}
+              {formStep === 1 &&
+                "We've sent a verification code to your phone and email. Please enter it to secure your account."}
+              {formStep === 2 &&
+                "Your account has been successfully created and verified. You're ready to start shopping!"}
             </p>
 
             <div className="space-y-4 pt-4">
               <div className="flex items-center space-x-3">
-                <CheckCircle className="text-indigo-200" size={24} />
+                <CheckCircle className="text-amber-200" size={24} />
                 <span className="text-lg">Access to exclusive deals</span>
               </div>
               <div className="flex items-center space-x-3">
-                <CheckCircle className="text-indigo-200" size={24} />
+                <CheckCircle className="text-amber-200" size={24} />
                 <span className="text-lg">Priority customer support</span>
               </div>
               <div className="flex items-center space-x-3">
-                <CheckCircle className="text-indigo-200" size={24} />
+                <CheckCircle className="text-amber-200" size={24} />
                 <span className="text-lg">Free shipping on premium items</span>
               </div>
             </div>
@@ -282,9 +346,9 @@ export default function BuyerRegistration() {
         </div>
 
         <div className="bg-white p-10 md:p-12 rounded-r-3xl">
-          {formStep === 0 ? (
+          {formStep === 0 && (
             <>
-              <h1 className="text-4xl font-extrabold text-indigo-700 mb-2 tracking-wide">
+              <h1 className="text-4xl font-extrabold text-amber-800 mb-2 tracking-wide">
                 Create Your Account
               </h1>
               <p className="text-gray-500 mb-8">
@@ -307,11 +371,11 @@ export default function BuyerRegistration() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-5">
                 <div className="space-y-1">
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <User className="text-indigo-400" size={20} />
+                      <User className="text-amber-400" size={20} />
                     </div>
                     <input
                       type="text"
@@ -322,7 +386,7 @@ export default function BuyerRegistration() {
                       placeholder="Full Name"
                       className={`w-full pl-12 pr-4 py-4 rounded-xl border ${
                         errors.fullName ? "border-red-300" : "border-gray-200"
-                      } placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition text-gray-800`}
+                      } placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-amber-100 focus:border-amber-500 transition text-gray-800`}
                     />
                   </div>
                   {errors.fullName && (
@@ -336,7 +400,7 @@ export default function BuyerRegistration() {
                 <div className="space-y-1">
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Mail className="text-indigo-400" size={20} />
+                      <Mail className="text-amber-400" size={20} />
                     </div>
                     <input
                       type="email"
@@ -347,7 +411,7 @@ export default function BuyerRegistration() {
                       placeholder="Email Address"
                       className={`w-full pl-12 pr-4 py-4 rounded-xl border ${
                         errors.email ? "border-red-300" : "border-gray-200"
-                      } placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition text-gray-800`}
+                      } placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-amber-100 focus:border-amber-500 transition text-gray-800`}
                     />
                   </div>
                   {errors.email && (
@@ -361,7 +425,7 @@ export default function BuyerRegistration() {
                 <div className="space-y-1">
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Phone className="text-indigo-400" size={20} />
+                      <Phone className="text-amber-400" size={20} />
                     </div>
                     <input
                       type="tel"
@@ -372,7 +436,7 @@ export default function BuyerRegistration() {
                       placeholder="Phone Number (10 digits)"
                       className={`w-full pl-12 pr-4 py-4 rounded-xl border ${
                         errors.phone ? "border-red-300" : "border-gray-200"
-                      } placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition text-gray-800`}
+                      } placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-amber-100 focus:border-amber-500 transition text-gray-800`}
                     />
                   </div>
                   {errors.phone && (
@@ -386,7 +450,7 @@ export default function BuyerRegistration() {
                 <div className="space-y-1">
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Lock className="text-indigo-400" size={20} />
+                      <Lock className="text-amber-400" size={20} />
                     </div>
                     <input
                       type={showPassword ? "text" : "password"}
@@ -397,7 +461,7 @@ export default function BuyerRegistration() {
                       placeholder="Password"
                       className={`w-full pl-12 pr-12 py-4 rounded-xl border ${
                         errors.password ? "border-red-300" : "border-gray-200"
-                      } placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition text-gray-800`}
+                      } placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-amber-100 focus:border-amber-500 transition text-gray-800`}
                     />
                     <button
                       type="button"
@@ -406,12 +470,12 @@ export default function BuyerRegistration() {
                     >
                       {showPassword ? (
                         <EyeOff
-                          className="text-gray-400 hover:text-indigo-600"
+                          className="text-gray-400 hover:text-amber-600"
                           size={20}
                         />
                       ) : (
                         <Eye
-                          className="text-gray-400 hover:text-indigo-600"
+                          className="text-gray-400 hover:text-amber-600"
                           size={20}
                         />
                       )}
@@ -435,7 +499,7 @@ export default function BuyerRegistration() {
                 <div className="space-y-1">
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Lock className="text-indigo-400" size={20} />
+                      <Lock className="text-amber-400" size={20} />
                     </div>
                     <input
                       type={showConfirmPassword ? "text" : "password"}
@@ -448,7 +512,7 @@ export default function BuyerRegistration() {
                         errors.confirmPassword
                           ? "border-red-300"
                           : "border-gray-200"
-                      } placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition text-gray-800`}
+                      } placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-amber-100 focus:border-amber-500 transition text-gray-800`}
                     />
                     <button
                       type="button"
@@ -457,12 +521,12 @@ export default function BuyerRegistration() {
                     >
                       {showConfirmPassword ? (
                         <EyeOff
-                          className="text-gray-400 hover:text-indigo-600"
+                          className="text-gray-400 hover:text-amber-600"
                           size={20}
                         />
                       ) : (
                         <Eye
-                          className="text-gray-400 hover:text-indigo-600"
+                          className="text-gray-400 hover:text-amber-600"
                           size={20}
                         />
                       )}
@@ -482,35 +546,36 @@ export default function BuyerRegistration() {
                       type="checkbox"
                       checked={acceptedTerms}
                       onChange={() => setAcceptedTerms(!acceptedTerms)}
-                      className="rounded text-indigo-600 focus:ring-indigo-500 border-gray-300 h-5 w-5"
+                      className="rounded text-amber-600 focus:ring-amber-500 border-gray-300 h-5 w-5"
                     />
                     <span className="ml-3 text-gray-600 text-sm">
                       I agree to the{" "}
-                      <Link
-                        href="/terms"
-                        className="text-indigo-600 hover:text-indigo-800"
+                      <a
+                        href="#"
+                        className="text-amber-600 hover:text-amber-800"
                       >
                         Terms and Conditions
-                      </Link>{" "}
+                      </a>{" "}
                       and{" "}
-                      <Link
-                        href="/privacy"
-                        className="text-indigo-600 hover:text-indigo-800"
+                      <a
+                        href="#"
+                        className="text-amber-600 hover:text-amber-800"
                       >
                         Privacy Policy
-                      </Link>
+                      </a>
                     </span>
                   </label>
                 </div>
 
                 <div className="pt-4">
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={handleSubmit}
                     disabled={!formValid || isSubmitting}
                     className={`w-full py-4 px-6 rounded-xl font-semibold transition shadow-lg flex items-center justify-center space-x-2 text-lg
                       ${
                         formValid && !isSubmitting
-                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700"
+                          ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white hover:from-amber-700 hover:to-orange-700"
                           : "bg-gray-300 text-gray-500 cursor-not-allowed"
                       }`}
                   >
@@ -522,32 +587,155 @@ export default function BuyerRegistration() {
 
                 <div className="text-center text-gray-500 text-sm mt-6">
                   Already have an account?{" "}
-                  <Link
-                    href="/buyer/login"
-                    className="text-indigo-600 font-medium hover:text-indigo-800"
+                  <a
+                    href="#"
+                    className="text-amber-600 font-medium hover:text-amber-800"
                   >
                     Sign in
-                  </Link>
+                  </a>
                 </div>
-              </form>
-            </>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-10 text-center space-y-6">
-              <div className="h-24 w-24 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="text-green-600" size={60} />
               </div>
-              <h2 className="text-3xl font-bold text-gray-800">
-                Registration Successful!
-              </h2>
-              <p className="text-lg text-gray-600 max-w-md">
-                Welcome to our buyers community! Your account has been created
-                successfully.
-              </p>
-              <Link href="/buyer/dashboard">
-                <button className="mt-6 bg-indigo-600 text-white py-3 px-8 rounded-xl font-semibold hover:bg-indigo-700 transition shadow-md">
-                  Start Shopping
+            </>
+          )}
+
+          {formStep === 1 && (
+            <>
+              <div className="flex items-center mb-6">
+                <button
+                  onClick={goBack}
+                  className="text-amber-600 hover:text-amber-800 mr-4"
+                >
+                  <ArrowLeft size={24} />
                 </button>
-              </Link>
+                <div>
+                  <h1 className="text-4xl font-extrabold text-amber-800 tracking-wide">
+                    Verify Your Account
+                  </h1>
+                  <p className="text-gray-500 mt-2">
+                    Enter the verification code sent to your phone and email
+                  </p>
+                </div>
+              </div>
+
+              {errors.apiError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
+                  <div className="flex items-center">
+                    <AlertCircle className="mr-2" size={20} />
+                    <span>{errors.apiError}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => dismissError("apiError")}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+              )}
+
+              <div className="space-y-6">
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <div className="flex items-center mb-2">
+                    <Shield className="text-amber-600 mr-2" size={20} />
+                    <span className="font-medium text-amber-800">
+                      Verification Details
+                    </span>
+                  </div>
+                  <p className="text-sm text-amber-700">Phone: {form.phone}</p>
+                  <p className="text-sm text-amber-700">Email: {form.email}</p>
+                </div>
+
+                {!otpSent ? (
+                  <div className="pt-4">
+                    <button
+                      type="button"
+                      onClick={sendOtp}
+                      disabled={otpLoading}
+                      className={`w-full py-4 px-6 rounded-xl font-semibold transition shadow-lg flex items-center justify-center space-x-2 text-lg
+                        ${
+                          !otpLoading
+                            ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white hover:from-amber-700 hover:to-orange-700"
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        }`}
+                    >
+                      <span>{otpLoading ? "Sending OTP..." : "Send OTP"}</span>
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="space-y-1">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={otp}
+                          onChange={handleOtpChange}
+                          placeholder="Enter 6-digit OTP"
+                          className={`w-full px-4 py-4 rounded-xl border ${
+                            errors.otp ? "border-red-300" : "border-gray-200"
+                          } placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-amber-100 focus:border-amber-500 transition text-gray-800 text-center text-2xl tracking-widest`}
+                          maxLength={6}
+                        />
+                      </div>
+                      {errors.otp && (
+                        <p className="text-red-500 text-sm ml-1 mt-1 flex items-center">
+                          <AlertCircle className="inline mr-1" size={14} />
+                          {errors.otp}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex space-x-4">
+                      <button
+                        type="button"
+                        onClick={verifyOtp}
+                        disabled={verifyingOtp || !otp}
+                        className={`flex-1 py-4 px-6 rounded-xl font-semibold transition shadow-lg flex items-center justify-center space-x-2 text-lg
+                          ${
+                            !verifyingOtp && otp
+                              ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white hover:from-amber-700 hover:to-orange-700"
+                              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                          }`}
+                      >
+                        <span>
+                          {verifyingOtp ? "Verifying..." : "Verify OTP"}
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={sendOtp}
+                        disabled={otpLoading}
+                        className="px-6 py-4 rounded-xl border border-amber-600 text-amber-600 hover:bg-amber-50 font-semibold transition"
+                      >
+                        {otpLoading ? "Sending..." : "Resend"}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </>
+          )}
+
+          {formStep === 2 && (
+            <div className="text-center space-y-6">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="text-green-600" size={40} />
+              </div>
+              <h1 className="text-4xl font-extrabold text-amber-800 tracking-wide">
+                Account Created Successfully!
+              </h1>
+              <p className="text-gray-500 text-lg">
+                Your account has been verified and is ready to use.
+              </p>
+              <div className="pt-4">
+                <button
+                  type="button"
+                  onClick={() => (window.location.href = "/buyer/login")}
+                  className="w-full py-4 px-6 rounded-xl font-semibold transition shadow-lg bg-gradient-to-r from-amber-600 to-orange-600 text-white hover:from-amber-700 hover:to-orange-700 text-lg"
+                >
+                  Continue to Login
+                </button>
+              </div>
             </div>
           )}
         </div>

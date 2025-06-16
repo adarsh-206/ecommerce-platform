@@ -1,4 +1,10 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+} from "react";
 import apiService from "@/app/utils/apiService";
 import { getLocalCart, saveLocalCart, clearLocalCart } from "./localCart";
 import { useAuth } from "./AuthContext";
@@ -7,73 +13,46 @@ const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
-  const fetchCart = async () => {
-    if (!isAuthenticated) {
-      const localCart = getLocalCart();
-      setCartItems(localCart);
-      return;
-    }
-
+  const fetchCart = useCallback(async () => {
     try {
-      const response = await apiService.get("/cart");
-      setCartItems(response?.data?.items || []);
+      if (!isAuthenticated) {
+        const localCart = getLocalCart();
+        setCartItems(localCart);
+      } else {
+        const response = await apiService.get("/cart", {}, true);
+        setCartItems(response?.data?.items || []);
+      }
     } catch {
       setCartItems([]);
     }
-  };
+  }, [isAuthenticated]);
 
-  const syncLocalCartToServer = async () => {
+  const syncLocalCartToServer = useCallback(async () => {
     const localCart = getLocalCart();
+    if (localCart.length === 0) return;
 
-    for (const item of localCart) {
-      await apiService.post("/cart/add", {
-        productId: item.product._id,
-        quantity: item.quantity,
-        size: item.size,
-        color: item.color,
-      });
+    const requests = localCart.map((item) =>
+      apiService.post(
+        "/cart/add",
+        {
+          productId: item.product._id,
+          quantity: item.quantity,
+          size: item.size,
+          color: item.color,
+        },
+        true
+      )
+    );
+
+    try {
+      await Promise.all(requests); // Sync all items in parallel
+      clearLocalCart();
+    } catch (err) {
+      console.error("Error syncing local cart to server:", err);
     }
-
-    clearLocalCart();
-  };
-
-  //   const addItem = async (productId, size, color) => {
-  //     if (!isAuthenticated) {
-  //       const localCart = getLocalCart();
-  //       const existingItem = localCart.find(
-  //         (item) =>
-  //           item.product._id === productId &&
-  //           item.size === size &&
-  //           item.color === color
-  //       );
-
-  //       if (existingItem) {
-  //         existingItem.quantity += 1;
-  //       } else {
-  //         localCart.push({
-  //           product: { _id: productId },
-  //           size,
-  //           color,
-  //           quantity: 1,
-  //         });
-  //       }
-
-  //       saveLocalCart(localCart);
-  //       setCartItems(localCart);
-  //       return;
-  //     }
-
-  //     await apiService.post("/cart/add", {
-  //       productId,
-  //       quantity: 1,
-  //       size,
-  //       color,
-  //     });
-
-  //     await fetchCart();
-  //   };
+  }, []);
 
   const addItem = async (productId, size, color) => {
     if (!isAuthenticated) {
@@ -90,48 +69,30 @@ export const CartProvider = ({ children }) => {
         existingItem.totalPrice =
           existingItem.priceAtAddition * existingItem.quantity;
       } else {
-        // Fetch full product details before adding
         const productResponse = await apiService.get(
           `/buyer/get-product/${productId}`
         );
         const productData = productResponse?.data;
-
-        // Find price based on selected size
         const sizeData = productData.priceBySize.find((s) => s.size === size);
-
-        console.log("sizeData:---->>", productData);
-
-        if (!sizeData) {
-          console.error("Selected size not found in product data");
-          return;
-        }
+        if (!sizeData) return;
 
         const price = sizeData.sellingPrice;
         const originalPrice = sizeData.originalPrice;
-
-        // calculate discount
         const discount =
           originalPrice > 0
-            ? Math.round(
-                ((originalPrice - price) / originalPrice) * 100 * 100
-              ) / 100
+            ? Math.round(((originalPrice - price) / originalPrice) * 10000) /
+              100
             : 0;
 
         let imageUrl = productData?.images?.main?.url;
-
         if (
-          productData.images.main.colorHex?.toLowerCase() ===
+          productData.images.main.colorHex?.toLowerCase() !==
           color.toLowerCase()
         ) {
-          imageUrl = productData.images.main.url;
-        } else {
           const matchedExtra = productData.images.extras.find(
             (img) => img.colorHex?.toLowerCase() === color.toLowerCase()
           );
-
-          if (matchedExtra) {
-            imageUrl = matchedExtra.url;
-          }
+          if (matchedExtra) imageUrl = matchedExtra.url;
         }
 
         localCart.push({
@@ -140,8 +101,8 @@ export const CartProvider = ({ children }) => {
             name: productData.name,
             image: imageUrl,
             brand: productData.brand,
-            originalPrice: originalPrice,
-            discount: discount,
+            originalPrice,
+            discount,
           },
           size,
           color,
@@ -157,13 +118,11 @@ export const CartProvider = ({ children }) => {
       return;
     }
 
-    await apiService.post("/cart/add", {
-      productId,
-      quantity: 1,
-      size,
-      color,
-    });
-
+    await apiService.post(
+      "/cart/add",
+      { productId, quantity: 1, size, color },
+      true
+    );
     await fetchCart();
   };
 
@@ -182,6 +141,8 @@ export const CartProvider = ({ children }) => {
           localCart.splice(itemIndex, 1);
         } else {
           localCart[itemIndex].quantity = newQuantity;
+          localCart[itemIndex].totalPrice =
+            localCart[itemIndex].priceAtAddition * newQuantity;
         }
       }
 
@@ -191,18 +152,14 @@ export const CartProvider = ({ children }) => {
     }
 
     if (newQuantity < 1) {
-      await apiService.delete("/cart/remove", {
-        data: { productId, size, color },
-      });
+      await apiService.delete("/cart/remove", { productId, size, color }, true);
     } else {
-      await apiService.patch("/cart/update", {
-        productId,
-        quantity: newQuantity,
-        size,
-        color,
-      });
+      await apiService.patch(
+        "/cart/update",
+        { productId, quantity: newQuantity, size, color },
+        true
+      );
     }
-
     await fetchCart();
   };
 
@@ -213,23 +170,29 @@ export const CartProvider = ({ children }) => {
         item.size === size &&
         item.color === color
     );
-
     return cartItem ? cartItem.quantity : 0;
   };
 
   useEffect(() => {
-    fetchCart();
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      syncLocalCartToServer().then(fetchCart);
-    }
-  }, [isAuthenticated]);
+    const initializeCart = async () => {
+      if (isAuthenticated) {
+        await syncLocalCartToServer();
+      }
+      await fetchCart();
+    };
+    initializeCart();
+  }, [isAuthenticated, syncLocalCartToServer, fetchCart]);
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addItem, updateItem, getItemQuantity, fetchCart }}
+      value={{
+        cartItems,
+        addItem,
+        updateItem,
+        getItemQuantity,
+        fetchCart,
+        syncLocalCartToServer,
+      }}
     >
       {children}
     </CartContext.Provider>

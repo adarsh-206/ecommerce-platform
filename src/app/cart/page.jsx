@@ -2,13 +2,17 @@
 
 import MainLayout from "@/components/layouts/MainLayout";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { Trash2, Plus, Minus, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import COLOR_NAMES from "@/constants/color";
 
 export default function CartPage() {
   const { cartItems, updateItem } = useCart();
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
   const handleQuantityChange = (item, newQuantity) => {
     if (newQuantity < 1) return;
@@ -19,13 +23,19 @@ export default function CartPage() {
     updateItem(item.product._id, item.size, item.color, 0);
   };
 
-  // Total price (actual price paid)
+  const handleCheckout = () => {
+    if (isAuthenticated) {
+      router.push("/checkout");
+    } else {
+      router.push("/buyer/login");
+    }
+  };
+
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.totalPrice * item.quantity,
     0
   );
 
-  // Total original price (before discount)
   const totalOriginalPrice = cartItems.reduce(
     (sum, item) => sum + item.product.originalPrice * item.quantity,
     0
@@ -136,7 +146,10 @@ export default function CartPage() {
               </p>
             </div>
 
-            <button className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white font-bold rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+            <button
+              onClick={handleCheckout}
+              className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white font-bold rounded-lg shadow-md hover:scale-105 transition-all duration-300"
+            >
               Proceed to Checkout
             </button>
           </div>
