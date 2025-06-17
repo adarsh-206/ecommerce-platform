@@ -27,7 +27,7 @@ export default function UserMenu({ userDetails, getUserDetails }) {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsOpen(false);
-    router.push("/");
+    window.location.href = "/";
   };
 
   return (
