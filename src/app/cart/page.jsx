@@ -8,36 +8,41 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import COLOR_NAMES from "@/constants/color";
+import { showToast } from "@/utils/showToast";
 
 export default function CartPage() {
   const { cartItems, updateItem } = useCart();
+
   const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   const handleQuantityChange = (item, newQuantity) => {
-    if (newQuantity < 1) return;
-    updateItem(item.product._id, item.size, item.color, newQuantity);
+    if (newQuantity < 1) {
+      updateItem(item.product._id, item.size, item.color, 0);
+      showToast.custom("Item removed from your cart");
+    } else {
+      updateItem(item.product._id, item.size, item.color, newQuantity);
+      showToast.custom("Cart updated successfully");
+    }
   };
 
   const handleRemoveItem = (item) => {
     updateItem(item.product._id, item.size, item.color, 0);
+    showToast.custom("Item removed from your cart");
   };
 
   const handleCheckout = () => {
-    if (isAuthenticated) {
-      router.push("/checkout");
-    } else {
-      router.push("/buyer/login");
-    }
+    showToast.success("Taking you to checkout...");
+    router.push(isAuthenticated ? "/checkout" : "/buyer/login");
   };
 
   const totalPrice = cartItems.reduce(
-    (sum, item) => sum + item.totalPrice * item.quantity,
+    (sum, item) => sum + item.price * item.quantity,
     0
   );
 
   const totalOriginalPrice = cartItems.reduce(
-    (sum, item) => sum + item.product.originalPrice * item.quantity,
+    (sum, item) => sum + item.originalPrice * item.quantity,
     0
   );
 
@@ -99,12 +104,12 @@ export default function CartPage() {
                     )}
                   </p>
                   <p className="text-sm text-amber-700 font-semibold mt-1">
-                    ₹ {item.totalPrice}
+                    ₹ {item.price}
                     <span className="line-through text-sm text-amber-400 ml-2">
-                      ₹ {item.product.originalPrice}
+                      ₹ {item.originalPrice}
                     </span>
                     <span className="ml-2 text-green-600 font-semibold">
-                      {parseInt(item.product.discount)}% OFF
+                      {parseInt(item.discount)}% OFF
                     </span>
                   </p>
                 </div>

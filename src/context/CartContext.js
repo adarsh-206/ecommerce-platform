@@ -66,8 +66,6 @@ export const CartProvider = ({ children }) => {
 
       if (existingItem) {
         existingItem.quantity += 1;
-        existingItem.totalPrice =
-          existingItem.priceAtAddition * existingItem.quantity;
       } else {
         const productResponse = await apiService.get(
           `/buyer/get-product/${productId}`
@@ -100,16 +98,13 @@ export const CartProvider = ({ children }) => {
             _id: productData.id,
             name: productData.name,
             image: imageUrl,
-            brand: productData.brand,
-            originalPrice,
-            discount,
           },
           size,
           color,
           quantity: 1,
-          priceAtAddition: price,
-          totalPrice: price,
-          currency: sizeData.currency,
+          price,
+          originalPrice,
+          discount,
         });
       }
 
@@ -173,6 +168,20 @@ export const CartProvider = ({ children }) => {
     return cartItem ? cartItem.quantity : 0;
   };
 
+  const clearCart = async () => {
+    if (!isAuthenticated) {
+      clearLocalCart();
+      setCartItems([]);
+    } else {
+      try {
+        await apiService.delete("/cart/clear", {}, true);
+        setCartItems([]);
+      } catch (err) {
+        console.error("Failed to clear cart:", err);
+      }
+    }
+  };
+
   useEffect(() => {
     const initializeCart = async () => {
       if (isAuthenticated) {
@@ -192,6 +201,7 @@ export const CartProvider = ({ children }) => {
         getItemQuantity,
         fetchCart,
         syncLocalCartToServer,
+        clearCart,
       }}
     >
       {children}

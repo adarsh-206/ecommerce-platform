@@ -3,11 +3,13 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { User, LogOut, ShoppingBag, Heart, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function UserMenu({ userDetails, getUserDetails }) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
+  const { logout } = useAuth();
 
   const isLoggedIn = userDetails && Object.keys(userDetails).length > 0;
 
@@ -25,7 +27,8 @@ export default function UserMenu({ userDetails, getUserDetails }) {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    // localStorage.removeItem("token");
+    logout();
     setIsOpen(false);
     getUserDetails();
     router.push("/");

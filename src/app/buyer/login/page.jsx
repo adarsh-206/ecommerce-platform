@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import apiService from "@/app/utils/apiService";
 import BrandLogo from "@/components/common/BrandLogo";
+import { useAuth } from "@/context/AuthContext";
 
 export default function BuyerLogin() {
   const [form, setForm] = useState({
@@ -20,6 +21,7 @@ export default function BuyerLogin() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -83,7 +85,8 @@ export default function BuyerLogin() {
       });
 
       if (response.data && response.data.token) {
-        localStorage.setItem("token", response.data.token);
+        // localStorage.setItem("token", response.data.token);
+        login(response.data.token);
         if (rememberMe) {
           localStorage.setItem("rememberedUser", form.email_or_phone);
         } else {

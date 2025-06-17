@@ -83,7 +83,7 @@ export default function SellerProductsPage() {
     if (!productId) return;
 
     try {
-      await apiService.delete(`/seller/products/${productId}`, true);
+      await apiService.delete(`/seller/products/${productId}`, {}, true);
       setProducts(products.filter((p) => p?._id !== productId));
     } catch (error) {
       console.error("Failed to delete product", error);
