@@ -1,4 +1,3 @@
-// Updated CheckoutPage.js
 "use client";
 
 import MainLayout from "@/components/layouts/MainLayout";
@@ -18,7 +17,6 @@ export default function CheckoutPage() {
   const { user } = useAuth();
   const router = useRouter();
 
-  // Change from numeric index to address ID
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -45,7 +43,6 @@ export default function CheckoutPage() {
   };
 
   const handleProceedToPay = async () => {
-    // Validate selected address
     if (!selectedAddress) {
       showToast.error("Please select a delivery address");
       return;
@@ -63,7 +60,7 @@ export default function CheckoutPage() {
     try {
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: finalTotal * 100, // in paise
+        amount: finalTotal * 100,
         currency: "INR",
         name: "Chaka-Chak",
         description: "Order Payment",
@@ -91,8 +88,8 @@ export default function CheckoutPage() {
 
             if (res.status) {
               showToast.success("Payment successful! Order placed.");
-              router.push("/orders");
               clearCart();
+              router.push("/orders");
             } else {
               showToast.error(
                 "Payment succeeded but failed to place order. Contact support."
@@ -126,16 +123,9 @@ export default function CheckoutPage() {
     }
   };
 
-  // Handle address selection - now receives address ID
   const handleAddressSelect = (addressId) => {
     setSelectedAddress(addressId);
   };
-
-  useEffect(() => {
-    if (cartItems.length === 0) {
-      router.push("/cart");
-    }
-  }, [cartItems, router]);
 
   return (
     <MainLayout>
