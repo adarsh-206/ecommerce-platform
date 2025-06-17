@@ -9,7 +9,7 @@ export default function UserMenu({ userDetails, getUserDetails }) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
-  const { logout } = useAuth();
+  const { logout, isAuthenticated } = useAuth();
 
   const isLoggedIn = userDetails && Object.keys(userDetails).length > 0;
 
@@ -30,8 +30,6 @@ export default function UserMenu({ userDetails, getUserDetails }) {
     // localStorage.removeItem("token");
     logout();
     setIsOpen(false);
-    getUserDetails();
-    router.push("/");
   };
 
   return (
