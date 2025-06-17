@@ -44,8 +44,6 @@ export default function CheckoutPage() {
     });
   };
 
-  console.log("selectedAdress", selectedAddress);
-
   const handleProceedToPay = async () => {
     // Validate selected address
     if (!selectedAddress) {
@@ -93,8 +91,8 @@ export default function CheckoutPage() {
 
             if (res.status) {
               showToast.success("Payment successful! Order placed.");
-              clearCart();
               router.push("/orders");
+              clearCart();
             } else {
               showToast.error(
                 "Payment succeeded but failed to place order. Contact support."

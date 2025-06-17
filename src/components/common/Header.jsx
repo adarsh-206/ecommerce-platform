@@ -28,8 +28,6 @@ export default function Header() {
       const response = await apiService.get("/user-details", {}, true);
       setUserDetails(response.data);
     } catch (error) {
-      console.log("errr", error);
-
       console.error(
         "Error fetching user details:",
         error.response?.data || error.message
