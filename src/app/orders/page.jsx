@@ -99,7 +99,7 @@ export default function OrdersPage() {
                       </div>
                     </div>
                     <div
-                      className={`text-sm px-3 py-1 rounded-full capitalize ${getStatusColor(
+                      className={`w-fit inline-block text-sm px-3 py-1 rounded-full capitalize ${getStatusColor(
                         order.orderStatus
                       )}`}
                     >

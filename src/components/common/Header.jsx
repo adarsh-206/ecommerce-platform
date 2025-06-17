@@ -128,7 +128,7 @@ export default function Header() {
           </div>
 
           <div className="md:hidden flex items-center space-x-4">
-            <CartIcon count={3} />
+            <CartIcon count={cartCount || 0} />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="inline-flex items-center justify-center p-2.5 rounded-lg text-amber-700 hover:text-orange-700 hover:bg-amber-100/60 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-amber-500 transition-all duration-200"
