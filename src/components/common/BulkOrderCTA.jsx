@@ -11,10 +11,10 @@ export default function BulkOrderCTA() {
         </p>
         <div className="mt-10 flex justify-center">
           <a
-            href="mailto:care@gmail.com"
+            href="mailto:chakachakteam@gmail.com"
             className="inline-block px-10 py-4 rounded-lg font-semibold text-[#d4a98e] bg-[#7c533e] hover:bg-[#6b432f] transition-colors duration-300"
           >
-            Mail us at care@gmail.com
+            Mail us at chakachakteam@gmail.com
           </a>
         </div>
       </div>
