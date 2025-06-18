@@ -34,16 +34,22 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2">
               {[
-                "FAQ",
-                "Cancellation & Refund Policy",
-                "Shipping & Delivery Plicy",
+                { name: "FAQs", path: "/faqs" },
+                {
+                  name: "Cancellation & Refund Policy",
+                  path: "/cancellation-refund-policy",
+                },
+                {
+                  name: "Shipping & Delivery Policy",
+                  path: "/shipping-delivery-policy",
+                },
               ].map((item, idx) => (
                 <li key={idx}>
                   <Link
-                    href={`/${item.toLowerCase().replace(/\s+/g, "")}`}
+                    href={item.path}
                     className="text-amber-600 hover:text-amber-800 transition-colors duration-200"
                   >
-                    {item}
+                    {item.name}
                   </Link>
                 </li>
               ))}

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import SearchBar from "./SearchBar";
+import categories from "@/constants/categories";
 
 export default function MobileMenu({
   userDetails,
@@ -25,36 +26,15 @@ export default function MobileMenu({
         <SearchBar />
       </div>
       <nav className="px-4 pb-4 space-y-2">
-        <Link
-          href="/categories/clothing"
-          className="block p-3 text-amber-800 hover:bg-amber-100/60 hover:text-orange-700 rounded-lg font-medium transition-all duration-200"
-        >
-          Clothing
-        </Link>
-        <Link
-          href="/categories/accessories"
-          className="block p-3 text-amber-800 hover:bg-amber-100/60 hover:text-orange-700 rounded-lg font-medium transition-all duration-200"
-        >
-          Accessories
-        </Link>
-        <Link
-          href="/categories/headware"
-          className="block p-3 text-amber-800 hover:bg-amber-100/60 hover:text-orange-700 rounded-lg font-medium transition-all duration-200"
-        >
-          Headware
-        </Link>
-        <Link
-          href="/categories/pet-products"
-          className="block p-3 text-amber-800 hover:bg-amber-100/60 hover:text-orange-700 rounded-lg font-medium transition-all duration-200"
-        >
-          Pet Products
-        </Link>
-        <Link
-          href="/categories/home-living"
-          className="block p-3 text-amber-800 hover:bg-amber-100/60 hover:text-orange-700 rounded-lg font-medium transition-all duration-200"
-        >
-          Home & Living
-        </Link>
+        {categories.map((cat) => (
+          <Link
+            key={cat.id}
+            href={cat.slug}
+            className="block p-3 text-amber-800 hover:bg-amber-100/60 hover:text-orange-700 rounded-lg font-medium transition-all duration-200"
+          >
+            {cat.name}
+          </Link>
+        ))}
 
         <hr className="my-3 border-amber-200/50" />
 
