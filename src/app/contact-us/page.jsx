@@ -1,8 +1,45 @@
 "use client";
 
+import { useState } from "react";
 import MainLayout from "@/components/layouts/MainLayout";
+import apiService from "../utils/apiService";
+import { showToast } from "@/utils/showToast";
 
 export default function ContactUsPage() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!form.name || !form.email || !form.message) {
+      showToast.error("All fields are required");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await apiService.post("/ticket", form, false);
+
+      setForm({ name: "", email: "", message: "" });
+      showToast.success("Your message was sent successfully!");
+    } catch (err) {
+      showToast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <MainLayout>
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 py-12 px-6">
@@ -15,13 +52,16 @@ export default function ContactUsPage() {
             or just want to say hello, drop us a message below.
           </p>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium text-amber-700 mb-1">
                 Name
               </label>
               <input
                 type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
                 placeholder="Your full name"
                 className="w-full text-gray-800 px-4 py-2 border border-amber-200 rounded-xl shadow-sm focus:ring-amber-400 focus:border-amber-400 outline-none"
               />
@@ -33,6 +73,9 @@ export default function ContactUsPage() {
               </label>
               <input
                 type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
                 placeholder="you@example.com"
                 className="w-full text-gray-800 px-4 py-2 border border-amber-200 rounded-xl shadow-sm focus:ring-amber-400 focus:border-amber-400 outline-none"
               />
@@ -44,6 +87,9 @@ export default function ContactUsPage() {
               </label>
               <textarea
                 rows="5"
+                name="message"
+                value={form.message}
+                onChange={handleChange}
                 placeholder="Your message..."
                 className="w-full text-gray-800 px-4 py-2 border border-amber-200 rounded-xl shadow-sm focus:ring-amber-400 focus:border-amber-400 outline-none resize-none"
               />
@@ -52,9 +98,14 @@ export default function ContactUsPage() {
             <div className="text-center">
               <button
                 type="submit"
-                className="bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white px-6 py-2 rounded-xl font-semibold shadow-md hover:from-amber-700 hover:via-orange-700 hover:to-rose-700 transition-all duration-300 transform hover:scale-105"
+                disabled={loading}
+                className={`bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white px-6 py-2 rounded-xl font-semibold shadow-md transition-all duration-300 transform ${
+                  loading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:from-amber-700 hover:via-orange-700 hover:to-rose-700 hover:scale-105"
+                }`}
               >
-                Send Message
+                {loading ? "Sending..." : "Send Message"}
               </button>
             </div>
           </form>
