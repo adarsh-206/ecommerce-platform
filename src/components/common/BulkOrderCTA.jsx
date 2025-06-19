@@ -12,7 +12,7 @@ export default function BulkOrderCTA() {
         <div className="mt-10 flex justify-center">
           <a
             href="mailto:chakachakteam@gmail.com"
-            className="inline-block px-10 py-4 rounded-lg font-semibold text-[#d4a98e] bg-[#7c533e] hover:bg-[#6b432f] transition-colors duration-300"
+            className="inline-block w-full sm:w-auto text-center px-6 sm:px-10 py-4 rounded-lg font-semibold text-[#d4a98e] bg-[#7c533e] hover:bg-[#6b432f] transition-colors duration-300"
           >
             Mail us at chakachakteam@gmail.com
           </a>
