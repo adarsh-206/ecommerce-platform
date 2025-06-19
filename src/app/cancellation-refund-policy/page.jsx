@@ -146,6 +146,7 @@ export default function CancellationAndRefundPolicyPage() {
               </p>
               <ul className="text-amber-700 mb-6 ml-6 space-y-2">
                 <li>• Email: chakachakteam@gmail.com</li>
+                <li>• Instagram: @chakachakteam</li>
                 {/* <li>• Phone: +91-XXXXXXXXXX</li> */}
               </ul>
 
