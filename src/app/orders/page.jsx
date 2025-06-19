@@ -12,6 +12,7 @@ import {
   Package,
   CheckCircle,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function OrdersPage() {
   const { user, isAuthenticated } = useAuth();
@@ -85,96 +86,101 @@ export default function OrdersPage() {
           ) : (
             <div className="space-y-6">
               {orders.map((order) => (
-                <div
+                <Link
                   key={order.orderId}
-                  className="bg-white rounded-lg shadow-lg p-5 border border-amber-200"
+                  href={`/order/${order.orderId}`}
+                  className="block transition-transform duration-200 hover:scale-[1.01]"
                 >
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
-                    <div>
-                      <div className="text-lg font-semibold text-amber-800">
-                        Order ID: {order.orderId}
+                  <div className="bg-white rounded-lg shadow-lg p-5 border border-amber-200">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
+                      <div>
+                        <div className="text-lg font-semibold text-amber-800">
+                          Order ID: {order.orderId}
+                        </div>
+                        <div className="text-sm text-amber-600">
+                          Placed on: {formatDate(order.createdAt)}
+                        </div>
                       </div>
-                      <div className="text-sm text-amber-600">
-                        Placed on: {formatDate(order.createdAt)}
-                      </div>
-                    </div>
-                    <div
-                      className={`w-fit inline-block text-sm px-3 py-1 rounded-full capitalize ${getStatusColor(
-                        order.orderStatus
-                      )}`}
-                    >
-                      {order.orderStatus}
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    {order.items.map((item, idx) => (
                       <div
-                        key={idx}
-                        className="flex items-center gap-4 bg-amber-50 p-3 rounded-lg border border-amber-100"
+                        className={`w-fit inline-block text-sm px-3 py-1 rounded-full capitalize ${getStatusColor(
+                          order.orderStatus
+                        )}`}
                       >
-                        <div className="w-16 h-16 bg-amber-100 rounded border border-amber-200 overflow-hidden flex items-center justify-center">
-                          <img
-                            src={item.product.url}
-                            alt={item.product.name}
-                            className="object-cover w-full h-full"
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-semibold text-amber-800">
-                            {item.product.name}
-                          </p>
-                          <div className="flex flex-wrap gap-4 text-xs text-amber-600 mt-1">
-                            <span>Size: {item.size}</span>
-                            <span>Color: {item.color}</span>
-                            <span>Quantity: {item.quantity}</span>
-                          </div>
-                          <p className="text-sm font-semibold text-amber-700 mt-2">
-                            ₹{item.priceAtPurchase} × {item.quantity} = ₹
-                            {(item.priceAtPurchase * item.quantity).toFixed(2)}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-4 pt-4 border-t border-amber-200">
-                    <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
-                      <div className="flex items-center gap-2 text-sm text-amber-700">
-                        <Truck className="w-4 h-4" />
-                        <span>
-                          {order.deliveryAddress.fullName},{" "}
-                          {order.deliveryAddress.addressLine1},{" "}
-                          {order.deliveryAddress.city} -{" "}
-                          {order.deliveryAddress.postalCode},{" "}
-                          {order.deliveryAddress.state},{" "}
-                          {order.deliveryAddress.country}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm font-semibold text-amber-800">
-                        <PackageCheck className="w-4 h-4" />
-                        <span>Total: ₹{order.totalAmount.toFixed(2)}</span>
+                        {order.orderStatus}
                       </div>
                     </div>
-                    <div className="mt-2 text-xs text-amber-600 flex items-center gap-2">
-                      <span className="flex items-center gap-1">
-                        Payment:{" "}
-                        <span className="capitalize font-medium flex items-center gap-1">
-                          {order.payment.paymentStatus}
-                          {order.payment.paymentStatus.toLowerCase() ===
-                            "paid" && (
-                            <CheckCircle className="w-4 h-4 text-green-600" />
+
+                    <div className="space-y-3">
+                      {order.items.map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center gap-4 bg-amber-50 p-3 rounded-lg border border-amber-100"
+                        >
+                          <div className="w-16 h-16 bg-amber-100 rounded border border-amber-200 overflow-hidden flex items-center justify-center">
+                            <img
+                              src={item.product.url}
+                              alt={item.product.name}
+                              className="object-cover w-full h-full"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-semibold text-amber-800">
+                              {item.product.name}
+                            </p>
+                            <div className="flex flex-wrap gap-4 text-xs text-amber-600 mt-1">
+                              <span>Size: {item.size}</span>
+                              <span>Color: {item.color}</span>
+                              <span>Quantity: {item.quantity}</span>
+                            </div>
+                            <p className="text-sm font-semibold text-amber-700 mt-2">
+                              ₹{item.priceAtPurchase} × {item.quantity} = ₹
+                              {(item.priceAtPurchase * item.quantity).toFixed(
+                                2
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-4 pt-4 border-t border-amber-200">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+                        <div className="flex items-center gap-2 text-sm text-amber-700">
+                          <Truck className="w-4 h-4" />
+                          <span>
+                            {order.deliveryAddress.fullName},{" "}
+                            {order.deliveryAddress.addressLine1},{" "}
+                            {order.deliveryAddress.city} -{" "}
+                            {order.deliveryAddress.postalCode},{" "}
+                            {order.deliveryAddress.state},{" "}
+                            {order.deliveryAddress.country}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm font-semibold text-amber-800">
+                          <PackageCheck className="w-4 h-4" />
+                          <span>Total: ₹{order.totalAmount.toFixed(2)}</span>
+                        </div>
+                      </div>
+                      <div className="mt-2 text-xs text-amber-600 flex items-center gap-2">
+                        <span className="flex items-center gap-1">
+                          Payment:{" "}
+                          <span className="capitalize font-medium flex items-center gap-1">
+                            {order.payment.paymentStatus}
+                            {order.payment.paymentStatus.toLowerCase() ===
+                              "paid" && (
+                              <CheckCircle className="w-4 h-4 text-green-600" />
+                            )}
+                          </span>
+                          {order.payment.transactionId && (
+                            <span className="ml-2">
+                              (Transaction ID: {order.payment.transactionId})
+                            </span>
                           )}
                         </span>
-                        {order.payment.transactionId && (
-                          <span className="ml-2">
-                            (Transaction ID: {order.payment.transactionId})
-                          </span>
-                        )}
-                      </span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}

@@ -6,7 +6,7 @@ export default function PrivacyPolicyPage() {
   return (
     <MainLayout>
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
-        <div className="w-full px-4 sm:px-10 lg:px-20 py-14 sm:py-20 lg:py-28">
+        <div className="w-full px-4 sm:px-10 lg:px-20 py-12 sm:py-16 lg:py-20">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-14">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-amber-800 mb-4 leading-tight tracking-tight">
