@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import ProductCard from "@/components/product/ProductCard";
-import { Sparkles, ArrowRight } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import apiService from "@/app/utils/apiService";
 import MainLayout from "@/components/layouts/MainLayout";

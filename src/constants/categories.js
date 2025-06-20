@@ -66,4 +66,21 @@ const categories = [
   },
 ];
 
+export const getCategoryNameById = (categoryId, subcategoryId = null) => {
+  const category = categories.find((cat) => cat.id == categoryId);
+  if (!category) return null;
+
+  if (subcategoryId === null) {
+    return category.name;
+  }
+
+  const sub = category.subcategories.find((s) => s.id == subcategoryId);
+  if (!sub) return category.name;
+
+  return {
+    category: category.name,
+    subcategory: sub.name,
+  };
+};
+
 export default categories;

@@ -76,7 +76,7 @@ export default function Header() {
 
           <div className="hidden md:flex items-center space-x-4">
             {searchOpen ? (
-              <div className="relative transition-all duration-300 w-64">
+              <div className="relative transition-all duration-300 min-w-80">
                 <SearchBar />
                 <button
                   onClick={() => setSearchOpen(false)}
