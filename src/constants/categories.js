@@ -83,4 +83,9 @@ export const getCategoryNameById = (categoryId, subcategoryId = null) => {
   };
 };
 
+export const getCategorySlugById = (categoryId) => {
+  const category = categories.find((cat) => cat.id == categoryId);
+  return category ? category.slug : null;
+};
+
 export default categories;

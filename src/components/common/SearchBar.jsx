@@ -4,7 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Mic, MicOff, Loader2 } from "lucide-react";
 import apiService from "@/app/utils/apiService";
-import { getCategoryNameById } from "@/constants/categories";
+import {
+  getCategoryNameById,
+  getCategorySlugById,
+} from "@/constants/categories";
 
 const SpeechRecognition =
   typeof window !== "undefined"
@@ -13,21 +16,21 @@ const SpeechRecognition =
 
 export default function SearchBar() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(-1);
   const [listening, setListening] = useState(false);
   const [listeningText, setListeningText] = useState("");
   const router = useRouter();
   const recognitionRef = useRef(null);
-  const listRef = useRef(null);
   let debounceTimer;
 
   useEffect(() => {
     if (!query.trim()) {
       stopListening();
-      setResults([]);
+      setCategories([]);
+      setProducts([]);
       setShowDropdown(false);
       return;
     }
@@ -71,50 +74,16 @@ export default function SearchBar() {
         { q: search },
         true
       );
-      setResults(data.products || []);
+      setCategories(data.categories || []);
+      setProducts(data.products || []);
       setShowDropdown(true);
     } catch (error) {
-      console.error("Search error:", error);
-      setResults([]);
+      setCategories([]);
+      setProducts([]);
       setShowDropdown(false);
     } finally {
       setLoading(false);
-      setActiveIndex(-1);
     }
-  };
-
-  const handleSelect = (productId) => {
-    setQuery("");
-    setShowDropdown(false);
-    stopListening();
-    router.push(`/product/${productId}`);
-  };
-
-  const handleKeyDown = (e) => {
-    if (!showDropdown || results.length === 0) return;
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setActiveIndex((prev) => (prev + 1) % results.length);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setActiveIndex((prev) => (prev - 1 + results.length) % results.length);
-    } else if (e.key === "Enter" && activeIndex >= 0) {
-      handleSelect(results[activeIndex]._id);
-    }
-  };
-
-  const highlightMatch = (text) => {
-    if (!query) return text;
-    const regex = new RegExp(`(${query})`, "ig");
-    return text.split(regex).map((part, i) =>
-      regex.test(part) ? (
-        <mark key={i} className="bg-yellow-200">
-          {part}
-        </mark>
-      ) : (
-        part
-      )
-    );
   };
 
   const stopListening = () => {
@@ -127,8 +96,10 @@ export default function SearchBar() {
   };
 
   const handleVoiceSearch = () => {
-    if (!SpeechRecognition)
-      return alert("Voice search not supported in this browser.");
+    if (!SpeechRecognition) {
+      alert("Voice search not supported in this browser.");
+      return;
+    }
 
     if (listening) {
       stopListening();
@@ -152,15 +123,33 @@ export default function SearchBar() {
       stopListening();
     };
 
-    recognition.onend = () => {
-      stopListening();
-    };
+    recognition.onend = () => stopListening();
 
     recognition.onerror = (event) => {
-      console.error("Voice error:", event.error);
       stopListening();
       setShowDropdown(false);
     };
+  };
+
+  const highlightMatch = (text) => {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, "ig");
+    return text.split(regex).map((part, i) =>
+      regex.test(part) ? (
+        <mark key={i} className="bg-yellow-200">
+          {part}
+        </mark>
+      ) : (
+        part
+      )
+    );
+  };
+
+  const handleSelect = (productId) => {
+    setQuery("");
+    setShowDropdown(false);
+    stopListening();
+    router.push(`/product/${productId}`);
   };
 
   return (
@@ -169,9 +158,9 @@ export default function SearchBar() {
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={handleKeyDown}
         onFocus={() => {
-          if (results.length > 0) setShowDropdown(true);
+          if (categories.length > 0 || products.length > 0)
+            setShowDropdown(true);
         }}
         onBlur={() => {
           setTimeout(() => {
@@ -240,26 +229,46 @@ export default function SearchBar() {
                 Tap to stop listening
               </button>
             </div>
-          ) : results.length > 0 ? (
+          ) : categories.length > 0 || products.length > 0 ? (
             <ul className="max-h-64 overflow-y-auto">
-              <li className="px-4 pt-2 pb-1 text-xs text-amber-500">
-                Here's what we found for you:
-              </li>
-              {results.map((product, index) => {
+              {categories.length > 0 && (
+                <li className="px-4 pt-2 pb-1 text-xs text-amber-500">
+                  Top categories for you:
+                </li>
+              )}
+              {categories.map((categoryId) => {
+                const categoryName = getCategoryNameById(categoryId);
+
+                return (
+                  <li
+                    key={`cat-${categoryId}`}
+                    onClick={() => {
+                      setQuery("");
+                      setShowDropdown(false);
+                      router.push(getCategorySlugById(categoryId));
+                    }}
+                    className="px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100 cursor-pointer"
+                  >
+                    {categoryName}
+                  </li>
+                );
+              })}
+
+              {products.length > 0 && (
+                <li className="px-4 pt-2 pb-1 text-xs text-amber-500">
+                  Found these products:
+                </li>
+              )}
+              {products.map((product) => {
                 const categoryInfo = getCategoryNameById(
                   product.category,
                   product.subCategory
                 );
-
                 return (
                   <li
                     key={product._id}
                     onClick={() => handleSelect(product._id)}
-                    className={`flex items-center px-4 py-2 cursor-pointer transition-all ${
-                      index === activeIndex
-                        ? "bg-amber-100"
-                        : "hover:bg-amber-50"
-                    }`}
+                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-amber-50"
                   >
                     <img
                       src={product?.images?.main?.url}
