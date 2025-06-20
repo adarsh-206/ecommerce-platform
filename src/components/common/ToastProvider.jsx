@@ -15,7 +15,7 @@ const ToastProvider = () => {
           fontWeight: "500",
           borderRadius: "8px",
         },
-        duration: 4000,
+        duration: 2000,
         success: {
           icon: "✅",
         },
