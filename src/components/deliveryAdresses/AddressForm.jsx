@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchStateCityData } from "@/utils/fetchStateCityData";
 
 const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
   const [formData, setFormData] = useState({
@@ -14,7 +15,57 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
     phone: "",
   });
 
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [pincodes, setPincodes] = useState([]);
+
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    const loadStates = async () => {
+      const data = await fetchStateCityData(
+        "/common/get-city-pincodes?type=states"
+      );
+      {
+        console.log("statess:---", data?.data);
+      }
+      if (Array.isArray(data?.data)) setStates(data?.data);
+    };
+    loadStates();
+  }, []);
+
+  useEffect(() => {
+    if (!formData.state) return;
+
+    const loadCities = async () => {
+      const data = await fetchStateCityData(
+        `/common/get-city-pincodes?type=cities&state=${formData.state}`
+      );
+      if (Array.isArray(data?.data)) setCities(data?.data);
+    };
+
+    setCities([]);
+    setPincodes([]);
+    setFormData((prev) => ({ ...prev, city: "", postalCode: "" }));
+
+    loadCities();
+  }, [formData.state]);
+
+  useEffect(() => {
+    if (!formData.city) return;
+
+    const loadPincodes = async () => {
+      const data = await fetchStateCityData(
+        `/common/get-city-pincodes?type=pincodes&city=${formData.city}`
+      );
+      if (Array.isArray(data?.data)) setPincodes(data?.data);
+    };
+
+    setPincodes([]);
+    setFormData((prev) => ({ ...prev, postalCode: "" }));
+
+    loadPincodes();
+  }, [formData.city]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -47,9 +98,8 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
             name="fullName"
             value={formData.fullName}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
-            placeholder="Enter full name"
             required
+            className="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:outline-none"
           />
         </div>
         <div>
@@ -61,9 +111,8 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
             name="phone"
             value={formData.phone}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
-            placeholder="+91 9876543210"
             required
+            className="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:outline-none"
           />
         </div>
       </div>
@@ -77,9 +126,8 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
           name="addressLine1"
           value={formData.addressLine1}
           onChange={handleInputChange}
-          className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
-          placeholder="House/Flat/Building number, Street name"
           required
+          className="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:outline-none"
         />
       </div>
 
@@ -92,54 +140,8 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
           name="addressLine2"
           value={formData.addressLine2}
           onChange={handleInputChange}
-          className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
-          placeholder="Landmark, Area (Optional)"
+          className="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:outline-none"
         />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            City *
-          </label>
-          <input
-            type="text"
-            name="city"
-            value={formData.city}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
-            placeholder="City"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            State *
-          </label>
-          <input
-            type="text"
-            name="state"
-            value={formData.state}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
-            placeholder="State"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Postal Code *
-          </label>
-          <input
-            type="text"
-            name="postalCode"
-            value={formData.postalCode}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
-            placeholder="PIN Code"
-            required
-          />
-        </div>
       </div>
 
       <div>
@@ -149,19 +151,85 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
         <input
           type="text"
           name="country"
-          value={formData.country}
-          onChange={handleInputChange}
-          className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
-          placeholder="Country"
-          required
+          value="India"
+          readOnly
+          disabled
+          className="w-full bg-gray-100 text-gray-600 px-3 py-2 border border-gray-300 rounded-md focus:outline-none cursor-not-allowed"
         />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            State *
+          </label>
+          <select
+            name="state"
+            value={formData.state}
+            onChange={handleInputChange}
+            required
+            className="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:outline-none"
+          >
+            <option value="">Select State</option>
+            {Array.isArray(states) &&
+              states.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            City *
+          </label>
+          <select
+            name="city"
+            value={formData.city}
+            onChange={handleInputChange}
+            required
+            disabled={!Array.isArray(cities) || cities.length === 0}
+            className="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:outline-none"
+          >
+            <option value="">Select City</option>
+            {Array.isArray(cities) &&
+              cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Postal Code *
+          </label>
+          <select
+            name="postalCode"
+            value={formData.postalCode}
+            onChange={handleInputChange}
+            required
+            disabled={!Array.isArray(pincodes) || pincodes.length === 0}
+            className="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:outline-none"
+          >
+            <option value="">Select PIN</option>
+            {Array.isArray(pincodes) &&
+              pincodes.map((pin) => (
+                <option key={pin} value={pin}>
+                  {pin}
+                </option>
+              ))}
+          </select>
+        </div>
       </div>
 
       <div className="flex gap-3 pt-4">
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 bg-amber-600 text-white py-2 px-4 rounded-md hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-1 bg-amber-600 text-white py-2 px-4 rounded-md hover:bg-amber-700 disabled:opacity-50"
         >
           {submitting
             ? "Saving..."
@@ -172,7 +240,7 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
         <button
           type="button"
           onClick={closeModals}
-          className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition-colors"
+          className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400"
         >
           Cancel
         </button>
