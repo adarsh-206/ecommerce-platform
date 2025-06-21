@@ -18,7 +18,6 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [pincodes, setPincodes] = useState([]);
-
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -26,10 +25,7 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
       const data = await fetchStateCityData(
         "/common/get-city-pincodes?type=states"
       );
-      {
-        console.log("statess:---", data?.data);
-      }
-      if (Array.isArray(data?.data)) setStates(data?.data);
+      if (Array.isArray(data?.data)) setStates(data.data);
     };
     loadStates();
   }, []);
@@ -41,13 +37,12 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
       const data = await fetchStateCityData(
         `/common/get-city-pincodes?type=cities&state=${formData.state}`
       );
-      if (Array.isArray(data?.data)) setCities(data?.data);
+      if (Array.isArray(data?.data)) setCities(data.data);
     };
 
     setCities([]);
     setPincodes([]);
     setFormData((prev) => ({ ...prev, city: "", postalCode: "" }));
-
     loadCities();
   }, [formData.state]);
 
@@ -58,12 +53,11 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
       const data = await fetchStateCityData(
         `/common/get-city-pincodes?type=pincodes&city=${formData.city}`
       );
-      if (Array.isArray(data?.data)) setPincodes(data?.data);
+      if (Array.isArray(data?.data)) setPincodes(data.data);
     };
 
     setPincodes([]);
     setFormData((prev) => ({ ...prev, postalCode: "" }));
-
     loadPincodes();
   }, [formData.city]);
 
@@ -171,12 +165,11 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
             className="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:outline-none"
           >
             <option value="">Select State</option>
-            {Array.isArray(states) &&
-              states.map((state) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
+            {states.map((state) => (
+              <option key={state} value={state}>
+                {state}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -189,16 +182,15 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
             value={formData.city}
             onChange={handleInputChange}
             required
-            disabled={!Array.isArray(cities) || cities.length === 0}
+            disabled={cities.length === 0}
             className="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:outline-none"
           >
             <option value="">Select City</option>
-            {Array.isArray(cities) &&
-              cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
+            {cities.map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -211,16 +203,15 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
             value={formData.postalCode}
             onChange={handleInputChange}
             required
-            disabled={!Array.isArray(pincodes) || pincodes.length === 0}
+            disabled={pincodes.length === 0}
             className="w-full text-gray-600 px-3 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:outline-none"
           >
             <option value="">Select PIN</option>
-            {Array.isArray(pincodes) &&
-              pincodes.map((pin) => (
-                <option key={pin} value={pin}>
-                  {pin}
-                </option>
-              ))}
+            {pincodes.map((pin) => (
+              <option key={pin} value={pin}>
+                {pin}
+              </option>
+            ))}
           </select>
         </div>
       </div>
