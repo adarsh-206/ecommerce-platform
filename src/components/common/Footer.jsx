@@ -45,6 +45,10 @@ export default function Footer() {
                   name: "Shipping & Delivery Policy",
                   path: "/shipping-delivery-policy",
                 },
+                {
+                  name: "Terms & Conditions",
+                  path: "/terms-and-conditions",
+                },
               ].map((item, idx) => (
                 <li key={idx}>
                   <Link
