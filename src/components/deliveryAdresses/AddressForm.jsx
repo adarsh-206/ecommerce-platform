@@ -99,7 +99,7 @@ const AddressForm = ({
       isEditing &&
       initialData?.postalCode &&
       pincodes.length > 0 &&
-      pincodes.includes(initialData.postalCode)
+      pincodes.map(String).includes(String(initialData.postalCode))
     ) {
       setFormData((prev) => ({ ...prev, postalCode: initialData.postalCode }));
     }
@@ -252,8 +252,6 @@ const AddressForm = ({
           <label className="block text-sm font-medium text-gray-700 mb-1">
             City *
           </label>
-          {console.log(formData?.city)}
-          {console.log(cities)}
           <select
             name="city"
             value={formData.city}

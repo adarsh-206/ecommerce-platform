@@ -35,6 +35,7 @@ export default function MyAccountPage() {
   const [editingAddress, setEditingAddress] = useState(null);
   const [deletingAddress, setDeletingAddress] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [passLoading, setPassLoading] = useState(false);
   const [editForm, setEditForm] = useState({
     fullName: "",
     email: "",
@@ -173,8 +174,6 @@ export default function MyAccountPage() {
   };
 
   const openEditModal = (address) => {
-    console.log("address", address);
-
     setEditingAddress(address);
     setShowEditModal(true);
   };
@@ -209,7 +208,7 @@ export default function MyAccountPage() {
     }
   };
 
-  const handlePasswordSubmit = () => {
+  const handlePasswordSubmit = async () => {
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       showToast.error("New passwords don't match");
       return;
@@ -221,6 +220,15 @@ export default function MyAccountPage() {
     }
 
     try {
+      await apiService.put(
+        "/change-password",
+        {
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+        },
+        true
+      );
+
       setPasswordForm({
         currentPassword: "",
         newPassword: "",
@@ -230,7 +238,22 @@ export default function MyAccountPage() {
       showToast.success("Password updated successfully");
     } catch (error) {
       console.error("Error updating password:", error);
-      showToast.error("Failed to update password");
+      const errorMsg =
+        error?.response?.data?.error || "Failed to update password";
+      showToast.error(errorMsg);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    setPassLoading(true);
+    try {
+      await apiService.post("/forgot-password", {}, true);
+      showToast.success("Password reset link sent to your email");
+    } catch (error) {
+      const errorMsg = error?.response?.data?.error || "Something went wrong";
+      showToast.error(errorMsg);
+    } finally {
+      setPassLoading(false);
     }
   };
 
@@ -238,7 +261,7 @@ export default function MyAccountPage() {
     if (!isOpen) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="fixed inset-0 bg-gray-800/70 backdrop-blur-md flex items-center justify-center p-4 z-50">
         <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between p-6 border-b">
             <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
@@ -350,7 +373,7 @@ export default function MyAccountPage() {
                         {userData.fullName || "N/A"}
                       </h2>
                       <p className="text-blue-100">{userData.email || "N/A"}</p>
-                      <p className="text-sm text-blue-200">
+                      <p className="text-sm text-gray-200">
                         Member since{" "}
                         {userData.createdAt
                           ? new Date(userData.createdAt).toLocaleDateString()
@@ -607,6 +630,17 @@ export default function MyAccountPage() {
                             <Eye size={20} />
                           )}
                         </button>
+                        <div className="mt-2 text-right">
+                          <button
+                            type="button"
+                            onClick={handleForgotPassword}
+                            className="text-sm text-blue-500 hover:underline"
+                          >
+                            {passLoading
+                              ? "Sending reset link..."
+                              : "Forgot Password?"}
+                          </button>
+                        </div>
                       </div>
                       <div className="relative">
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
