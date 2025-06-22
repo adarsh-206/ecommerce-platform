@@ -24,26 +24,41 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow mt-10">
-      <h2 className="text-2xl font-bold mb-4">Forgot Password</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          className="w-full border p-2 mb-4"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-          type="submit"
-        >
-          Send Reset Link
-        </button>
-      </form>
-      {message && <p className="text-green-600 mt-4">{message}</p>}
-      {error && <p className="text-red-600 mt-4">{error}</p>}
+    <div className="min-h-screen bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-amber-100">
+        <h2 className="text-3xl font-extrabold text-orange-600 text-center mb-6">
+          Forgot Password
+        </h2>
+        <form onSubmit={handleSubmit}>
+          <label className="block text-amber-700 font-medium mb-1">
+            Email Address
+          </label>
+          <input
+            type="email"
+            className="w-full text-gray-500 border border-orange-300 rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <button
+            className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+            type="submit"
+          >
+            Send Reset Link
+          </button>
+        </form>
+
+        {message && (
+          <p className="text-green-600 text-center mt-4 font-medium">
+            {message}
+          </p>
+        )}
+        {error && (
+          <p className="text-rose-600 text-center mt-4 font-medium">{error}</p>
+        )}
+      </div>
     </div>
   );
 }
