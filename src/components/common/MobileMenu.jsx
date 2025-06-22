@@ -75,7 +75,7 @@ export default function MobileMenu({
               </div>
             </div>
             <Link
-              href="/account"
+              href="/my-account"
               className="block p-3 text-amber-800 hover:bg-amber-100/60 hover:text-orange-700 rounded-lg font-medium transition-all duration-200"
             >
               My Account

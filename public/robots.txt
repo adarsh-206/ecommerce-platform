@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://chaka-chak.in
+
+# Sitemaps
+Sitemap: https://chaka-chak.in/sitemap.xml

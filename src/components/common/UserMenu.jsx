@@ -81,7 +81,7 @@ export default function UserMenu({ userDetails, getUserDetails }) {
             {isLoggedIn ? (
               <>
                 <Link
-                  href="/account"
+                  href="/my-account"
                   className="flex items-center px-4 py-3 text-sm text-amber-800 hover:bg-amber-100/60 hover:text-orange-700 transition-all duration-200 rounded-lg mx-2"
                 >
                   <User size={18} className="mr-3 text-amber-600" />

@@ -3,7 +3,12 @@
 import { useState, useEffect } from "react";
 import { fetchStateCityData } from "@/utils/fetchStateCityData";
 
-const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
+const AddressForm = ({
+  onSubmit,
+  isEditing = false,
+  initialData = null,
+  closeModals,
+}) => {
   const [formData, setFormData] = useState({
     fullName: "",
     addressLine1: "",
@@ -29,6 +34,76 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
     };
     loadStates();
   }, []);
+
+  useEffect(() => {
+    if (isEditing && initialData) {
+      // Step 1: Initialize form data (without worrying if city/pincode exists in dropdown yet)
+      setFormData({
+        fullName: initialData.fullName || "",
+        addressLine1: initialData.addressLine1 || "",
+        addressLine2: initialData.addressLine2 || "",
+        city: initialData.city || "",
+        state: initialData.state || "",
+        country: initialData.country || "India",
+        postalCode: initialData.postalCode || "",
+        phone: initialData.phone || "",
+      });
+
+      // Step 2: Fetch cities based on state
+      if (initialData.state) {
+        fetchStateCityData(
+          `/common/get-city-pincodes?type=cities&state=${initialData.state}`
+        ).then((res) => {
+          if (Array.isArray(res?.data)) {
+            setCities(res.data);
+
+            // Step 3: Ensure selected city exists
+            if (!res.data.includes(initialData.city)) {
+              setFormData((prev) => ({ ...prev, city: "" }));
+            }
+          }
+        });
+      }
+
+      // Step 4: Fetch pincodes based on city
+      if (initialData.city) {
+        fetchStateCityData(
+          `/common/get-city-pincodes?type=pincodes&city=${initialData.city}`
+        ).then((res) => {
+          if (Array.isArray(res?.data)) {
+            setPincodes(res.data);
+
+            // Step 5: Ensure selected pin exists
+            if (!res.data.includes(initialData.postalCode)) {
+              setFormData((prev) => ({ ...prev, postalCode: "" }));
+            }
+          }
+        });
+      }
+    }
+  }, [isEditing, initialData]);
+
+  useEffect(() => {
+    if (
+      isEditing &&
+      initialData?.city &&
+      cities.length > 0 &&
+      cities.includes(initialData.city)
+    ) {
+      setFormData((prev) => ({ ...prev, city: initialData.city }));
+    }
+  }, [cities]);
+
+  useEffect(() => {
+    if (
+      isEditing &&
+      initialData?.postalCode &&
+      pincodes.length > 0 &&
+      pincodes.includes(initialData.postalCode)
+    ) {
+      setFormData((prev) => ({ ...prev, postalCode: initialData.postalCode }));
+    }
+  }, [pincodes]);
 
   useEffect(() => {
     if (!formData.state) return;
@@ -177,6 +252,8 @@ const AddressForm = ({ onSubmit, isEditing = false, closeModals }) => {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             City *
           </label>
+          {console.log(formData?.city)}
+          {console.log(cities)}
           <select
             name="city"
             value={formData.city}
