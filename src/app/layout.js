@@ -9,8 +9,9 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "Chaka-Chak",
-  description: "Your one-stop shop for all your shopping needs",
+  title: "Chaka-Chak | Standout Style & Decor You Won’t Find Anywhere Else",
+  description:
+    "Shop Chaka-Chak for bold fashion, eye-catching accessories, and stylish decor — made just for you. Unique finds, fast shipping, and good vibes only.",
   icons: {
     icon: "/chaka-chak-logo.ico",
   },

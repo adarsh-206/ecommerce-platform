@@ -80,6 +80,11 @@ export default function NewArrivals() {
           </Link>
         </div>
 
+        <h3 className="sr-only">
+          Discover the newest additions to our curated product lineup at
+          Chaka-Chak
+        </h3>
+
         {loading ? (
           <>
             <div className="sm:hidden">
@@ -97,7 +102,9 @@ export default function NewArrivals() {
               <div className="overflow-hidden rounded-xl">
                 <div
                   className="flex transition-transform duration-500 ease-in-out"
-                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                  style={{
+                    transform: `translateX(-${currentSlide * 100}%)`,
+                  }}
                 >
                   {products.map((product) => (
                     <div key={product.id} className="w-full flex-shrink-0 px-2">

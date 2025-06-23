@@ -12,7 +12,6 @@ export default function FeaturedCategories() {
 
   useEffect(() => {
     const imageMap = {};
-
     categories.forEach((category, catIndex) => {
       imageMap[catIndex] = [];
       category.images.forEach((src) => {
@@ -21,7 +20,6 @@ export default function FeaturedCategories() {
         imageMap[catIndex].push(img);
       });
     });
-
     setLoadedImages(imageMap);
   }, []);
 
@@ -35,7 +33,6 @@ export default function FeaturedCategories() {
         }));
       }, 4000 + categoryIndex * 700)
     );
-
     return () => intervals.forEach(clearInterval);
   }, []);
 
@@ -50,7 +47,6 @@ export default function FeaturedCategories() {
         setItemsPerSlide(2);
       }
     };
-
     updateItemsPerSlide();
     window.addEventListener("resize", updateItemsPerSlide);
     return () => window.removeEventListener("resize", updateItemsPerSlide);
@@ -62,7 +58,6 @@ export default function FeaturedCategories() {
         (prev) => (prev + 1) % Math.ceil(categories.length / itemsPerSlide)
       );
     }, 4000);
-
     return () => clearInterval(autoSlide);
   }, [categories.length, itemsPerSlide]);
 
@@ -89,7 +84,6 @@ export default function FeaturedCategories() {
           </div>
         </div>
       </div>
-
       <h3 className="text-md xs:text-sm sm:text-lg md:text-xl font-semibold text-amber-800 hover:text-orange-700 transition-colors duration-300 text-center px-1">
         {category.name}
       </h3>
@@ -105,6 +99,11 @@ export default function FeaturedCategories() {
             Featured Categories
           </h2>
         </div>
+
+        <h3 className="sr-only">
+          Explore our top product categories including fashion, lifestyle and
+          decor
+        </h3>
 
         <div className="block sm:hidden">
           <div className="overflow-hidden">

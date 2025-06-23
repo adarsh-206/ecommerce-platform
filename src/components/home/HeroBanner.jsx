@@ -29,7 +29,6 @@ export default function HeroBanner() {
 
   return (
     <>
-      {/* Desktop and tablet version */}
       <div className="hidden sm:block relative w-full h-[650px] overflow-hidden">
         <div
           className="flex w-full h-full transition-transform duration-700 ease-in-out"
@@ -39,13 +38,19 @@ export default function HeroBanner() {
             <div key={index} className="relative w-full h-full flex-shrink-0">
               <Image
                 src={banner}
-                alt={`Hero Banner ${index + 1}`}
+                alt={`Hero Banner Slide ${index + 1}`}
                 fill
                 priority={index === 0}
                 unoptimized
                 className="object-cover object-center"
               />
-              <div className="absolute inset-0" />
+              <div className="absolute inset-0">
+                {index === 0 && (
+                  <h1 className="sr-only">
+                    Chaka-Chak – Unique Fashion, Accessories & Decor
+                  </h1>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -89,7 +94,6 @@ export default function HeroBanner() {
         </button>
       </div>
 
-      {/* Mobile version */}
       <div className="sm:hidden w-full h-[350px] bg-gradient-to-r from-[#e0c3a9] to-[#d4a98e] relative overflow-hidden font-[TC_October]">
         <div
           className="flex w-full h-full transition-transform duration-700 ease-in-out"

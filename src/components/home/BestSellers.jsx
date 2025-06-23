@@ -33,7 +33,7 @@ export default function BestSellers() {
     try {
       const data = await apiService.get("/buyer/products/best-seller");
       const result = data?.data || [];
-      const latest4 = result.slice(0, 4); // take only the first 4 items :contentReference[oaicite:1]{index=1}
+      const latest4 = result.slice(0, 4);
 
       cachedData.current = latest4;
       if (isMounted.current) {
@@ -82,6 +82,10 @@ export default function BestSellers() {
             <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
+
+        <h3 className="sr-only">
+          Shop our most popular trending products at Chaka-Chak
+        </h3>
 
         {loading ? (
           <>
