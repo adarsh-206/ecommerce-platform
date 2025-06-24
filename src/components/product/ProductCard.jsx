@@ -4,19 +4,24 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import categories from "@/constants/categories";
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 import { showToast } from "@/utils/showToast";
+import { Heart } from "lucide-react";
+import checkLoginStatus from "@/utils/checkLoginStatus";
 
 export default function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isInWishlist, setIsInWishlist] = useState(false);
   const cardRef = useRef(null);
   const [cardHeight, setCardHeight] = useState(0);
+
   const { addItem, updateItem, getItemQuantity } = useCart();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 768);
-    };
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -28,6 +33,17 @@ export default function ProductCard({ product }) {
     }
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      const loggedIn = await checkLoginStatus();
+      setIsLoggedIn(loggedIn);
+    })();
+  }, []);
+
+  useEffect(() => {
+    setIsInWishlist(wishlist?.some((item) => item.id === product.id));
+  }, [wishlist, product.id]);
+
   const productLink = product?.id ? `/product/${product.id}` : "#";
   const categoryObj = categories.find((cat) => cat.id == product.category);
   const categoryName = categoryObj?.name || "";
@@ -38,7 +54,6 @@ export default function ProductCard({ product }) {
 
   const defaultSize = product?.priceBySize?.[0]?.size || "";
   const defaultColor = product?.availableColors?.[0] || "";
-
   const quantity = getItemQuantity(product.id, defaultSize, defaultColor);
 
   const handleAddToCart = async () => {
@@ -53,6 +68,21 @@ export default function ProductCard({ product }) {
   const handleQuantityChange = async (delta) => {
     const newQty = quantity + delta;
     await updateItem(product.id, defaultSize, defaultColor, newQty);
+  };
+
+  const toggleWishlist = async () => {
+    setIsInWishlist(!isInWishlist);
+
+    try {
+      if (isInWishlist) {
+        await removeFromWishlist(product.id);
+      } else {
+        await addToWishlist(product.id);
+      }
+    } catch {
+      setIsInWishlist(isInWishlist);
+      showToast.error("Wishlist action failed");
+    }
   };
 
   return (
@@ -82,15 +112,29 @@ export default function ProductCard({ product }) {
         </div>
       </Link>
 
+      {isLoggedIn && (
+        <button
+          onClick={toggleWishlist}
+          className="absolute top-2 right-2 p-1"
+          aria-label="Toggle wishlist"
+        >
+          <Heart
+            className="w-6 h-6"
+            fill={isInWishlist ? "#f43f5e" : "none"}
+            stroke="#f43f5e"
+          />
+        </button>
+      )}
+
       <div className="p-5 flex flex-col flex-grow">
         <div className="flex flex-wrap gap-2 mb-2">
           {categoryName && (
-            <span className="self-start text-xs font-medium text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
+            <span className="text-xs font-medium text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
               {categoryName}
             </span>
           )}
           {subCategoryName && (
-            <span className="self-start text-xs font-medium text-orange-700 bg-orange-100 px-3 py-1 rounded-full">
+            <span className="text-xs font-medium text-orange-700 bg-orange-100 px-3 py-1 rounded-full">
               {subCategoryName}
             </span>
           )}

@@ -363,16 +363,18 @@ export default function MyAccountPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
               <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-                <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 px-8 py-6">
-                  <div className="flex items-center space-x-4">
+                <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 px-6 py-6 sm:px-8">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0">
                     <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
                       <User className="w-8 h-8 text-white" />
                     </div>
-                    <div className="text-white">
-                      <h2 className="text-2xl font-bold">
+                    <div className="text-white overflow-hidden">
+                      <h2 className="text-2xl font-bold break-words">
                         {userData.fullName || "N/A"}
                       </h2>
-                      <p className="text-blue-100">{userData.email || "N/A"}</p>
+                      <p className="text-blue-100 truncate w-full">
+                        {userData.email || "N/A"}
+                      </p>
                       <p className="text-sm text-gray-200">
                         Member since{" "}
                         {userData.createdAt
@@ -383,18 +385,27 @@ export default function MyAccountPage() {
                   </div>
                 </div>
 
-                <div className="p-8">
+                <div className="p-6 sm:p-8">
                   <div className="flex justify-between items-center mb-8">
-                    <h3 className="text-2xl font-bold text-gray-900">
+                    <h3 className="text-base sm:text-lg lg:text-2xl font-bold text-gray-900">
                       Profile Information
                     </h3>
                     {!isEditing && (
                       <button
                         onClick={() => setIsEditing(true)}
-                        className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                        className={`
+        flex items-center justify-center
+        bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white 
+        rounded-full sm:rounded-xl
+        transition-all duration-300 transform hover:scale-105 shadow-lg
+        w-10 h-10 sm:w-auto sm:h-auto
+        px-0 sm:px-4 py-0 sm:py-1 lg:px-4 lg:py-2
+      `}
                       >
                         <Edit3 size={18} />
-                        <span>Edit Profile</span>
+                        <span className="hidden sm:inline text-sm sm:text-md lg:text-xs m-0">
+                          Edit Profile
+                        </span>
                       </button>
                     )}
                   </div>
@@ -427,7 +438,7 @@ export default function MyAccountPage() {
                             type="email"
                             value={editForm.email}
                             disabled
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed transition-all duration-200"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed transition-all duration-200 truncate"
                             placeholder="Enter your email"
                           />
                         </div>
@@ -445,27 +456,35 @@ export default function MyAccountPage() {
                         </div>
                       </div>
 
-                      <div className="flex justify-center space-x-4 pt-6">
+                      <div className="flex justify-center items-center space-x-3 pt-6 flex-nowrap overflow-auto">
                         <button
                           onClick={handleEditSubmit}
-                          className="flex items-center space-x-2 px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                          className="flex items-center space-x-2 px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 
+               text-sm sm:text-base bg-gradient-to-r from-green-600 to-emerald-600 text-white 
+               rounded-xl hover:from-green-700 hover:to-emerald-700 
+               transition-all duration-300 transform hover:scale-105 shadow-lg"
                         >
-                          <Save size={18} />
-                          <span>Save Changes</span>
+                          <Save size={16} className="sm:w-5 sm:h-5" />
+                          <span className="whitespace-nowrap">
+                            Save Changes
+                          </span>
                         </button>
+
                         <button
                           onClick={() => setIsEditing(false)}
-                          className="flex items-center space-x-2 px-8 py-3 bg-gray-500 text-white rounded-xl hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                          className="flex items-center space-x-2 px-4 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3 
+               text-sm sm:text-base bg-gray-500 text-white rounded-xl 
+               hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
                         >
-                          <X size={18} />
-                          <span>Cancel</span>
+                          <X size={16} className="sm:w-5 sm:h-5" />
+                          <span className="whitespace-nowrap">Cancel</span>
                         </button>
                       </div>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-6">
-                        <div className="bg-gray-50 rounded-xl p-4">
+                        <div className="bg-gray-50 rounded-xl p-4 break-words">
                           <label className="block text-sm font-semibold text-gray-500 mb-1">
                             Full Name
                           </label>
@@ -473,11 +492,11 @@ export default function MyAccountPage() {
                             {userData.fullName || "Not provided"}
                           </p>
                         </div>
-                        <div className="bg-gray-50 rounded-xl p-4">
+                        <div className="bg-gray-50 rounded-xl p-4 break-words">
                           <label className="block text-sm font-semibold text-gray-500 mb-1">
                             Email
                           </label>
-                          <p className="text-gray-900 font-medium text-lg">
+                          <p className="text-gray-900 font-medium text-lg truncate">
                             {userData.email || "Not provided"}
                           </p>
                         </div>
@@ -511,7 +530,7 @@ export default function MyAccountPage() {
                                   key={address._id || index}
                                   className="text-gray-900 font-medium space-y-1 border border-gray-400 p-4 rounded-lg bg-amber-50 relative"
                                 >
-                                  <div className="flex items-start justify-between">
+                                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
                                     <div className="flex-1">
                                       <div className="flex items-center gap-2 mb-2">
                                         {address.addressLine1
@@ -541,7 +560,7 @@ export default function MyAccountPage() {
                                         {address.phone}
                                       </p>
                                     </div>
-                                    <div className="flex items-center gap-2 ml-4">
+                                    <div className="flex items-center gap-2 ml-0 sm:ml-4">
                                       <button
                                         onClick={() => openEditModal(address)}
                                         className="text-amber-600 hover:text-amber-700 p-2 hover:bg-amber-100 rounded-full transition-colors"
@@ -573,7 +592,7 @@ export default function MyAccountPage() {
             </div>
 
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 sticky top-8">
+              <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 sm:p-8 sticky top-8">
                 <div className="flex items-center space-x-3 mb-6">
                   <div className="w-10 h-10 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 rounded-xl flex items-center justify-center">
                     <Shield className="w-5 h-5 text-white" />

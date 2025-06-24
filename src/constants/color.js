@@ -107,4 +107,11 @@ const COLOR_NAMES = {
   "#7fffd4": "Light Aquamarine",
 };
 
+export const getColorName = (hexCode) => {
+  if (!hexCode) return "Unknown Color";
+
+  const normalizedHex = hexCode.trim().toLowerCase();
+  return COLOR_NAMES[normalizedHex] || "Custom Color";
+};
+
 export default COLOR_NAMES;
