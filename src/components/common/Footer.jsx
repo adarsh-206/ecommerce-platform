@@ -10,24 +10,28 @@ export default function Footer() {
               About Chaka-Chak
             </h3>
             <ul className="space-y-2">
-              {["Home", "About Us", "Contact Us", "Privacy Policy"].map(
-                (item, idx) => {
-                  const path =
-                    item === "Home"
-                      ? "/"
-                      : `/${item.toLowerCase().replace(/\s+/g, "-")}`;
-                  return (
-                    <li key={idx}>
-                      <Link
-                        href={path}
-                        className="text-amber-600 hover:text-amber-800 transition-colors duration-200"
-                      >
-                        {item}
-                      </Link>
-                    </li>
-                  );
-                }
-              )}
+              {[
+                "Home",
+                "About Us",
+                "Contact Us",
+                "Blogs",
+                "Privacy Policy",
+              ].map((item, idx) => {
+                const path =
+                  item === "Home"
+                    ? "/"
+                    : `/${item.toLowerCase().replace(/\s+/g, "-")}`;
+                return (
+                  <li key={idx}>
+                    <Link
+                      href={path}
+                      className="text-amber-600 hover:text-amber-800 transition-colors duration-200"
+                    >
+                      {item}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div>

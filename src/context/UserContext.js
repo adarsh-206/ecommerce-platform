@@ -19,7 +19,9 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    getUserDetails();
+    if (localStorage.getItem("token")) {
+      getUserDetails();
+    }
   }, []);
 
   return (
