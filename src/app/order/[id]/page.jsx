@@ -65,99 +65,161 @@ export default function OrderPage({ params }) {
       <meta charset="UTF-8">
       <title>Invoice - ${invoiceNumber}</title>
       <style>
-          body {
-              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-              margin: 40px;
-              color: #2c2c2c;
-              background-color: #fff;
-          }
-          .invoice-header {
-              text-align: center;
-              padding-bottom: 20px;
-              border-bottom: 2px solid #000;
-              margin-bottom: 20px;
-          }
-          .brand-name {
-              font-size: 32px;
-              font-weight: bold;
-              color: #111;
-              margin-bottom: 8px;
-          }
-          .contact-info {
-              font-size: 14px;
-              color: #555;
-          }
-          .invoice-meta {
-              display: flex;
-              justify-content: space-between;
-              margin-bottom: 20px;
-              font-size: 14px;
-          }
-          .invoice-meta div {
-              width: 48%;
-          }
-          .billing-shipping {
-              display: flex;
-              justify-content: space-between;
-              margin-bottom: 30px;
-          }
-          .address-block {
-              width: 48%;
-              font-size: 14px;
-          }
-          .address-block h3 {
-              margin-bottom: 6px;
-              font-size: 16px;
-              color: #111;
-          }
-          .items-table {
-              width: 100%;
-              border-collapse: collapse;
-              margin-bottom: 30px;
-              font-size: 14px;
-          }
-          .items-table th, .items-table td {
-              border: 1px solid #ccc;
-              padding: 10px;
-              text-align: left;
-          }
-          .items-table th {
-              background-color: #f0f0f0;
-              font-weight: 600;
-          }
-          .total-section {
-              float: right;
-              width: 320px;
-              font-size: 14px;
-          }
-          .total-row {
-              display: flex;
-              justify-content: space-between;
-              padding: 6px 0;
-          }
-          .total-row.grand-total {
-              font-weight: bold;
-              border-top: 2px solid #000;
-              padding-top: 10px;
-              margin-top: 6px;
-          }
-          .tax-info {
-              margin-top: 40px;
-              font-size: 12px;
-              color: #555;
-          }
-          .footer {
-              margin-top: 50px;
-              text-align: center;
-              font-size: 12px;
-              border-top: 1px solid #ddd;
-              padding-top: 20px;
-              color: #444;
-          }
-          @media print {
-              body { margin: 0; }
-          }
-      </style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 40px;
+            color: #2c2c2c;
+            background-color: #fff;
+        }
+
+        .invoice-header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #000;
+            margin-bottom: 20px;
+        }
+
+        .brand-name {
+            font-size: 32px;
+            font-weight: bold;
+            color: #111;
+            margin-bottom: 8px;
+        }
+
+        .contact-info {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .invoice-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
+
+        .invoice-meta div {
+            width: 48%;
+            margin-bottom: 10px;
+        }
+
+        .billing-shipping {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .address-block {
+            width: 48%;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .address-block h3 {
+            margin-bottom: 6px;
+            font-size: 16px;
+            color: #111;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 14px;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .items-table table {
+            width: 100%;
+            min-width: 600px;
+        }
+
+        .items-table th,
+        .items-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .items-table th {
+            background-color: #f0f0f0;
+            font-weight: 600;
+        }
+
+        .total-section {
+            float: right;
+            width: 100%;
+            max-width: 320px;
+            font-size: 14px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+        }
+
+        .total-row.grand-total {
+            font-weight: bold;
+            border-top: 2px solid #000;
+            padding-top: 10px;
+            margin-top: 6px;
+        }
+
+        .tax-info {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+            color: #444;
+        }
+
+        @media print {
+            body {
+            margin: 0;
+            }
+        }
+
+        /* ✅ Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+            margin: 20px;
+            }
+
+            .invoice-meta div,
+            .address-block {
+            width: 100%;
+            }
+
+            .invoice-meta,
+            .billing-shipping {
+            flex-direction: column;
+            }
+
+            .items-table {
+            font-size: 12px;
+            }
+
+            .total-section {
+            float: none;
+            width: 100%;
+            }
+
+            .total-row {
+            justify-content: space-between;
+            }
+        }
+    </style>
   </head>
   <body>
       <div class="invoice-header">
