@@ -20,7 +20,7 @@ export function WishlistProvider({ children }) {
       setWishlist(response?.data);
       setHasFetched(true);
     } catch {
-      showToast.error("Failed to load wishlist");
+      //   showToast.error("Failed to load wishlist");
     } finally {
       setLoading(false);
     }
@@ -56,7 +56,9 @@ export function WishlistProvider({ children }) {
   };
 
   useEffect(() => {
-    fetchWishlist();
+    if (localStorage.getItem("token")) {
+      fetchWishlist();
+    }
   }, []);
 
   return (
