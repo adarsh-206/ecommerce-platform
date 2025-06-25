@@ -145,9 +145,9 @@ export default function EditBlogPage() {
       reader.onload = (e) => {
         const imageUrl = e.target.result;
         setImagePreview(imageUrl);
-        setForm((prev) => ({ ...prev, coverImage: imageUrl }));
       };
       reader.readAsDataURL(file);
+      setForm((prev) => ({ ...prev, coverImage: file }));
     }
   };
 
@@ -163,7 +163,7 @@ export default function EditBlogPage() {
         publishedAt: form.isPublished ? new Date().toISOString() : null,
       };
 
-      await apiService.put(`/blogs/${params.id}`, payload, true);
+      await apiService.put(`/blogs/${params.id}`, payload, true, true);
       router.push("/super-admin/blogs");
     } catch (err) {
       setError(
@@ -185,7 +185,7 @@ export default function EditBlogPage() {
 
     try {
       setDeleteLoading(true);
-      await apiService.delete(`/blogs/${params.id}`, true);
+      await apiService.delete(`/blogs/${params.id}`, {}, true);
       router.push("/super-admin/blogs");
     } catch (err) {
       setError("Failed to delete blog. Try again.");
@@ -280,7 +280,7 @@ export default function EditBlogPage() {
 
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Excerpt
+                      Excerpt (Short Description)
                     </label>
                     <textarea
                       name="excerpt"

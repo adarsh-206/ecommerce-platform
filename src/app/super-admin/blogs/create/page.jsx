@@ -35,13 +35,22 @@ export default function CreateBlogPage() {
   const [imagePreview, setImagePreview] = useState("");
   const quillRef = useRef(null);
   const fileInputRef = useRef(null);
+  const editorRef = useRef(null);
   const { userDetails } = useUser();
 
   useEffect(() => {
+    if (editorRef.current) return;
+
     const script = document.createElement("script");
     script.src =
       "https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js";
-    script.onload = initializeQuill;
+    script.onload = () => {
+      if (!editorRef.current && window.Quill && quillRef.current) {
+        editorRef.current = new Quill(quillRef.current, {
+          theme: "snow",
+        });
+      }
+    };
     document.head.appendChild(script);
 
     const link = document.createElement("link");
@@ -108,9 +117,9 @@ export default function CreateBlogPage() {
       reader.onload = (e) => {
         const imageUrl = e.target.result;
         setImagePreview(imageUrl);
-        setForm((prev) => ({ ...prev, coverImage: imageUrl }));
       };
       reader.readAsDataURL(file);
+      setForm((prev) => ({ ...prev, coverImage: file }));
     }
   };
 
@@ -127,7 +136,7 @@ export default function CreateBlogPage() {
         publishedAt: form.isPublished ? new Date().toISOString() : null,
       };
 
-      const response = await apiService.post("/blogs/", payload, true);
+      const response = await apiService.post("/blogs/", payload, true, true);
 
       if (response.status === 201 || response.status === 200) {
         alert("Blog created successfully!");
@@ -206,7 +215,7 @@ export default function CreateBlogPage() {
 
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Excerpt
+                      Excerpt (Short Description)
                     </label>
                     <textarea
                       name="excerpt"
