@@ -14,6 +14,7 @@ export const metadata = {
     "Shop Chaka-Chak for bold fashion, eye-catching accessories, and stylish decor — made just for you. Unique finds, fast shipping, and good vibes only.",
   icons: {
     icon: "/chaka-chak-logo.ico",
+    apple: "/apple-touch-icon.png",
   },
 };
 
