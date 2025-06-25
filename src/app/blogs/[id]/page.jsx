@@ -25,6 +25,14 @@ export default function BlogDetailPage() {
     if (id) fetchBlog();
   }, [id]);
 
+  useEffect(() => {
+    const links = document.querySelectorAll(".blog-content a");
+    links.forEach((link) => {
+      link.setAttribute("target", "_blank");
+      link.setAttribute("rel", "noopener noreferrer");
+    });
+  }, []);
+
   const Skeleton = () => (
     <div className="max-w-5xl mx-auto bg-white shadow rounded-2xl p-8 animate-pulse">
       <div className="w-24 h-5 bg-amber-100 rounded mb-4" />

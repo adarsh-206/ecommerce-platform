@@ -15,3 +15,17 @@
 .blog-content li {
   margin-bottom: 0.5rem;
 }
+
+.blog-content a {
+  color: #ff6600;
+  background-color: rgba(255, 165, 0, 0.1);
+  padding: 2px 4px;
+  border-radius: 4px;
+  text-decoration: underline;
+  transition: background-color 0.2s ease;
+}
+
+.blog-content a:hover {
+  background-color: rgba(255, 165, 0, 0.25);
+  text-decoration: none;
+}
