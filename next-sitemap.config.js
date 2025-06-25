@@ -1,5 +1,5 @@
 const getSlugs = async () => {
-  const res = await fetch("https://api.chaka-chak.in/blogs/get-slugs");
+  const res = await fetch("https://api.chaka-chak.in/slugs/get-slugs");
   if (!res.ok) {
     console.error("Failed to fetch slugs. Status:", res.status);
     return [];
