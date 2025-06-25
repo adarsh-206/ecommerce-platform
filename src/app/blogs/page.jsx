@@ -42,7 +42,7 @@ export default function BlogsPage() {
     <MainLayout>
       <main className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 px-4 py-10 sm:px-6 lg:px-12">
         <h1 className="text-3xl font-bold text-amber-800 mb-8 text-center">
-          Chaka-Chak Blogs
+          Latest Blogs
         </h1>
 
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
