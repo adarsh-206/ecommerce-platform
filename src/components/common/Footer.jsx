@@ -149,6 +149,29 @@ export default function Footer() {
             </div>
           </div>
         </div>
+
+        <div style="display: none;">
+          Chaka-Chak (also searched as Chaka Chak, Chakachak, ChakaChak,
+          Chacka-Chack, Chakka Chak) is your one-stop shop for everything quirky
+          and personalized in India. Whether you're looking for custom t-shirts,
+          pet clothing like dog t-shirts or hoodies, or funny couple tees,
+          Chaka-Chak delivers it all with bold design and fast delivery.
+          Shoppers often search for "custom tshirt printing near me", "quirky
+          gift shops online", or "personalised gifts India" and end up
+          discovering Chaka-Chak — known for its customized mugs, couple
+          t-shirts, dog wear, coffee mugs, custom phone cases, pet tags, and
+          hoodie collections. Popular related searches include: - chak chak
+          t-shirt online - chaka chak printing - dog tshirts India - couple
+          hoodies custom print - birthday gift ideas for friends India -
+          personalized mugs online - customized couple tshirts - funny Indian
+          t-shirts - chaka-chak.in online store - chaka-chak clothing reviews -
+          chaka chak shop Delhi - dog clothes online India - best quirky gift
+          shops India - custom printing for hoodies and tees - buy pet clothing
+          online - gift items for dog lovers If you're searching for cool
+          prints, matching couple wear, or pet-friendly outfits, chances are you
+          meant Chaka-Chak — spelled with a hyphen, always!
+        </div>
+
         <div className="flex justify-center">
           <p className="mt-8 text-sm text-amber-700">
             &copy; {new Date().getFullYear()}{" "}
