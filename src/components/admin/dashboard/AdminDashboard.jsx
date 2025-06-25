@@ -1,7 +1,10 @@
 export const metadata = {
-  title: "Admin Dashboard",
+  title: "Chaka-Chak | Clean, Quirky, Totally You",
   description:
-    "Manage products, orders, and users for your Indian eCommerce store",
+    "Shop Chaka-Chak for bold fashion, eye-catching accessories, and stylish decor — made just for you. Unique finds, fast shipping, and good vibes only.",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+  },
 };
 
 import { AdminLayout } from "../../layouts/AdminLayout";

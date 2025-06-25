@@ -6,7 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { useEffect } from "react";
 
 export const metadata = {
-  title: "Chaka-Chak | Standout Style & Decor You Won’t Find Anywhere Else",
+  title: "Chaka-Chak | Clean, Quirky, Totally You",
   description:
     "Shop Chaka-Chak for bold fashion, eye-catching accessories, and stylish decor — made just for you. Unique finds, fast shipping, and good vibes only.",
   icons: {
