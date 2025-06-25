@@ -34,10 +34,16 @@ export default function ProductCard({ product }) {
   }, []);
 
   useEffect(() => {
-    (async () => {
-      const loggedIn = await checkLoginStatus();
-      setIsLoggedIn(loggedIn);
-    })();
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      (async () => {
+        const loggedIn = await checkLoginStatus();
+        setIsLoggedIn(loggedIn);
+      })();
+    } else {
+      setIsLoggedIn(false);
+    }
   }, []);
 
   useEffect(() => {
