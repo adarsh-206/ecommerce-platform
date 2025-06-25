@@ -2,6 +2,18 @@
 import { useRouter } from "next/navigation";
 import MainLayout from "@/components/layouts/MainLayout";
 
+export const faqsMetadata = {
+  title: "Chaka-Chak FAQs | Frequently Asked Questions & Quick Answers",
+  description:
+    "Find quick answers to the most frequently asked questions about shopping at Chaka-Chak, your trusted destination for quirky and unique fashion items. Our comprehensive FAQ section has been carefully compiled based on real customer inquiries and covers every aspect of your shopping experience, from browsing our products to post-purchase support. Whether you're a first-time visitor or a returning customer, this resource provides valuable information that can help you navigate our website more effectively and make informed decisions about your purchases. We cover common topics such as product availability, sizing guides, material information, care instructions, shipping policies, delivery timelines, payment methods, return procedures, exchange processes, and much more. Our FAQ section is regularly updated to reflect the most current information and to address new questions that arise as we expand our product range and services. We understand that every customer's situation is unique, and while our FAQs cover the most common scenarios, we encourage you to contact our customer service team directly if you need personalized assistance or have specific questions not addressed here. The questions and answers are organized in easy-to-navigate categories, making it simple for you to find the information you need quickly. We've also included helpful tips and tricks that can enhance your shopping experience, such as how to best care for your purchases, styling suggestions, and ways to stay updated on our latest offers and new arrivals.",
+  keywords:
+    "chaka chak faq, frequently asked questions, shopping help, customer queries, quick answers",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function FAQsPage() {
   const router = useRouter();
 

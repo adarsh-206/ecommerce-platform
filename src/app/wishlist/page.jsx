@@ -5,9 +5,20 @@ import Link from "next/link";
 import MainLayout from "@/components/layouts/MainLayout";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
-import { showToast } from "@/utils/showToast";
 import { Heart, X } from "lucide-react";
 import ProductCard from "@/components/product/ProductCard";
+
+export const wishlistMetadata = {
+  title: "My Wishlist | Chaka-Chak - Save Your Favorite Fashion Items",
+  description:
+    "Organize and manage your favorite Chaka-Chak items in your personal wishlist, the perfect tool for keeping track of products you love and want to purchase later. Your wishlist serves as your personal collection of desired items, allowing you to curate and save products that catch your eye during your browsing sessions. Whether you're planning for a special occasion, waiting for a sale, or simply want to remember items for future consideration, your wishlist keeps everything organized and easily accessible. You can add items to your wishlist with a single click while browsing, and each saved item retains all its important details including current pricing, available sizes and colors, stock status, and product images. Our wishlist feature is designed to be more than just a simple save function - it's a powerful tool that helps you make better purchasing decisions by allowing you to compare saved items, track price changes, and receive notifications when wishlist items go on sale or are running low in stock. You can create multiple wishlists for different purposes, such as seasonal collections, gift ideas for friends and family, or items for specific occasions like parties, work events, or vacations. The wishlist also makes it easy to share your favorite finds with others, perfect for gift-giving occasions or when seeking style advice from friends. Items in your wishlist can be quickly moved to your cart when you're ready to purchase, streamlining your shopping process and ensuring you never lose track of the items you truly want to add to your wardrobe collection.",
+  keywords:
+    "chaka chak wishlist, save favorites, favorite items, want list, saved products",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
 
 export default function WishlistPage() {
   const { wishlist = [], fetchWishlist } = useWishlist();

@@ -21,6 +21,18 @@ import { useUser } from "@/context/UserContext";
 import apiService from "../utils/apiService";
 import AddressForm from "@/components/deliveryAdresses/AddressForm";
 
+export const myAccountMetadata = {
+  title: "My Account | Chaka-Chak - Manage Profile, Orders & Preferences",
+  description:
+    "Access your personal Chaka-Chak account dashboard where you can manage all aspects of your shopping experience, from updating your profile information to tracking your orders and managing your preferences. Your account is your central hub for everything related to your Chaka-Chak journey, providing convenient access to your order history, wishlist items, saved addresses, payment methods, and personal settings. Through your account dashboard, you can easily track the status of current orders, view detailed information about past purchases, download invoices, and initiate returns or exchanges if needed. We've designed the account interface to be intuitive and comprehensive, giving you complete control over your shopping experience while maintaining the highest standards of security and privacy protection. Your account also enables you to save multiple shipping addresses for convenient ordering to different locations, store preferred payment methods for faster checkout, and set up personalized preferences that help us recommend products tailored to your style and interests. You can manage your communication preferences, choosing which types of emails and notifications you'd like to receive about new arrivals, special offers, and exclusive deals. The wishlist feature allows you to save items you're interested in for future purchase, create multiple lists for different occasions or seasons, and share your favorite finds with friends and family. Your account also provides access to exclusive member benefits, early access to sales, special discounts, and loyalty program rewards that make your continued shopping with Chaka-Chak even more rewarding and enjoyable.",
+  keywords:
+    "chaka chak account, user dashboard, manage profile, order history, account settings",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function MyAccountPage() {
   const [userData, setUserData] = useState({});
   const [isEditing, setIsEditing] = useState(false);

@@ -2,6 +2,18 @@
 
 import MainLayout from "@/components/layouts/MainLayout";
 
+export const aboutUsMetadata = {
+  title: "About Chaka-Chak | Our Story, Mission & Vision for Quirky Fashion",
+  description:
+    "Learn about Chaka-Chak's inspiring journey from a small startup to India's leading destination for clean, quirky, and totally unique fashion experiences. Founded with a simple yet powerful vision - to make fashion accessible, affordable, and fun for everyone - Chaka-Chak has grown into a trusted brand that serves thousands of happy customers across the country. Our story begins with a passionate team of fashion enthusiasts who believed that everyone deserves to express their personality through their clothing choices without having to compromise on quality or budget. We recognized a gap in the Indian fashion market for products that were both trendy and affordable, quirky yet sophisticated, and accessible to people from all walks of life. This realization drove us to create Chaka-Chak, a platform that celebrates individuality and encourages self-expression through fashion. Our mission is to democratize fashion by offering high-quality, unique products at prices that don't require you to empty your savings account. We work tirelessly to source the best materials, collaborate with talented designers, and maintain strict quality control standards to ensure that every product bearing the Chaka-Chak name meets our high expectations and yours. Our vision extends beyond just selling clothes - we aim to build a community of fashion-forward individuals who aren't afraid to stand out, make bold choices, and embrace their unique style with confidence and pride.",
+  keywords:
+    "chaka chak about, company story, fashion mission, brand vision, quirky fashion India, our story",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function AboutUsPage() {
   return (
     <MainLayout>

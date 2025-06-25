@@ -5,6 +5,18 @@ import Link from "next/link";
 import apiService from "../utils/apiService";
 import MainLayout from "@/components/layouts/MainLayout";
 
+export const blogsMetadata = {
+  title: "Chaka-Chak Blogs | Fashion Tips, Trends & Style Inspiration",
+  description:
+    "Dive into the vibrant world of fashion and lifestyle with Chaka-Chak's comprehensive blog section, your ultimate source for the latest trends, styling tips, fashion inspiration, and industry insights. Our expert team of fashion enthusiasts and style gurus regularly publish engaging articles that cover everything from seasonal fashion forecasts to timeless styling techniques that never go out of style. Whether you're looking to revamp your wardrobe, learn about sustainable fashion practices, discover new brands, or simply stay updated with the ever-evolving world of fashion, our blog has something valuable for everyone. Explore detailed guides on how to mix and match different pieces, understand color coordination, choose the right accessories for various occasions, and much more. We also feature exclusive interviews with fashion designers, behind-the-scenes content from photo shoots, product spotlights, and honest reviews of trending items. Our blog isn't just about fashion - we also cover lifestyle topics including home decor trends, gift ideas for special occasions, wellness tips, and advice on building confidence through personal style. Join our community of fashion-forward readers who trust Chaka-Chak for authentic, practical, and inspiring content that helps them make informed fashion choices while expressing their unique personality through their wardrobe selections.",
+  keywords:
+    "chaka chak blog, fashion blog India, style tips, fashion trends, lifestyle blog, fashion inspiration",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function BlogsPage() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);

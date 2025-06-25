@@ -6,6 +6,18 @@ import { useState, useEffect, useRef } from "react";
 import apiService from "@/app/utils/apiService";
 import MainLayout from "@/components/layouts/MainLayout";
 
+export const bestSellersMetadata = {
+  title: "Best Sellers at Chaka-Chak | Most Popular Fashion Items & Top Picks",
+  description:
+    "Explore Chaka-Chak's best-selling collection featuring the most popular and highly-rated fashion items that have captured the hearts of thousands of satisfied customers across India. Our best sellers section showcases proven winners - products that consistently receive rave reviews, high ratings, and repeat purchases from our loyal customer base. These aren't just popular items; they're fashion statements that have stood the test of time and continue to be customer favorites month after month. From our signature graphic tees that perfectly blend humor with style to elegant accessories that add the perfect finishing touch to any outfit, every item in this collection has earned its place through genuine customer love and satisfaction. You'll find versatile pieces that work for multiple occasions, high-quality products that offer exceptional value for money, and trending items that keep you looking fashionable without breaking the bank. Our best sellers include everything from casual wear that's perfect for everyday comfort to statement pieces that make you the center of attention at parties and social gatherings. These products have been tested by real customers in real-life situations, ensuring that when you choose from our best sellers, you're investing in items that deliver on both style and functionality. Join the thousands of happy customers who have made these items their wardrobe staples and discover why these particular pieces have become the talk of the town in fashion circles.",
+  keywords:
+    "chaka chak best sellers, popular fashion, top rated products, customer favorites, most loved items",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 const LoadingCard = () => (
   <div className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse">
     <div className="h-48 bg-gray-200"></div>

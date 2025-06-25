@@ -16,6 +16,19 @@ import {
 import BrandLogo from "@/components/common/BrandLogo";
 import apiService from "@/app/utils/apiService";
 
+export const buyerRegisterMetadata = {
+  title:
+    "Create Account | Chaka-Chak - Join India's Quirkiest Fashion Community",
+  description:
+    "Join the Chaka-Chak family by creating your personal account and unlock access to India's most exciting collection of quirky fashion, unique accessories, and stylish lifestyle products. Registration is quick, easy, and completely free, giving you immediate access to exclusive member benefits, personalized shopping experiences, and special offers that aren't available to casual browsers. When you create an account with Chaka-Chak, you're not just signing up for a shopping platform - you're joining a vibrant community of fashion enthusiasts who appreciate unique style, quality products, and exceptional value. Your account provides numerous advantages including faster checkout processes, saved payment methods and addresses, order tracking capabilities, wishlist functionality, and access to your complete purchase history. As a registered member, you'll be the first to know about new arrivals, exclusive sales, limited-time offers, and special events. You'll also receive personalized product recommendations based on your browsing and purchase history, helping you discover new items that perfectly match your style preferences. Our registration process prioritizes your privacy and security, using advanced encryption and security measures to protect your personal information. We require only essential information to create your account, and you have complete control over your communication preferences and privacy settings. Once registered, you can easily manage your profile, update your information, and customize your shopping experience to match your preferences. Joining Chaka-Chak means becoming part of a community that celebrates individuality, embraces creativity, and believes that fashion should be fun, accessible, and expressive of your unique personality.",
+  keywords:
+    "chaka chak register, create account, join community, sign up, new member, registration",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function BuyerRegistration() {
   const [form, setForm] = useState({
     fullName: "",

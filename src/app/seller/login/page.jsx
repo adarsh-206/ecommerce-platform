@@ -16,6 +16,18 @@ import apiService from "@/app/utils/apiService";
 import BrandLogo from "@/components/common/BrandLogo";
 import Image from "next/image";
 
+export const sellerLoginMetadata = {
+  title: "Seller Login | Chaka-Chak - Access Your Business Dashboard",
+  description:
+    "Access your Chaka-Chak seller dashboard to manage your fashion business, track sales performance, and grow your presence on India's premier marketplace for unique and quirky fashion items. Your seller account provides comprehensive tools and insights that enable you to run your online business efficiently while maximizing your sales potential and customer satisfaction. Through your secure seller login, you gain access to a powerful suite of business management tools including inventory management systems, order processing workflows, customer communication platforms, and detailed analytics that help you understand your business performance and identify growth opportunities. Your dashboard provides real-time updates on new orders, payment processing, shipping requirements, and customer inquiries, ensuring that you never miss important business activities. The platform includes sophisticated inventory tracking that helps you manage stock levels, set up automated reorder alerts, and coordinate with suppliers or manufacturers. You can easily upload new products, update existing listings, manage pricing strategies, and create promotional campaigns that drive sales and increase your brand visibility. Our seller platform also provides access to valuable business insights through comprehensive reporting tools that track your sales trends, customer demographics, popular products, and seasonal patterns. This data helps you make informed decisions about inventory planning, marketing strategies, and business expansion opportunities. Your seller account includes integrated communication tools that enable professional customer service, allowing you to respond to customer inquiries, handle return requests, and build positive relationships that lead to repeat business and positive reviews. The platform also provides educational resources, best practice guides, and seller community forums where you can learn from experienced sellers and stay updated on marketplace trends and opportunities.",
+  keywords:
+    "chaka chak seller login, seller dashboard, business account, manage store, seller access",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function SellerLogin() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);

@@ -6,6 +6,18 @@ import apiService from "@/app/utils/apiService";
 import BrandLogo from "@/components/common/BrandLogo";
 import { useAuth } from "@/context/AuthContext";
 
+export const buyerLoginMetadata = {
+  title: "Login | Chaka-Chak - Access Your Fashion Account",
+  description:
+    "Access your Chaka-Chak account to continue your personalized shopping journey and enjoy all the exclusive benefits that come with being a valued member of our fashion-forward community. Our secure login process protects your account information while providing quick and easy access to your personal dashboard, saved items, order history, and customized shopping experience. Once logged in, you'll have immediate access to your wishlist items, saved addresses and payment methods, ongoing order tracking, and personalized product recommendations tailored specifically to your style preferences and shopping behavior. Your account dashboard serves as your central hub for managing all aspects of your Chaka-Chak experience, from updating your profile information to accessing exclusive member-only deals and promotions. We understand the importance of account security, which is why we've implemented robust security measures including secure password requirements, optional two-factor authentication, and advanced encryption protocols to protect your personal and financial information. If you're having trouble accessing your account, our password recovery system makes it easy to regain access through your registered email address. For returning customers, logging in provides seamless access to your complete purchase history, making it simple to reorder favorite items, track current shipments, or manage returns and exchanges. Your login also enables you to participate in our loyalty program, earn rewards points on purchases, and access special member pricing on select items. We've designed our login process to be as smooth and hassle-free as possible, ensuring that you can quickly access your account and get back to discovering amazing new fashion finds that express your unique style and personality.",
+  keywords:
+    "chaka chak login, sign in, access account, member login, user access",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function BuyerLogin() {
   const [form, setForm] = useState({
     email_or_phone: "",

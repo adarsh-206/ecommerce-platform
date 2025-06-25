@@ -12,6 +12,18 @@ import COLOR_NAMES from "@/constants/color";
 import { showToast } from "@/utils/showToast";
 import apiService from "../utils/apiService";
 
+export const checkoutMetadata = {
+  title: "Secure Checkout | Chaka-Chak - Complete Your Fashion Purchase",
+  description:
+    "Complete your Chaka-Chak purchase through our secure, user-friendly checkout process designed to make your shopping experience as smooth and worry-free as possible. Our checkout system employs industry-leading security measures to protect your personal and financial information throughout the entire transaction process. We accept multiple payment methods including credit cards, debit cards, digital wallets, UPI payments, and other popular online payment options, giving you the flexibility to choose the method that's most convenient for you. Our streamlined checkout process guides you through each step clearly, from confirming your shipping address to selecting your preferred delivery options and finalizing your payment. We provide real-time order summaries that show exactly what you're purchasing, including itemized pricing, applicable discounts, shipping costs, and total amounts, ensuring complete transparency before you confirm your order. Our system also offers guest checkout options for customers who prefer not to create an account, as well as registered user benefits for those who want to save their information for faster future purchases. During checkout, you can apply promotional codes, gift cards, or loyalty points if you have them, and our system will automatically calculate the best possible deal for your order. We also provide estimated delivery dates and tracking information setup, so you'll know exactly when to expect your new Chaka-Chak items and can monitor their progress from our warehouse to your doorstep.",
+  keywords:
+    "chaka chak checkout, secure payment, complete purchase, order process, safe shopping",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function CheckoutPage() {
   const { cartItems, clearCart } = useCart();
   const { user } = useAuth();

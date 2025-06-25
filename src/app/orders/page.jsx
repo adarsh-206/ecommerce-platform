@@ -13,6 +13,18 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+export const ordersMetadata = {
+  title: "My Orders | Chaka-Chak - Track Orders & Purchase History",
+  description:
+    "Keep track of all your Chaka-Chak orders in one convenient location, from recent purchases to your complete shopping history with us. Our comprehensive orders section provides detailed information about every purchase you've made, including current order status, tracking information, delivery updates, and past purchase records. You can easily monitor the progress of your recent orders from the moment they're confirmed through processing, packing, shipping, and final delivery to your doorstep. Each order entry includes complete details such as order date, items purchased, quantities, sizes, colors, individual and total pricing, payment method used, shipping address, and expected delivery date. Our real-time tracking system keeps you informed about your package's journey with regular updates and the ability to track your shipment directly through our integrated tracking interface. For past orders, you can view complete purchase history, reorder favorite items with just a few clicks, download invoices for your records, and access customer support for any order-related questions or concerns. The orders section also allows you to manage returns and exchanges, providing easy access to our return process, return shipping labels, and status updates on any returns or exchanges you've initiated. You can filter and search through your order history by date, product type, order status, or other criteria to quickly find specific purchases. This comprehensive order management system ensures that you have complete visibility and control over your Chaka-Chak shopping experience, making it easy to stay organized and informed about all your fashion purchases.",
+  keywords:
+    "chaka chak orders, track orders, order history, purchase tracking, order status",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function OrdersPage() {
   const { isAuthenticated } = useAuth();
   const [orders, setOrders] = useState([]);

@@ -5,6 +5,18 @@ import { useState, useEffect, useRef } from "react";
 import apiService from "@/app/utils/apiService";
 import MainLayout from "@/components/layouts/MainLayout";
 
+export const newArrivalsMetadata = {
+  title: "New Arrivals at Chaka-Chak | Latest Fashion Trends & Fresh Styles",
+  description:
+    "Discover the hottest new arrivals at Chaka-Chak, where cutting-edge fashion meets unbeatable style and affordability. Our new arrivals section is constantly updated with the freshest designs, trending styles, and must-have pieces that fashion enthusiasts across India are talking about. From the latest graphic tees featuring contemporary artwork and witty slogans to sophisticated formal wear perfect for professional settings, our new collection encompasses a diverse range of products designed to cater to every fashion preference and lifestyle need. Each week, we carefully select and add new items to our inventory, ensuring that our customers always have access to the most current fashion trends and seasonal essentials. Whether you're searching for summer essentials like breezy dresses and comfortable shorts, winter warmers including cozy sweaters and stylish jackets, or year-round staples like versatile tops and classic bottoms, our new arrivals section is your go-to destination for staying ahead of the fashion curve. We work closely with emerging designers and established brands to bring you exclusive pieces that you won't find elsewhere, making Chaka-Chak your secret weapon for standing out in any crowd. Don't miss out on limited-edition items and special collections that sell out quickly - check back regularly to see what's new and exciting in the world of Chaka-Chak fashion.",
+  keywords:
+    "chaka chak new arrivals, latest fashion, new collection, trending styles, fresh designs, fashion updates",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 const LoadingCard = () => (
   <div className="bg-amber-50 rounded-xl shadow-lg overflow-hidden animate-pulse">
     <div className="h-48 bg-gray-200"></div>

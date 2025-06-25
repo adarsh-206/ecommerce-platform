@@ -7,6 +7,18 @@ import categories from "@/constants/categories";
 import apiService from "@/app/utils/apiService";
 import { useRouter } from "next/navigation";
 
+export const sellerRegisterMetadata = {
+  title: "Become a Seller | Chaka-Chak - Start Your Fashion Business Journey",
+  description:
+    "Transform your creative passion into a thriving business by becoming a seller on Chaka-Chak, India's fastest-growing marketplace for unique and quirky fashion items. Our seller platform is designed to empower creative entrepreneurs, established brands, and fashion enthusiasts who want to share their products with a wider audience while building a sustainable and profitable business. Whether you're a designer creating original pieces, a manufacturer with unique products, or an entrepreneur with innovative fashion ideas, Chaka-Chak provides the perfect platform to showcase your creations to thousands of potential customers across India. Our comprehensive seller registration process is straightforward and supportive, guiding you through each step of setting up your seller account, uploading your products, and launching your online store within our trusted marketplace. As a Chaka-Chak seller, you'll benefit from our established customer base, marketing support, secure payment processing, integrated shipping solutions, and dedicated seller support team that's committed to helping you succeed. We provide powerful tools for inventory management, order processing, customer communication, and sales analytics that help you make informed business decisions and grow your revenue. Our platform charges competitive fees and provides transparent pricing structures, ensuring that you keep more of your profits while accessing professional e-commerce capabilities that would be expensive to develop independently. We also offer marketing opportunities through featured product placements, promotional campaigns, and social media exposure that can significantly boost your product visibility and sales potential.",
+  keywords:
+    "chaka chak seller, become seller, sell online, fashion business, marketplace seller, vendor registration",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function SellerRegister() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);

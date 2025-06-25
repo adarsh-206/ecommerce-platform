@@ -10,6 +10,18 @@ import { useRouter } from "next/navigation";
 import COLOR_NAMES from "@/constants/color";
 import { showToast } from "@/utils/showToast";
 
+export const cartMetadata = {
+  title: "Shopping Cart | Chaka-Chak - Review Your Selected Items",
+  description:
+    "Review your selected items in your Chaka-Chak shopping cart and get ready to complete your purchase of amazing quirky fashion pieces and unique lifestyle products. Your cart is where all your carefully chosen items come together, giving you a final opportunity to review your selections, adjust quantities, apply discount codes, and calculate your total before proceeding to checkout. We've designed our cart experience to be intuitive and informative, providing you with all the details you need to make confident purchasing decisions. Each item in your cart displays clear product information including images, descriptions, sizes, colors, individual pricing, and availability status. You can easily modify quantities, remove items you've changed your mind about, or save items to your wishlist for future consideration. Our cart also provides real-time updates on shipping costs, estimated delivery dates, and any applicable taxes or fees, ensuring complete transparency in your purchase process. We understand that sometimes you need time to think about your purchases, so items in your cart are temporarily held for you, giving you the flexibility to step away and return later to complete your order. Our secure cart system protects your information and ensures that your selected items remain available while you're browsing or considering additional purchases. Take advantage of our suggested products feature that shows complementary items other customers have purchased together, helping you create complete looks or discover new favorites you might have missed during your initial browsing session.",
+  keywords:
+    "chaka chak cart, shopping cart, review items, checkout, purchase process",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function CartPage() {
   const { cartItems, updateItem } = useCart();
 

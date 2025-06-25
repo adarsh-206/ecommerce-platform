@@ -5,6 +5,18 @@ import MainLayout from "@/components/layouts/MainLayout";
 import apiService from "../utils/apiService";
 import { showToast } from "@/utils/showToast";
 
+export const contactUsMetadata = {
+  title: "Contact Chaka-Chak | Customer Support, Help & Get in Touch",
+  description:
+    "Get in touch with the Chaka-Chak team for any questions, concerns, feedback, or assistance you might need during your shopping journey with us. We pride ourselves on providing exceptional customer service that goes above and beyond to ensure your complete satisfaction with every interaction. Our dedicated customer support team is available through multiple channels to address your inquiries promptly and professionally, whether you need help with product selection, order tracking, return processing, payment issues, or general information about our services. We understand that shopping online can sometimes raise questions, and we're here to provide clear, helpful answers that make your experience smooth and enjoyable. You can reach us through our contact form, email, phone, or social media channels - whichever method is most convenient for you. We also provide detailed information about our physical location, business hours, and response times so you know exactly what to expect when you contact us. Our team consists of knowledgeable fashion experts who can provide styling advice, product recommendations, and technical support to help you make the most of your Chaka-Chak experience. We value your feedback immensely as it helps us continuously improve our products and services. Whether you have suggestions for new products, compliments about your recent purchase, or concerns that need addressing, we want to hear from you. Your voice matters to us, and we're committed to building lasting relationships with every customer who chooses Chaka-Chak for their fashion needs.",
+  keywords:
+    "chaka chak contact, customer support, help center, get in touch, customer service, contact details",
+  icons: {
+    icon: "/chaka-chak-logo.ico",
+    apple: "/chaka-chak-logo.png",
+  },
+};
+
 export default function ContactUsPage() {
   const [form, setForm] = useState({
     name: "",
