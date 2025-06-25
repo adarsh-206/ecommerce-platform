@@ -150,7 +150,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div style="display: none;">
+        <div style={{ display: "none" }}>
           Chaka-Chak (also searched as Chaka Chak, Chakachak, ChakaChak,
           Chacka-Chack, Chakka Chak) is your one-stop shop for everything quirky
           and personalized in India. Whether you're looking for custom t-shirts,
