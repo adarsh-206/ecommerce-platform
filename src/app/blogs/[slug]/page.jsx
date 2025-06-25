@@ -8,13 +8,13 @@ import Link from "next/link";
 import "./style.css";
 
 export default function BlogDetailPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchBlog = async () => {
     try {
-      const res = await apiService.get(`/blogs/${id}`, {}, true);
+      const res = await apiService.get(`/blogs/${slug}`, {}, true);
       if (res?.data) setBlog(res.data);
     } finally {
       setLoading(false);
@@ -22,8 +22,8 @@ export default function BlogDetailPage() {
   };
 
   useEffect(() => {
-    if (id) fetchBlog();
-  }, [id]);
+    if (slug) fetchBlog();
+  }, [slug]);
 
   useEffect(() => {
     const links = document.querySelectorAll(".blog-content a");
