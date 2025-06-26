@@ -62,19 +62,19 @@ export default function ProductCard({ product }) {
   const defaultColor = product?.availableColors?.[0] || "";
   const quantity = getItemQuantity(product.id, defaultSize, defaultColor);
 
-  const handleAddToCart = async () => {
-    try {
-      await addItem(product.id, defaultSize, defaultColor);
-      showToast.success("Added to cart");
-    } catch {
-      showToast.error("Failed to add to cart");
-    }
-  };
+  // const handleAddToCart = async () => {
+  //   try {
+  //     await addItem(product.id, defaultSize, defaultColor);
+  //     showToast.success("Added to cart");
+  //   } catch {
+  //     showToast.error("Failed to add to cart");
+  //   }
+  // };
 
-  const handleQuantityChange = async (delta) => {
-    const newQty = quantity + delta;
-    await updateItem(product.id, defaultSize, defaultColor, newQty);
-  };
+  // const handleQuantityChange = async (delta) => {
+  //   const newQty = quantity + delta;
+  //   await updateItem(product.id, defaultSize, defaultColor, newQty);
+  // };
 
   const toggleWishlist = async () => {
     setIsInWishlist(!isInWishlist);
@@ -174,43 +174,63 @@ export default function ProductCard({ product }) {
           <p className="text-xl font-bold text-amber-800">
             ₹{product.price.toFixed(2)}
           </p>
-          {quantity > 0 ? (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleQuantityChange(-1)}
-                className="bg-amber-100 text-amber-700 hover:bg-amber-200 px-2 py-1 rounded-full text-lg font-bold"
-              >
-                −
-              </button>
-              <span className="text-amber-800 font-semibold">{quantity}</span>
-              <button
-                onClick={() => handleQuantityChange(1)}
-                className="bg-orange-100 text-orange-700 hover:bg-orange-200 px-2 py-1 rounded-full text-lg font-bold"
-              >
-                +
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={handleAddToCart}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-amber-200"
-              aria-label={`Add ${product.name} to cart`}
+          {/*
+  {quantity > 0 ? (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => handleQuantityChange(-1)}
+        className="bg-amber-100 text-amber-700 hover:bg-amber-200 px-2 py-1 rounded-full text-lg font-bold"
+      >
+        −
+      </button>
+      <span className="text-amber-800 font-semibold">{quantity}</span>
+      <button
+        onClick={() => handleQuantityChange(1)}
+        className="bg-orange-100 text-orange-700 hover:bg-orange-200 px-2 py-1 rounded-full text-lg font-bold"
+      >
+        +
+      </button>
+    </div>
+  ) : (
+    <button
+      onClick={handleAddToCart}
+      className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-amber-200"
+      aria-label={`Add ${product.name} to cart`}
+    >
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+        />
+      </svg>
+    </button>
+  )}
+  */}
+          <Link
+            href={productLink}
+            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-amber-200"
+          >
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </button>
-          )}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+          </Link>
         </div>
       </div>
     </div>

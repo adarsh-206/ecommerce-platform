@@ -50,329 +50,203 @@ export default function OrderPage({ params }) {
     }
   };
 
-  const generateInvoiceHTML = (order) => {
-    const currentDate = new Date();
-    const invoiceNumber = `INV-${order.orderId}-${currentDate.getFullYear()}`;
-
-    const subtotal =
-      order.items?.reduce((sum, item) => sum + item.price * item.quantity, 0) ||
-      0;
-
-    return `
-  <!DOCTYPE html>
-  <html>
-  <head>
-      <meta charset="UTF-8">
-      <title>Invoice - ${invoiceNumber}</title>
-      <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 40px;
-            color: #2c2c2c;
-            background-color: #fff;
-        }
-
-        .invoice-header {
-            text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #000;
-            margin-bottom: 20px;
-        }
-
-        .brand-name {
-            font-size: 32px;
-            font-weight: bold;
-            color: #111;
-            margin-bottom: 8px;
-        }
-
-        .contact-info {
-            font-size: 14px;
-            color: #555;
-        }
-
-        .invoice-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            font-size: 14px;
-            flex-wrap: wrap;
-        }
-
-        .invoice-meta div {
-            width: 48%;
-            margin-bottom: 10px;
-        }
-
-        .billing-shipping {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .address-block {
-            width: 48%;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .address-block h3 {
-            margin-bottom: 6px;
-            font-size: 16px;
-            color: #111;
-        }
-
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-            font-size: 14px;
-            overflow-x: auto;
-            display: block;
-        }
-
-        .items-table table {
-            width: 100%;
-            min-width: 600px;
-        }
-
-        .items-table th,
-        .items-table td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: left;
-        }
-
-        .items-table th {
-            background-color: #f0f0f0;
-            font-weight: 600;
-        }
-
-        .total-section {
-            float: right;
-            width: 100%;
-            max-width: 320px;
-            font-size: 14px;
-        }
-
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-        }
-
-        .total-row.grand-total {
-            font-weight: bold;
-            border-top: 2px solid #000;
-            padding-top: 10px;
-            margin-top: 6px;
-        }
-
-        .tax-info {
-            margin-top: 40px;
-            font-size: 12px;
-            color: #555;
-        }
-
-        .footer {
-            margin-top: 50px;
-            text-align: center;
-            font-size: 12px;
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
-            color: #444;
-        }
-
-        @media print {
-            body {
-            margin: 0;
-            }
-        }
-
-        /* ✅ Mobile Responsiveness */
-        @media (max-width: 768px) {
-            body {
-            margin: 20px;
-            }
-
-            .invoice-meta div,
-            .address-block {
-            width: 100%;
-            }
-
-            .invoice-meta,
-            .billing-shipping {
-            flex-direction: column;
-            }
-
-            .items-table {
-            font-size: 12px;
-            }
-
-            .total-section {
-            float: none;
-            width: 100%;
-            }
-
-            .total-row {
-            justify-content: space-between;
-            }
-        }
-    </style>
-  </head>
-  <body>
-      <div class="invoice-header">
-          <div class="brand-name">Chaka-Chak</div>
-          <div class="contact-info">
-              Email: chakachakteam@gmail.com &nbsp; | &nbsp; Instagram: @chakachakteam
-          </div>
-      </div>
-
-      <div class="invoice-meta">
-          <div>
-              <p><strong>Invoice No:</strong> ${invoiceNumber}</p>
-              <p><strong>Invoice Date:</strong> ${currentDate.toLocaleDateString(
-                "en-IN"
-              )}</p>
-              <p><strong>Order ID:</strong> ${order.orderId}</p>
-          </div>
-          <div>
-              <p><strong>Payment Status:</strong> ${
-                order.payment?.status?.toUpperCase() || "PENDING"
-              }</p>
-              <p><strong>Order Date:</strong> ${new Date(
-                order.createdAt
-              ).toLocaleDateString("en-IN")}</p>
-          </div>
-      </div>
-
-      <div class="billing-shipping">
-          <div class="address-block">
-              <h3>Bill To:</h3>
-              <p><strong>${
-                order.deliveryAddress?.fullName || "Customer"
-              }</strong></p>
-              <p>${order.deliveryAddress?.addressLine1 || ""}</p>
-              ${
-                order.deliveryAddress?.addressLine2
-                  ? `<p>${order.deliveryAddress.addressLine2}</p>`
-                  : ""
-              }
-              <p>${order.deliveryAddress?.city || ""}, ${
-      order.deliveryAddress?.state || ""
-    } - ${order.deliveryAddress?.postalCode || ""}</p>
-              <p>${order.deliveryAddress?.country || "India"}</p>
-              ${
-                order.deliveryAddress?.phone
-                  ? `<p>Phone: ${order.deliveryAddress.phone}</p>`
-                  : ""
-              }
-          </div>
-          <div class="address-block">
-              <h3>Ship To:</h3>
-              <p><strong>${
-                order.deliveryAddress?.fullName || "Customer"
-              }</strong></p>
-              <p>${order.deliveryAddress?.addressLine1 || ""}</p>
-              ${
-                order.deliveryAddress?.addressLine2
-                  ? `<p>${order.deliveryAddress.addressLine2}</p>`
-                  : ""
-              }
-              <p>${order.deliveryAddress?.city || ""}, ${
-      order.deliveryAddress?.state || ""
-    } - ${order.deliveryAddress?.postalCode || ""}</p>
-              <p>${order.deliveryAddress?.country || "India"}</p>
-              ${
-                order.deliveryAddress?.phone
-                  ? `<p>Phone: ${order.deliveryAddress.phone}</p>`
-                  : ""
-              }
-          </div>
-      </div>
-
-      <table class="items-table">
-          <thead>
-              <tr>
-                  <th>S.No</th>
-                  <th>Description</th>
-                  <th>Qty</th>
-                  <th>Rate (₹)</th>
-                  <th>Amount (₹)</th>
-              </tr>
-          </thead>
-          <tbody>
-              ${
-                order.items
-                  ?.map(
-                    (item, index) => `
-                  <tr>
-                      <td>${index + 1}</td>
-                      <td>${item.name}<br><small>Size: ${
-                      item.size
-                    }, Color: ${getColorName(item.color)}</small></td>
-                      <td>${item.quantity}</td>
-                      <td>${item.price?.toLocaleString("en-IN")}</td>
-                      <td>${(item.price * item.quantity)?.toLocaleString(
-                        "en-IN"
-                      )}</td>
-                  </tr>
-              `
-                  )
-                  .join("") || ""
-              }
-          </tbody>
-      </table>
-
-      <div class="total-section">
-          <div class="total-row">
-              <span>Subtotal:</span>
-              <span>₹${subtotal.toLocaleString("en-IN")}</span>
-          </div>
-          <div class="total-row">
-              <span>Shipping:</span>
-              <span>₹0</span>
-          </div>
-          <div class="total-row grand-total">
-              <span>Total Amount:</span>
-              <span>₹${order.totalAmount?.toLocaleString("en-IN")}</span>
-          </div>
-      </div>
-
-      <div style="clear: both;"></div>
-
-      <div class="tax-info">
-          <p><strong>Points to Note:</strong></p>
-          <p>• This is a computer generated invoice and does not require physical signature.</p>
-          <p>• Goods once sold will not be taken back or exchanged.</p>
-      </div>
-
-      <div class="footer">
-          <p><strong>Thank you for shopping with Chaka-Chak!</strong></p>
-          <p>Need help? Contact us at chakachakteam@gmail.com or DM us @chakachakteam</p>
-      </div>
-  </body>
-  </html>
-  `;
-  };
-
   const downloadInvoice = async () => {
     try {
       setDownloadingInvoice(true);
 
-      const invoiceHTML = generateInvoiceHTML(order);
+      const { jsPDF } = await import("jspdf");
+      const doc = new jsPDF();
 
-      const blob = new Blob([invoiceHTML], { type: "text/html" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `Invoice-${order.orderId}.html`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      const currentDate = new Date();
+      const invoiceNumber = `INV-${order.orderId}-${currentDate.getFullYear()}`;
+      const subtotal =
+        order.items?.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        ) || 0;
 
+      doc.setFontSize(24);
+      doc.setFont(undefined, "bold");
+      doc.text("Chaka-Chak", 105, 25, { align: "center" });
+
+      doc.setFontSize(10);
+      doc.setFont(undefined, "normal");
+      doc.text(
+        "Email: chakachakteam@gmail.com | Instagram: @chakachakteam",
+        105,
+        35,
+        { align: "center" }
+      );
+
+      doc.setLineWidth(0.5);
+      doc.line(20, 45, 190, 45);
+
+      doc.setFontSize(12);
+      doc.setFont(undefined, "bold");
+      doc.text("Invoice Details", 20, 60);
+
+      doc.setFont(undefined, "normal");
+      doc.setFontSize(10);
+      doc.text(`Invoice No: ${invoiceNumber}`, 20, 70);
+      doc.text(
+        `Invoice Date: ${currentDate.toLocaleDateString("en-IN")}`,
+        20,
+        80
+      );
+      doc.text(`Order ID: ${order.orderId}`, 20, 90);
+
+      doc.text(
+        `Payment Status: ${order.payment?.status?.toUpperCase() || "PENDING"}`,
+        110,
+        70
+      );
+      doc.text(
+        `Order Date: ${new Date(order.createdAt).toLocaleDateString("en-IN")}`,
+        110,
+        80
+      );
+
+      doc.setFont(undefined, "bold");
+      doc.text("Bill To:", 20, 110);
+      doc.text("Ship To:", 110, 110);
+
+      doc.setFont(undefined, "normal");
+      const billToY = 120;
+      const shipToY = 120;
+
+      doc.text(order.deliveryAddress?.fullName || "Customer", 20, billToY);
+      doc.text(order.deliveryAddress?.addressLine1 || "", 20, billToY + 10);
+      if (order.deliveryAddress?.addressLine2) {
+        doc.text(order.deliveryAddress.addressLine2, 20, billToY + 20);
+      }
+      doc.text(
+        `${order.deliveryAddress?.city || ""}, ${
+          order.deliveryAddress?.state || ""
+        } - ${order.deliveryAddress?.postalCode || ""}`,
+        20,
+        billToY + 30
+      );
+      doc.text(order.deliveryAddress?.country || "India", 20, billToY + 40);
+      if (order.deliveryAddress?.phone) {
+        doc.text(`Phone: ${order.deliveryAddress.phone}`, 20, billToY + 50);
+      }
+
+      doc.text(order.deliveryAddress?.fullName || "Customer", 110, shipToY);
+      doc.text(order.deliveryAddress?.addressLine1 || "", 110, shipToY + 10);
+      if (order.deliveryAddress?.addressLine2) {
+        doc.text(order.deliveryAddress.addressLine2, 110, shipToY + 20);
+      }
+      doc.text(
+        `${order.deliveryAddress?.city || ""}, ${
+          order.deliveryAddress?.state || ""
+        } - ${order.deliveryAddress?.postalCode || ""}`,
+        110,
+        shipToY + 30
+      );
+      doc.text(order.deliveryAddress?.country || "India", 110, shipToY + 40);
+      if (order.deliveryAddress?.phone) {
+        doc.text(`Phone: ${order.deliveryAddress.phone}`, 110, shipToY + 50);
+      }
+
+      const tableStartY = 180;
+      doc.setFont(undefined, "bold");
+      doc.setFontSize(11);
+      doc.text("Items", 20, tableStartY);
+
+      doc.setLineWidth(0.3);
+      doc.line(20, tableStartY + 5, 190, tableStartY + 5);
+
+      const headers = [
+        "S.No",
+        "Description",
+        "Qty",
+        "Rate (Rs. )",
+        "Amount (Rs. )",
+      ];
+      const headerY = tableStartY + 15;
+      const colWidths = [15, 80, 20, 30, 35];
+      let xPos = 20;
+
+      doc.setFont(undefined, "bold");
+      doc.setFontSize(9);
+      headers.forEach((header, index) => {
+        doc.text(header, xPos, headerY);
+        xPos += colWidths[index];
+      });
+
+      doc.line(20, headerY + 3, 190, headerY + 3);
+
+      doc.setFont(undefined, "normal");
+      let currentY = headerY + 15;
+
+      order.items?.forEach((item, index) => {
+        if (currentY > 250) {
+          doc.addPage();
+          currentY = 30;
+        }
+
+        xPos = 20;
+        doc.text((index + 1).toString(), xPos, currentY);
+        xPos += colWidths[0];
+
+        const description = `${item.name}\nSize: ${
+          item.size
+        }, Color: ${getColorName(item.color)}`;
+        const lines = doc.splitTextToSize(description, colWidths[1] - 5);
+        doc.text(lines, xPos, currentY);
+        xPos += colWidths[1];
+
+        doc.text(item.quantity.toString(), xPos, currentY);
+        xPos += colWidths[2];
+
+        doc.text(item.price?.toLocaleString("en-IN"), xPos, currentY);
+        xPos += colWidths[3];
+
+        doc.text(
+          (item.price * item.quantity)?.toLocaleString("en-IN"),
+          xPos,
+          currentY
+        );
+
+        currentY += Math.max(15, lines.length * 5);
+        doc.line(20, currentY - 5, 190, currentY - 5);
+      });
+
+      currentY += 10;
+      const totalStartX = 130;
+
+      doc.setFont(undefined, "normal");
+      doc.text("Subtotal:", totalStartX, currentY);
+      doc.text(`Rs. ${subtotal.toLocaleString("en-IN")}`, 170, currentY);
+
+      currentY += 10;
+      doc.text("Shipping:", totalStartX, currentY);
+      doc.text("Rs. 0", 170, currentY);
+
+      currentY += 10;
+      doc.setFont(undefined, "bold");
+      doc.setLineWidth(0.5);
+      doc.line(totalStartX, currentY - 3, 190, currentY - 3);
+      doc.text("Total Amount:", totalStartX, currentY + 5);
+      doc.text(
+        `Rs. ${order.totalAmount?.toLocaleString("en-IN")}`,
+        170,
+        currentY + 5
+      );
+
+      currentY += 20;
+      doc.setFont(undefined, "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(150);
+      doc.text(
+        "This is a computer generated invoice and does not require physical signature.",
+        105,
+        currentY,
+        { align: "center" }
+      );
+      doc.setTextColor(0);
+
+      doc.save(`Invoice-${order.orderId}.pdf`);
       showToast.success("Invoice downloaded successfully!");
     } catch (error) {
       console.error("Error downloading invoice:", error);

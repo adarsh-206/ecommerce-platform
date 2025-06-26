@@ -2,7 +2,7 @@
 import Footer from "@/components/common/Footer";
 import Header from "@/components/common/Header";
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import categories from "@/constants/categories";
 import COLOR_NAMES from "@/constants/color";
 import ImageModal from "@/components/product/ImageModal";
@@ -13,6 +13,7 @@ import { ShoppingCart } from "lucide-react";
 
 export default function ProductInfoPage() {
   const params = useParams();
+  const router = useRouter();
   const productId = params.id;
   const { addItem, updateItem, getItemQuantity, cartItems } = useCart();
 
@@ -128,6 +129,14 @@ export default function ProductInfoPage() {
     }
   };
 
+  const handleGoToCart = () => {
+    router.push("/cart");
+  };
+
+  const findCartItemForProduct = () => {
+    return cartItems.find((item) => item.productId === productId);
+  };
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -135,15 +144,24 @@ export default function ProductInfoPage() {
         const data = await apiService.get(`/buyer/get-product/${productId}`);
         setProduct(data?.data);
 
-        if (data?.data?.priceBySize && data.data.priceBySize.length > 0) {
-          setSelectedSize(data.data.priceBySize[0].size);
-        }
+        const cartItem = findCartItemForProduct();
 
-        if (data?.data?.colors && data.data.colors.length > 0) {
-          const firstColor = data.data.colors[0];
-          setSelectedColor(firstColor);
-          const imageIndex = getImageIndexForColor(firstColor);
+        if (cartItem) {
+          setSelectedSize(cartItem.size);
+          setSelectedColor(cartItem.color);
+          const imageIndex = getImageIndexForColor(cartItem.color);
           setSelectedImage(imageIndex);
+        } else {
+          if (data?.data?.priceBySize && data.data.priceBySize.length > 0) {
+            setSelectedSize(data.data.priceBySize[0].size);
+          }
+
+          if (data?.data?.colors && data.data.colors.length > 0) {
+            const firstColor = data.data.colors[0];
+            setSelectedColor(firstColor);
+            const imageIndex = getImageIndexForColor(firstColor);
+            setSelectedImage(imageIndex);
+          }
         }
 
         setError(null);
@@ -158,7 +176,7 @@ export default function ProductInfoPage() {
     if (productId) {
       fetchProduct();
     }
-  }, [productId]);
+  }, [productId, cartItems]);
 
   const getSelectedPriceData = () => {
     if (!product?.priceBySize || !selectedSize) return null;
@@ -529,7 +547,10 @@ export default function ProductInfoPage() {
                           : "Out of Stock"}
                       </button>
                     ) : (
-                      <div className="flex-1 flex items-center justify-center py-3 px-6 bg-green-100 text-green-800 rounded-full font-semibold">
+                      <button
+                        onClick={handleGoToCart}
+                        className="flex-1 flex items-center justify-center py-3 px-6 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-full font-semibold shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
+                      >
                         <svg
                           className="w-5 h-5 mr-2"
                           fill="currentColor"
@@ -537,12 +558,12 @@ export default function ProductInfoPage() {
                         >
                           <path
                             fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
                             clipRule="evenodd"
                           />
                         </svg>
-                        Added to Cart
-                      </div>
+                        Go to Cart ({cartQuantity})
+                      </button>
                     )}
                     <button
                       onClick={() => setIsWishlisted(!isWishlisted)}

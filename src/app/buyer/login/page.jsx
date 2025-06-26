@@ -5,6 +5,7 @@ import Link from "next/link";
 import apiService from "@/app/utils/apiService";
 import BrandLogo from "@/components/common/BrandLogo";
 import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 
 export const buyerLoginMetadata = {
   title: "Login | Chaka-Chak - Access Your Fashion Account",
@@ -34,6 +35,7 @@ export default function BuyerLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const { login } = useAuth();
+  const { cartItems } = useCart();
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -161,9 +161,9 @@ export const CartProvider = ({ children }) => {
   const getItemQuantity = (productId, size, color) => {
     const cartItem = cartItems.find(
       (item) =>
-        item.product._id === productId &&
-        item.size === size &&
-        item.color === color
+        item.product._id == productId &&
+        item.size == size &&
+        item.color == color
     );
     return cartItem ? cartItem.quantity : 0;
   };

@@ -119,8 +119,7 @@ export default function DeliveryAddresses({
     }
   };
 
-  const handleEditAddress = async (e) => {
-    e.preventDefault();
+  const handleEditAddress = async (formData) => {
     if (
       !formData.fullName ||
       !formData.addressLine1 ||
@@ -431,6 +430,7 @@ export default function DeliveryAddresses({
         <AddressForm
           onSubmit={handleEditAddress}
           isEditing={true}
+          initialData={editingAddress}
           closeModals={closeModals}
         />
       </Modal>
