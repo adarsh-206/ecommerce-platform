@@ -231,8 +231,8 @@ export default function BuyerRegistration() {
       setFormStep(1);
     } catch (error) {
       let errorMessage = "Registration failed. Please try again.";
-      if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
+      if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
       }
       setErrors((prev) => ({ ...prev, apiError: errorMessage }));
     } finally {
