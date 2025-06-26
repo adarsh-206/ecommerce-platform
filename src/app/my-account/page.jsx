@@ -20,6 +20,8 @@ import MainLayout from "@/components/layouts/MainLayout";
 import { useUser } from "@/context/UserContext";
 import apiService from "../utils/apiService";
 import AddressForm from "@/components/deliveryAdresses/AddressForm";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export const myAccountMetadata = {
   title: "My Account | Chaka-Chak - Manage Profile, Orders & Preferences",
@@ -59,6 +61,8 @@ export default function MyAccountPage() {
     confirmPassword: "",
   });
   const { userDetails } = useUser();
+  const router = useRouter();
+  const { logout } = useAuth();
 
   useEffect(() => {
     if (userDetails) {
@@ -266,6 +270,34 @@ export default function MyAccountPage() {
       showToast.error(errorMsg);
     } finally {
       setPassLoading(false);
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    const confirmDelete = confirm(
+      "Are you sure you want to delete your profile? This action is irreversible."
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      setLoading(true);
+      const response = await apiService.delete("/user/", {}, true);
+
+      if (response.status === 200) {
+        showToast.success("Your profile was deleted successfully.");
+        logout();
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
+      } else {
+        showToast.error("Failed to delete your profile.");
+      }
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+      showToast.error("An error occurred while deleting your profile.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -741,6 +773,26 @@ export default function MyAccountPage() {
                       </div>
                     </div>
                   )}
+                </div>
+
+                <div className="bg-gradient-to-r from-red-50 to-rose-100 rounded-2xl p-6 border border-red-200 mt-8">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-1">
+                        Delete Profile
+                      </h4>
+                      <p className="text-gray-600 text-sm">
+                        Permanently delete your account and all associated data.
+                        This action cannot be undone.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleDeleteProfile}
+                    className="w-full px-4 py-3 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-xl hover:from-red-700 hover:to-rose-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                  >
+                    Delete Profile
+                  </button>
                 </div>
               </div>
             </div>
