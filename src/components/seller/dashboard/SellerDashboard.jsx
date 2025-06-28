@@ -7,14 +7,10 @@ export const metadata = {
   },
 };
 
+import apiService from "@/app/utils/apiService";
 import { SellerLayout } from "../../layouts/SellerLayout";
-import {
-  Package,
-  ShoppingCart,
-  Users,
-  IndianRupee,
-  AlertCircle,
-} from "lucide-react";
+import { Package, ShoppingCart, IndianRupee } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const DashboardCard = ({ title, value, icon: Icon, color }) => {
   const colorMap = {
@@ -25,10 +21,6 @@ const DashboardCard = ({ title, value, icon: Icon, color }) => {
     orange: {
       bg: "bg-orange-100",
       text: "text-orange-600",
-    },
-    yellow: {
-      bg: "bg-yellow-100",
-      text: "text-yellow-600",
     },
     green: {
       bg: "bg-green-100",
@@ -51,79 +43,28 @@ const DashboardCard = ({ title, value, icon: Icon, color }) => {
   );
 };
 
-const RecentOrder = ({ id, customer, date, status, amount }) => {
-  const statusColors = {
-    completed: "bg-green-100 text-green-700",
-    processing: "bg-orange-100 text-orange-700",
-    shipped: "bg-amber-100 text-amber-700",
-    cancelled: "bg-red-100 text-red-700",
-    pending: "bg-yellow-100 text-yellow-700",
+export default function SellerDashboard() {
+  const [stats, setStats] = useState({
+    totalOrders: 0,
+    totalProducts: 0,
+    totalRevenue: 0,
+  });
+
+  const fetchStats = async () => {
+    try {
+      const response = await apiService.get("/order/seller/stats", {}, true);
+      const data = response.data;
+      setStats(data);
+    } catch (error) {
+      setStats({ totalOrders: 0, totalProducts: 0, totalRevenue: 0 });
+    }
   };
 
-  return (
-    <tr className="border-b border-gray-200 text-gray-700">
-      <td className="py-3 pl-6">{id}</td>
-      <td className="py-3">{customer}</td>
-      <td className="py-3">{date}</td>
-      <td className="py-3">
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status]}`}
-        >
-          {status?.charAt(0)?.toUpperCase() + status?.slice(1)}
-        </span>
-      </td>
-      <td className="py-3 pr-6">₹{amount}</td>
-    </tr>
-  );
-};
-
-const LowStockItem = ({ id, name, stock, supplier }) => {
-  return (
-    <div className="flex items-center justify-between py-4 border-b border-gray-200">
-      <div>
-        <p className="font-medium text-gray-800">{name}</p>
-        <p className="text-sm text-gray-500">ID: {id}</p>
-        <p className="text-sm text-gray-500">Supplier: {supplier}</p>
-      </div>
-      <div className="flex items-center">
-        <span className="text-red-600 font-medium mr-2">{stock} left</span>
-      </div>
-    </div>
-  );
-};
-
-export default function SellerDashboard() {
-  const recentOrders = [
-    {
-      id: "ORD-IN1024",
-      customer: "Amit Sharma",
-      date: "13 May 2025",
-      status: "completed",
-      amount: "1599.00",
-    },
-    {
-      id: "ORD-IN1023",
-      customer: "Pooja Patel",
-      date: "12 May 2025",
-      status: "processing",
-      amount: "799.00",
-    },
-  ];
-
-  const lowStockItems = [
-    {
-      id: "PRD-IN203",
-      name: "Bluetooth Speaker",
-      stock: 2,
-      supplier: "GadgetKart India",
-    },
-    {
-      id: "PRD-IN158",
-      name: "Fitness Band Pro",
-      stock: 4,
-      supplier: "TechWorld Mumbai",
-    },
-  ];
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      fetchStats();
+    }
+  }, []);
 
   return (
     <SellerLayout>
@@ -132,87 +73,25 @@ export default function SellerDashboard() {
         <p className="text-gray-600">Welcome back to Chaka-Chak</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <DashboardCard
           title="Total Orders"
-          value="2,304"
+          value={stats.totalOrders}
           icon={ShoppingCart}
-          trend="+10.5%"
           color="amber"
         />
         <DashboardCard
           title="Total Products"
-          value="1,120"
+          value={stats.totalProducts}
           icon={Package}
-          trend="+6.3%"
           color="orange"
         />
         <DashboardCard
-          title="Customers"
-          value="5,674"
-          icon={Users}
-          trend="+15.8%"
-          color="yellow"
-        />
-        <DashboardCard
           title="Revenue"
-          value="₹4,82,350"
+          value={`₹${stats.totalRevenue}`}
           icon={IndianRupee}
-          trend="+22.1%"
           color="green"
         />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-lg border border-rose-200 overflow-hidden">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-800">
-              Recent Orders
-            </h2>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-gray-600">
-                <tr>
-                  <th className="text-left py-3 pl-6 font-medium">Order ID</th>
-                  <th className="text-left py-3 font-medium">Customer</th>
-                  <th className="text-left py-3 font-medium">Date</th>
-                  <th className="text-left py-3 font-medium">Status</th>
-                  <th className="text-left py-3 pr-6 font-medium">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentOrders.map((order) => (
-                  <RecentOrder key={order.id} {...order} />
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="p-4 border-t border-gray-100 bg-gray-50">
-            <button className="text-amber-600 hover:text-amber-800 text-sm font-medium">
-              View all orders →
-            </button>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg border border-rose-200">
-          <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-800">
-              Low Stock Alert
-            </h2>
-            <AlertCircle size={20} className="text-red-600" />
-          </div>
-          <div className="p-6">
-            {lowStockItems.map((item) => (
-              <LowStockItem key={item.id} {...item} />
-            ))}
-          </div>
-          <div className="p-4 border-t border-gray-100 bg-gray-50">
-            <button className="text-amber-600 hover:text-amber-800 text-sm font-medium">
-              View inventory →
-            </button>
-          </div>
-        </div>
       </div>
     </SellerLayout>
   );

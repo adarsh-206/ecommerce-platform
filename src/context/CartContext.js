@@ -184,11 +184,15 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     const initializeCart = async () => {
+      const userType = localStorage.getItem("userType");
+      if (userType === "seller" || userType === "super-admin") return;
+
       if (isAuthenticated) {
         await syncLocalCartToServer();
       }
       await fetchCart();
     };
+
     initializeCart();
   }, [isAuthenticated, syncLocalCartToServer, fetchCart]);
 

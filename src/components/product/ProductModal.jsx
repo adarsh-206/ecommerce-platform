@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import ProductFormTabContent from "./ProductFormTabContent";
+import { showToast } from "@/utils/showToast";
 
 export default function ProductModal({
   product,
@@ -25,7 +26,7 @@ export default function ProductModal({
         currency: "INR",
       },
     ],
-    stock: { quantity: 0, lowStockThreshold: 5 },
+    stock: { quantity: 50, lowStockThreshold: 5 },
     category: "",
     subCategory: "",
     brand: "",
@@ -50,16 +51,7 @@ export default function ProductModal({
     },
     { id: 1, title: "Pricing", fields: ["priceBySize"] },
     { id: 2, title: "Inventory", fields: ["stock", "sizes", "colors"] },
-    {
-      id: 3,
-      title: "Details",
-      fields: ["weight", "dimensions", "tags", "attributes"],
-    },
-    {
-      id: 4,
-      title: "Media & Status",
-      fields: ["images", "featured"],
-    },
+    { id: 3, title: "Media & Status", fields: ["images", "featured"] },
   ];
 
   useEffect(() => {
@@ -103,17 +95,10 @@ export default function ProductModal({
       const [parent, child] = name.split(".");
       let processedValue = finalValue;
 
-      // For number inputs, allow empty string during typing but prevent negative values
       if (type === "number") {
-        if (value === "") {
-          processedValue = "";
-        } else {
-          const numValue = Number(value);
-          processedValue = numValue < 0 ? 0 : numValue;
-        }
+        processedValue = value === "" ? "" : Math.max(Number(value), 0);
       } else if (!isNaN(finalValue) && finalValue !== "") {
-        const numValue = Number(finalValue);
-        processedValue = numValue < 0 ? 0 : numValue;
+        processedValue = Math.max(Number(finalValue), 0);
       }
 
       setForm((f) => ({
@@ -123,13 +108,13 @@ export default function ProductModal({
           [child]: processedValue,
         },
       }));
-    } else if (name === "tags" || name === "sizes" || name === "colors") {
+    } else if (["tags", "sizes", "colors"].includes(name)) {
       setForm((f) => ({
         ...f,
         [name]: value
           .split(",")
           .map((v) => v.trim())
-          .filter((v) => v),
+          .filter(Boolean),
       }));
     } else {
       setForm((f) => ({ ...f, [name]: finalValue }));
@@ -138,19 +123,11 @@ export default function ProductModal({
 
   const handlePriceChange = (index, field, value) => {
     const newPrices = [...form.priceBySize];
-
     if (field === "size" || field === "currency") {
       newPrices[index][field] = value;
     } else {
-      // Allow empty string while typing, but prevent negative values
-      if (value === "") {
-        newPrices[index][field] = "";
-      } else {
-        const numValue = Number(value);
-        newPrices[index][field] = numValue < 0 ? 0 : numValue;
-      }
+      newPrices[index][field] = value === "" ? "" : Math.max(Number(value), 0);
     }
-
     setForm((f) => ({ ...f, priceBySize: newPrices }));
   };
 
@@ -207,7 +184,6 @@ export default function ProductModal({
 
   const isTabValid = (tabIndex) => {
     const tab = tabs[tabIndex];
-
     const optionalFields = [
       "brand",
       "sizes",
@@ -222,60 +198,34 @@ export default function ProductModal({
     return tab.fields.every((field) => {
       if (optionalFields.includes(field)) return true;
 
-      let isValid = true;
-
       switch (field) {
         case "name":
-          isValid = form.name && form.name.trim().length >= 3;
-          break;
-
+          return form.name && form.name.trim().length >= 3;
         case "description":
-          isValid =
-            form.description.short &&
-            form.description.short.trim() &&
-            form.description.long &&
-            form.description.long.trim();
-          break;
-
+          return (
+            form.description.short?.trim() && form.description.long?.trim()
+          );
         case "category":
-          isValid = !!form.category;
-          break;
-
+          return !!form.category;
         case "subCategory":
           const subcategories = getSubcategories();
-          isValid = subcategories.length === 0 || !!form.subCategory;
-          break;
-
+          return subcategories.length === 0 || !!form.subCategory;
         case "priceBySize":
-          isValid =
+          return (
             form.priceBySize.length > 0 &&
             form.priceBySize.every(
-              (p) =>
-                p.size &&
-                p.size.trim() &&
-                p.originalPrice > 0 &&
-                p.sellingPrice > 0
-            );
-          break;
-
+              (p) => p.size?.trim() && p.originalPrice > 0 && p.sellingPrice > 0
+            )
+          );
         case "stock":
-          isValid =
-            typeof form.stock.quantity === "number" && form.stock.quantity >= 0;
-          break;
-
+          return (
+            typeof form.stock.quantity === "number" && form.stock.quantity >= 0
+          );
         case "images":
-          isValid = form.images.main;
-          break;
-
+          return !!form.images.main;
         default:
-          isValid = true;
+          return true;
       }
-
-      // if (!isValid) {
-      //   console.warn(`Tab ${tabIndex} - Invalid field: ${field}`);
-      // }
-
-      return isValid;
     });
   };
 
@@ -283,8 +233,7 @@ export default function ProductModal({
     currentTab < tabs.length - 1 && isTabValid(currentTab);
 
   const canSubmit = () =>
-    currentTab === tabs.length - 1 &&
-    tabs.every((_, index) => isTabValid(index));
+    currentTab === tabs.length - 1 && tabs.every((_, i) => isTabValid(i));
 
   const handleImageUpload = (event, type, colorHex = "") => {
     const file = event.target.files[0];
@@ -296,9 +245,9 @@ export default function ProductModal({
           images: {
             ...prev.images,
             [type]: {
-              file: file,
+              file,
               preview: e.target.result,
-              colorHex: colorHex,
+              colorHex,
             },
           },
         }));
@@ -313,21 +262,11 @@ export default function ProductModal({
       const reader = new FileReader();
       reader.onload = (e) => {
         setForm((prev) => {
-          const currentExtras = prev.images?.extras || [];
-          const newExtras = [...currentExtras];
-
-          newExtras[index] = {
-            file: file,
-            preview: e.target.result,
-            colorHex: colorHex, // Store color linkage
-          };
-
+          const newExtras = [...(prev.images.extras || [])];
+          newExtras[index] = { file, preview: e.target.result, colorHex };
           return {
             ...prev,
-            images: {
-              ...prev.images,
-              extras: newExtras,
-            },
+            images: { ...prev.images, extras: newExtras },
           };
         });
       };
@@ -337,53 +276,53 @@ export default function ProductModal({
 
   const removeExtraImage = (index) => {
     setForm((prev) => {
-      const newExtra = [...(prev.images?.extras || [])];
-      newExtra[index] = null;
+      const newExtras = (prev.images.extras || []).filter(
+        (_, i) => i !== index
+      );
       return {
         ...prev,
-        images: {
-          ...prev.images,
-          extras: newExtra,
-        },
+        images: { ...prev.images, extras: newExtras },
       };
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (canSubmit()) {
       onSave(form);
+    } else {
+      showToast.error("Please complete all required fields before submitting.");
     }
   };
 
-  const handleTabNav = () => {
+  const handleTabNav = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (currentTab === 1) {
       for (let i = 0; i < form.priceBySize.length; i++) {
         const p = form.priceBySize[i];
 
         if (!p.size.trim()) {
-          alert("Size/Variant is required.");
+          showToast.error("Size/Variant is required.");
           return;
         }
-
         if (p.originalPrice < 0 || p.purchasePrice < 0 || p.sellingPrice < 0) {
-          alert("Negative prices are not allowed.");
+          showToast.error("Negative prices are not allowed.");
           return;
         }
-
         if (p.sellingPrice < p.purchasePrice) {
-          alert("Selling price cannot be less than purchase price.");
+          showToast.error("Selling price cannot be less than purchase price.");
           return;
         }
-
         if (p.sellingPrice > p.originalPrice) {
-          alert("Selling price cannot be more than original price.");
+          showToast.error("Selling price cannot be more than original price.");
           return;
         }
       }
     }
 
-    // Proceed to next tab if validation passes
     setCurrentTab(currentTab + 1);
   };
 
@@ -395,6 +334,7 @@ export default function ProductModal({
             {product ? "Edit Product" : "Add New Product"}
           </h2>
           <button
+            type="button"
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
             aria-label="Close"
@@ -406,6 +346,7 @@ export default function ProductModal({
         <div className="flex border-b border-gray-200">
           {tabs.map((tab, index) => (
             <button
+              type="button"
               key={tab.id}
               onClick={() => setCurrentTab(index)}
               className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
@@ -512,7 +453,6 @@ export default function ProductModal({
                 }`}
               >
                 {loading ? (
-                  // Simple spinner - you can replace this with an SVG or CSS spinner
                   <svg
                     className="animate-spin h-5 w-5 text-white"
                     xmlns="http://www.w3.org/2000/svg"
@@ -536,7 +476,7 @@ export default function ProductModal({
                 ) : product ? (
                   "Update Product"
                 ) : (
-                  "Create Products"
+                  "Create Product"
                 )}
               </button>
             )}

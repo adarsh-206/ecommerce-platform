@@ -37,9 +37,9 @@ export default function SellerRegister() {
   const [apiError, setApiError] = useState("");
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    router.replace("/seller");
-  }, [router]);
+  // useEffect(() => {
+  //   router.replace("/seller");
+  // }, [router]);
 
   useEffect(() => {
     function handleClickOutside(e) {

@@ -56,7 +56,18 @@ export function WishlistProvider({ children }) {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    const userType = localStorage.getItem("userType");
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return;
+    }
+
+    if (userType === "seller" || userType === "super-admin") {
+      return;
+    }
+
+    if (token) {
       fetchWishlist();
     }
   }, []);

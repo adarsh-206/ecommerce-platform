@@ -54,8 +54,9 @@ export default function SellerLogin() {
       });
 
       if (response?.status === 200) {
-        localStorage.setItem("token", response.data.token);
         router.push("/seller/dashboard");
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("userType", "seller");
       }
     } catch (err) {
       if (err.response && err.response.data) {

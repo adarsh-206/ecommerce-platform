@@ -50,7 +50,7 @@ export const SellerLayout = ({ children }) => {
     { name: "Dashboard", href: "/seller/dashboard", icon: Home },
     { name: "Products", href: "/seller/products", icon: Package },
     { name: "Orders", href: "/seller/orders", icon: ShoppingCart },
-    { name: "Settings", href: "/seller/settings", icon: Settings },
+    // { name: "Settings", href: "/seller/settings", icon: Settings },
   ];
 
   if (!isLoggedIn) {

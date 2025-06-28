@@ -318,7 +318,7 @@ export default function ProductsList({ products, onEdit, onDelete }) {
                     <button
                       className="text-rose-600 hover:text-rose-900 mr-3"
                       onClick={() =>
-                        window.open(`/products/${product._id}`, "_blank")
+                        window.open(`/product/${product._id}`, "_blank")
                       }
                     >
                       <Eye className="h-5 w-5" />

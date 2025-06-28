@@ -7,6 +7,7 @@ import ProductModal from "@/components/product/ProductModal";
 import { PlusCircle, Filter, Search } from "lucide-react";
 import categories from "@/constants/categories";
 import apiService from "@/app/utils/apiService";
+import { showToast } from "@/utils/showToast";
 
 export default function SellerProductsPage() {
   const [products, setProducts] = useState([]);
@@ -22,10 +23,8 @@ export default function SellerProductsPage() {
     fetchProducts();
   }, []);
 
-  // Helper function to validate and sanitize product data
   const sanitizeProduct = (product) => {
     if (!product) return null;
-
     return {
       ...product,
       name: product.name || "NA",
@@ -46,18 +45,16 @@ export default function SellerProductsPage() {
     try {
       const data = await apiService.get("/seller/products", {}, true);
       const productsData = data?.data;
-
       if (Array.isArray(productsData)) {
-        // Sanitize each product to ensure all required fields exist
         const sanitizedProducts = productsData
           .map(sanitizeProduct)
-          .filter((product) => product !== null);
+          .filter(Boolean);
         setProducts(sanitizedProducts);
       } else {
         setProducts([]);
       }
     } catch (error) {
-      console.error("Failed to fetch products", error);
+      showToast.error("Failed to fetch products");
       setProducts([]);
     } finally {
       setIsLoading(false);
@@ -81,21 +78,20 @@ export default function SellerProductsPage() {
 
   const handleDelete = async (productId) => {
     if (!productId) return;
-
     try {
+      showToast.loading("Deleting product...");
       await apiService.delete(`/seller/products/${productId}`, {}, true);
       setProducts(products.filter((p) => p?._id !== productId));
+      showToast.success("Product deleted successfully");
     } catch (error) {
-      console.error("Failed to delete product", error);
+      showToast.error("Failed to delete product");
     }
   };
 
   const handleSave = async (productData) => {
     if (!productData) return;
-
     try {
       setLoading(true);
-
       if (selectedProduct?._id) {
         const updated = await apiService.put(
           `/seller/products/${selectedProduct._id}`,
@@ -111,12 +107,12 @@ export default function SellerProductsPage() {
               )
             );
           }
+          showToast.success("Product updated successfully");
         }
       } else {
         const images = productData?.images;
         const mainImage = images?.main;
         const extraImages = images?.extras;
-
         if (!mainImage?.file) return;
 
         const cleanProductData = {
@@ -137,13 +133,8 @@ export default function SellerProductsPage() {
 
         const formData = new FormData();
         formData.append("data", JSON.stringify(cleanProductData));
-
-        const mainImageFile = cleanProductData.images.main.file;
-        const extraImageFiles = cleanProductData.images.extras;
-
-        formData.append("mainImage", mainImageFile);
-
-        extraImageFiles.forEach((imgObj, index) => {
+        formData.append("mainImage", cleanProductData.images.main.file);
+        cleanProductData.images.extras.forEach((imgObj) => {
           if (imgObj?.file) {
             formData.append("extraImages", imgObj.file);
           }
@@ -161,13 +152,14 @@ export default function SellerProductsPage() {
           if (sanitizedCreated) {
             setProducts([...products, sanitizedCreated]);
           }
+          showToast.success("Product created successfully");
         }
       }
 
       closeModal();
       fetchProducts();
     } catch (error) {
-      console.error("Failed to save product", error);
+      showToast.error("Failed to save product");
     } finally {
       setLoading(false);
     }
@@ -176,30 +168,21 @@ export default function SellerProductsPage() {
   const filteredProducts = Array.isArray(products)
     ? products.filter((product) => {
         if (!product) return false;
-
         const productName = product.name || "";
         const productCategory = product.category;
         const productSubCategory = product.subCategory;
-
-        if (filterCategory !== "all" && productCategory !== filterCategory) {
+        if (filterCategory !== "all" && productCategory !== filterCategory)
           return false;
-        }
-
         if (
           filterSubcategory !== "all" &&
           productSubCategory !== filterSubcategory
-        ) {
+        )
           return false;
-        }
-
-        if (searchQuery && searchQuery.trim()) {
+        if (searchQuery?.trim()) {
           const query = searchQuery.toLowerCase().trim();
           const name = productName.toLowerCase();
-          if (!name.includes(query)) {
-            return false;
-          }
+          if (!name.includes(query)) return false;
         }
-
         return true;
       })
     : [];

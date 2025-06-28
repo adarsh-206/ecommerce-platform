@@ -4,7 +4,6 @@ import Header from "@/components/common/Header";
 import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import categories from "@/constants/categories";
-import COLOR_NAMES from "@/constants/color";
 import ImageModal from "@/components/product/ImageModal";
 import ProductImageGallery from "@/components/product/ProductImageGallery";
 import { useCart } from "@/context/CartContext";
@@ -42,7 +41,7 @@ export default function ProductInfoPage() {
     }
 
     for (const category of categories) {
-      const subCategory = category.subcategories.find(
+      const subCategory = category.subcategories?.find(
         (sub) => sub.id == categoryId
       );
       if (subCategory) {
@@ -50,7 +49,7 @@ export default function ProductInfoPage() {
       }
     }
 
-    return "";
+    return "Product";
   };
 
   const getAllImages = () => {
@@ -82,6 +81,7 @@ export default function ProductInfoPage() {
   };
 
   const getImageIndexForColor = (colorHex) => {
+    if (!colorHex) return 0;
     const images = getAllImages();
     const imageIndex = images.findIndex(
       (img) =>
@@ -90,9 +90,9 @@ export default function ProductInfoPage() {
     return imageIndex !== -1 ? imageIndex : 0;
   };
 
-  const handleColorSelect = (color) => {
-    setSelectedColor(color);
-    const imageIndex = getImageIndexForColor(color);
+  const handleColorSelect = (colorHex) => {
+    setSelectedColor(colorHex);
+    const imageIndex = getImageIndexForColor(colorHex);
     setSelectedImage(imageIndex);
   };
 
@@ -100,32 +100,44 @@ export default function ProductInfoPage() {
     const images = getAllImages();
     setSelectedImage(index);
 
-    if (images[index]?.colorHex) {
-      const matchingColor = product.colors.find(
-        (color) => color.toLowerCase() === images[index].colorHex.toLowerCase()
+    const image = images[index];
+    if (image?.colorHex) {
+      const matchingColor = product.colors?.find(
+        (color) => color.hexCode?.toLowerCase() === image.colorHex.toLowerCase()
       );
       if (matchingColor) {
-        setSelectedColor(matchingColor);
+        setSelectedColor(matchingColor.hexCode);
       }
     }
   };
 
   const handleAddToCart = async () => {
+    if (!selectedSize || !selectedColor) {
+      alert("Please select size and color");
+      return;
+    }
+
     try {
       setIsAddingToCart(true);
       await addItem(productId, selectedSize, selectedColor);
     } catch (error) {
       console.error("Error adding to cart:", error);
+      alert("Failed to add item to cart");
     } finally {
       setIsAddingToCart(false);
     }
   };
 
   const handleUpdateCartQuantity = async (newQuantity) => {
+    if (newQuantity < 1) {
+      return;
+    }
+
     try {
       await updateItem(productId, selectedSize, selectedColor, newQuantity);
     } catch (error) {
       console.error("Error updating cart quantity:", error);
+      alert("Failed to update quantity");
     }
   };
 
@@ -134,7 +146,7 @@ export default function ProductInfoPage() {
   };
 
   const findCartItemForProduct = () => {
-    return cartItems.find((item) => item.productId === productId);
+    return cartItems?.find((item) => item.productId === productId);
   };
 
   useEffect(() => {
@@ -158,8 +170,8 @@ export default function ProductInfoPage() {
 
           if (data?.data?.colors && data.data.colors.length > 0) {
             const firstColor = data.data.colors[0];
-            setSelectedColor(firstColor);
-            const imageIndex = getImageIndexForColor(firstColor);
+            setSelectedColor(firstColor.hexCode);
+            const imageIndex = getImageIndexForColor(firstColor.hexCode);
             setSelectedImage(imageIndex);
           }
         }
@@ -176,7 +188,7 @@ export default function ProductInfoPage() {
     if (productId) {
       fetchProduct();
     }
-  }, [productId, cartItems]);
+  }, [productId]);
 
   const getSelectedPriceData = () => {
     if (!product?.priceBySize || !selectedSize) return null;
@@ -227,12 +239,13 @@ export default function ProductInfoPage() {
     setModalImageIndex(newIndex);
 
     if (images[newIndex]?.colorHex) {
-      const matchingColor = product.colors.find(
+      const matchingColor = product.colors?.find(
         (color) =>
-          color.toLowerCase() === images[newIndex].colorHex.toLowerCase()
+          color.hexCode?.toLowerCase() ===
+          images[newIndex].colorHex.toLowerCase()
       );
       if (matchingColor) {
-        setSelectedColor(matchingColor);
+        setSelectedColor(matchingColor.hexCode);
         setSelectedImage(newIndex);
       }
     }
@@ -244,12 +257,13 @@ export default function ProductInfoPage() {
     setModalImageIndex(newIndex);
 
     if (images[newIndex]?.colorHex) {
-      const matchingColor = product.colors.find(
+      const matchingColor = product.colors?.find(
         (color) =>
-          color.toLowerCase() === images[newIndex].colorHex.toLowerCase()
+          color.hexCode?.toLowerCase() ===
+          images[newIndex].colorHex.toLowerCase()
       );
       if (matchingColor) {
-        setSelectedColor(matchingColor);
+        setSelectedColor(matchingColor.hexCode);
         setSelectedImage(newIndex);
       }
     }
@@ -273,9 +287,12 @@ export default function ProductInfoPage() {
         <Header />
         <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center mb-4">
               <ShoppingCart className="h-24 w-24 text-amber-600 animate-bounce" />
             </div>
+            <p className="text-amber-800 text-lg font-medium">
+              Loading product...
+            </p>
           </div>
         </div>
         <Footer />
@@ -289,9 +306,15 @@ export default function ProductInfoPage() {
         <Header />
         <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-red-600 text-lg">
+            <p className="text-red-600 text-lg font-medium">
               {error || "Product not found"}
             </p>
+            <button
+              onClick={() => router.push("/")}
+              className="mt-4 px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+            >
+              Go Home
+            </button>
           </div>
         </div>
         <Footer />
@@ -315,6 +338,14 @@ export default function ProductInfoPage() {
 
   const maxQuantity = getMaxQuantity();
 
+  const getSelectedColorName = () => {
+    if (!selectedColor) return "";
+    const colorObj = product.colors?.find(
+      (color) => color.hexCode === selectedColor
+    );
+    return colorObj?.name || selectedColor;
+  };
+
   return (
     <div>
       <Header />
@@ -322,9 +353,19 @@ export default function ProductInfoPage() {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <nav className="mb-6">
             <div className="flex items-center space-x-2 text-sm text-amber-600">
-              <span>Home</span>
+              <button
+                onClick={() => router.push("/")}
+                className="hover:text-amber-800 transition-colors"
+              >
+                Home
+              </button>
               <span>/</span>
-              <span>Products</span>
+              <button
+                onClick={() => router.push("/products")}
+                className="hover:text-amber-800 transition-colors"
+              >
+                Products
+              </button>
               <span>/</span>
               <span className="text-amber-800 font-medium">{categoryName}</span>
             </div>
@@ -367,7 +408,7 @@ export default function ProductInfoPage() {
                 </h1>
 
                 <p className="text-amber-600 mb-4">
-                  {product.description?.short}
+                  {product.description?.short || "No description available"}
                 </p>
 
                 <div className="flex items-center space-x-4 mb-4">
@@ -399,8 +440,9 @@ export default function ProductInfoPage() {
                   <div className="flex items-center space-x-4 mb-6">
                     <span className="text-3xl font-bold text-amber-800">
                       ₹
-                      {priceData.sellingPrice?.toLocaleString("en-IN") ||
-                        priceData.price?.toLocaleString("en-IN")}
+                      {(
+                        priceData.sellingPrice || priceData.price
+                      )?.toLocaleString("en-IN")}
                     </span>
                     {priceData.originalPrice &&
                       priceData.originalPrice >
@@ -429,7 +471,7 @@ export default function ProductInfoPage() {
                   {product.priceBySize && product.priceBySize.length > 0 && (
                     <div>
                       <label className="block text-sm font-semibold text-amber-800 mb-2">
-                        Size
+                        Size *
                       </label>
                       <div className="flex flex-wrap gap-3">
                         {product.priceBySize.map((priceItem) => (
@@ -462,17 +504,17 @@ export default function ProductInfoPage() {
                   {product.colors && product.colors.length > 0 && (
                     <div>
                       <label className="block text-sm font-semibold text-amber-800 mb-2">
-                        Available Colors
+                        Color * {selectedColor && `(${getSelectedColorName()})`}
                       </label>
                       <div className="flex flex-wrap gap-3">
-                        {product.colors.map((color, index) => {
-                          const colorName =
-                            COLOR_NAMES[color.toLowerCase()] || color;
-                          const isSelected = selectedColor === color;
+                        {product.colors.map((colorObj, index) => {
+                          const { name, hexCode } = colorObj;
+                          const isSelected = selectedColor === hexCode;
+
                           return (
                             <button
-                              key={index}
-                              onClick={() => handleColorSelect(color)}
+                              key={colorObj._id || index}
+                              onClick={() => handleColorSelect(hexCode)}
                               className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm border-2 transition-all duration-300 ${
                                 isSelected
                                   ? "border-amber-500 bg-amber-100 text-amber-800 shadow-md"
@@ -485,11 +527,11 @@ export default function ProductInfoPage() {
                                     ? "border-amber-600"
                                     : "border-gray-300"
                                 }`}
-                                style={{
-                                  backgroundColor: color,
-                                }}
+                                style={{ backgroundColor: hexCode }}
                               ></div>
-                              <span className="font-medium">{colorName}</span>
+                              <span className="font-medium">
+                                {name || hexCode}
+                              </span>
                             </button>
                           );
                         })}
@@ -507,7 +549,8 @@ export default function ProductInfoPage() {
                           onClick={() =>
                             handleUpdateCartQuantity(cartQuantity - 1)
                           }
-                          className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-colors duration-300"
+                          disabled={cartQuantity <= 1}
+                          className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           -
                         </button>
@@ -518,7 +561,7 @@ export default function ProductInfoPage() {
                           onClick={() =>
                             handleUpdateCartQuantity(cartQuantity + 1)
                           }
-                          className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-colors duration-300"
+                          className="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={cartQuantity >= maxQuantity}
                         >
                           +
@@ -532,16 +575,26 @@ export default function ProductInfoPage() {
                       <button
                         onClick={handleAddToCart}
                         disabled={
-                          !isInStock || maxQuantity === 0 || isAddingToCart
+                          !isInStock ||
+                          maxQuantity === 0 ||
+                          isAddingToCart ||
+                          !selectedSize ||
+                          !selectedColor
                         }
                         className={`flex-1 py-3 px-6 rounded-full font-semibold shadow-lg transition-all duration-300 ${
-                          isInStock && maxQuantity > 0 && !isAddingToCart
+                          isInStock &&
+                          maxQuantity > 0 &&
+                          !isAddingToCart &&
+                          selectedSize &&
+                          selectedColor
                             ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white hover:shadow-xl hover:scale-105"
                             : "bg-gray-300 text-gray-500 cursor-not-allowed"
                         }`}
                       >
                         {isAddingToCart
                           ? "Adding..."
+                          : !selectedSize || !selectedColor
+                          ? "Select Size & Color"
                           : isInStock && maxQuantity > 0
                           ? "Add to Cart"
                           : "Out of Stock"}
@@ -683,8 +736,19 @@ export default function ProductInfoPage() {
                     </span>
                   </div>
                 )}
+                {product.dimensions?.width > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-amber-700 font-medium">
+                      Dimensions:
+                    </span>
+                    <span className="text-amber-800">
+                      {product.dimensions.width} × {product.dimensions.height} ×{" "}
+                      {product.dimensions.depth} {product.dimensions.unit}
+                    </span>
+                  </div>
+                )}
 
-                {priceData && (
+                {priceData && selectedSize && (
                   <div className="pt-3 border-t border-amber-200">
                     <h3 className="text-lg font-semibold text-amber-800 mb-2">
                       Price Details ({selectedSize})
