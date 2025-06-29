@@ -11,7 +11,6 @@ import {
   RefreshCw,
   Bot,
   User,
-  LifeBuoy,
 } from "lucide-react";
 
 export default function Chatbot() {
@@ -245,10 +244,7 @@ export default function Chatbot() {
           <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white px-6 py-4 flex justify-between items-center">
             <div>
               <h2 className="text-lg font-bold">Chaka-Chak Support</h2>
-              <p className="text-xs opacity-90">
-                <LifeBuoy className="w-4 h-4 inline mr-1 text-white" />
-                We're here to help!
-              </p>
+              <p className="text-xs opacity-90">We're here to help! 🛍️</p>
             </div>
             <button
               onClick={() => setIsOpen(false)}
