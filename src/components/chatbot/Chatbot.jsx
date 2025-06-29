@@ -240,7 +240,7 @@ export default function Chatbot() {
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {isOpen ? (
-        <div className="w-full max-w-md sm:max-w-sm bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-orange-200 h-[80vh] sm:h-[75vh]">
+        <div className="w-full max-w-md sm:max-w-xs bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-orange-200 h-[80vh] sm:h-[75vh]">
           {/* Header */}
           <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white px-6 py-4 flex justify-between items-center">
             <div>
