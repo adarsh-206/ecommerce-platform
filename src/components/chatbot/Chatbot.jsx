@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Send,
   X,
@@ -21,25 +21,44 @@ export default function Chatbot() {
     },
   ]);
   const [input, setInput] = useState("");
+  const [showTrigger, setShowTrigger] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const fullHeight = document.body.scrollHeight;
+
+      const scrollPosition = scrollY + windowHeight;
+      const scrollThreshold = fullHeight * 0.7; // bottom 30%
+
+      setShowTrigger(scrollPosition >= scrollThreshold);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // call once on load
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const quickOptions = [
     {
       icon: <Clock className="w-4 h-4" />,
       text: "Shipping & Delivery Time",
       response:
-        "📦 Our standard delivery takes 3-5 business days. Express delivery is available in 1-2 days for major cities. Free shipping on orders above ₹499!",
+        "📦 Our delivery takes 7-10 business days. We appreciate your patience while we ensure quality service.",
     },
     {
       icon: <Package className="w-4 h-4" />,
       text: "Track My Order",
       response:
-        "🔍 You can track your order anytime! Just go to 'My Orders' section or share your order ID with me and I'll help you track it.",
+        "🔍 You can track your order anytime! Just go to 'My Orders' section.",
     },
     {
       icon: <RefreshCw className="w-4 h-4" />,
       text: "Return & Exchange",
       response:
-        "🔄 Easy returns within 7 days! Items should be unused with original packaging. We offer hassle-free exchanges for size/color changes.",
+        "⚠️ We only accept returns if the product received is defective. If the same item is not available for replacement, a refund will be initiated.",
     },
     {
       icon: <CreditCard className="w-4 h-4" />,
@@ -51,13 +70,13 @@ export default function Chatbot() {
       icon: <MapPin className="w-4 h-4" />,
       text: "Delivery Areas",
       response:
-        "🌍 We deliver pan-India! Same-day delivery available in Delhi, Mumbai, Bangalore, and Hyderabad. Check pincode availability at checkout.",
+        "🌍 We deliver across India! Please check your pincode at checkout to confirm availability.",
     },
     {
       icon: <Headphones className="w-4 h-4" />,
       text: "Contact Support",
       response:
-        "📞 Need more help? Call us at 1800-XXX-XXXX (Mon-Sat, 9AM-9PM) or email support@chaka-chak.com. We're always here for you!",
+        "📞 Need more help? DM us on instagram @chakachakteam or email chakachakteam@gmail.com. We're always here for you!",
     },
   ];
 
@@ -67,7 +86,6 @@ export default function Chatbot() {
     setInput("");
     setShowOptions(false);
 
-    // Simple bot response simulation
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
@@ -93,8 +111,8 @@ export default function Chatbot() {
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {isOpen ? (
-        <div className="w-96 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-orange-200">
-          {/* Gradient Header */}
+        <div className="w-full max-w-md sm:max-w-sm bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-orange-200 h-[80vh] sm:h-[75vh]">
+          {/* Header */}
           <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white px-6 py-4 flex justify-between items-center">
             <div>
               <h2 className="text-lg font-bold">Chaka-Chak Support</h2>
@@ -108,8 +126,8 @@ export default function Chatbot() {
             </button>
           </div>
 
-          {/* Message area */}
-          <div className="flex-1 p-4 space-y-3 overflow-y-auto max-h-96 bg-gradient-to-b from-orange-50/30 to-white">
+          {/* Messages */}
+          <div className="flex-1 p-4 space-y-3 overflow-y-auto bg-gradient-to-b from-orange-50/30 to-white">
             {messages.map((msg, index) => (
               <div
                 key={index}
@@ -129,7 +147,6 @@ export default function Chatbot() {
               </div>
             ))}
 
-            {/* Quick Options */}
             {showOptions && (
               <div className="space-y-2 mt-4">
                 <p className="text-sm font-medium text-gray-600 px-2">
@@ -180,13 +197,17 @@ export default function Chatbot() {
           </div>
         </div>
       ) : (
-        <button
-          className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 hover:scale-105"
-          onClick={() => setIsOpen(true)}
-        >
-          <Headphones className="w-5 h-5" />
-          <span className="font-medium">Need Help?</span>
-        </button>
+        <>
+          {!isOpen && showTrigger && (
+            <button
+              className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-105"
+              onClick={() => setIsOpen(true)}
+              aria-label="Open Support Chat"
+            >
+              <Headphones className="w-6 h-6" />
+            </button>
+          )}
+        </>
       )}
     </div>
   );
