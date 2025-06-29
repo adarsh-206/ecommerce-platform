@@ -3,6 +3,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import ToastProvider from "@/components/common/ToastProvider";
 import Head from "next/head";
+import Chatbot from "@/components/chatbot/Chatbot";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -84,6 +85,7 @@ export default function RootLayout({ children }) {
       <body className={poppins.className}>
         <ToastProvider />
         <Providers>{children}</Providers>
+        <Chatbot />
       </body>
     </html>
   );
