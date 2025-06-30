@@ -5,6 +5,7 @@ import NewArrivals from "@/components/home/NewArrivals";
 import BestSellers from "@/components/home/BestSellers";
 import BulkOrderCTA from "@/components/common/BulkOrderCTA";
 import PromoFeatures from "@/components/home/PromoFeatures";
+import CustomizeProduct from "@/components/common/CustomizeProduct";
 
 export const homeMetadata = {
   title: "Chaka-Chak | Clean, Quirky, Totally You - Shop Unique Fashion Online",
@@ -25,7 +26,8 @@ export default function Home() {
       <FeaturedCategories />
       <NewArrivals />
       <BestSellers />
-      <BulkOrderCTA />
+      <CustomizeProduct />
+      {/* <BulkOrderCTA /> */}
       <PromoFeatures />
     </MainLayout>
   );

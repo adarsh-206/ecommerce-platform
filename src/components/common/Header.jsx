@@ -6,12 +6,13 @@ import SearchBar from "./SearchBar";
 import CartIcon from "./CartIcon";
 import UserMenu from "./UserMenu";
 import MobileMenu from "./MobileMenu";
-import { ShoppingBag, Search, X, Menu } from "lucide-react";
+import { Search, X, Menu, Shirt } from "lucide-react";
 import apiService from "@/app/utils/apiService";
 import BrandLogo from "./BrandLogo";
 import categories from "@/constants/categories";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import "./style.css";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -101,29 +102,16 @@ export default function Header() {
               userDetails={userDetails}
               getUserDetails={getUserDetails}
             />
-            {!pathname.startsWith("/seller") && (
-              <>
-                {!userDetails?._id ? (
-                  <Link
-                    href="/seller"
-                    className="ml-4 inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white text-sm font-bold rounded-xl shadow-lg hover:from-amber-700 hover:via-orange-700 hover:to-rose-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl border border-amber-500/20"
-                  >
-                    <span>Start Selling</span>
-                    <ShoppingBag className="h-4 w-4 ml-2" />
-                  </Link>
-                ) : (
-                  userDetails.role === "seller" && (
-                    <Link
-                      href="/seller/dashboard"
-                      className="ml-4 inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white text-sm font-bold rounded-xl shadow-lg hover:from-amber-700 hover:via-orange-700 hover:to-rose-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl border border-amber-500/20"
-                    >
-                      <span>Continue Selling</span>
-                      <ShoppingBag className="h-4 w-4 ml-2" />
-                    </Link>
-                  )
-                )}
-              </>
-            )}
+            <div className="flex justify-center">
+              <a
+                href="/customize-your-product"
+                className="group text-sm relative inline-flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto text-lg font-bold text-white rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 shadow-xl transition-transform duration-300 hover:scale-110 focus:outline-none shiny-button"
+              >
+                <Shirt className="w-3 h-3 text-white transition-transform duration-300 group-hover:rotate-6" />
+                Customize Your Apparel
+                <span className="absolute inset-0 rounded-xl ring-2 ring-transparent group-hover:ring-white/40 transition duration-300 pointer-events-none" />
+              </a>
+            </div>
           </div>
 
           <div className="md:hidden flex items-center space-x-4">
