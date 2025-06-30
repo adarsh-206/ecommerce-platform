@@ -70,7 +70,7 @@ export function TShirtCanvas({
   decalScale,
 }) {
   return (
-    <div className="xl:col-span-3 lg:col-span-2 bg-white/10 backdrop-blur-lg border border-white/20 relative overflow-hidden min-h-[150px] flex items-center">
+    <div className="xl:col-span-3 lg:col-span-2 bg-white/10 backdrop-blur-lg border border-white/20 relative overflow-hidden min-h-[300px] md:min-h-[150px] flex items-center">
       <Canvas
         shadows={false} // Disable shadows globally
         camera={{ position: [0, 0, 3], fov: 15 }}

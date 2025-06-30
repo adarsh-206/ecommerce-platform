@@ -63,7 +63,7 @@ export default function YourProduct() {
   return (
     <MainLayout>
       <div className="min-h-screen w-full bg-orange-100 font-sans text-white pt-6 md:pt-20">
-        <main className="max-w-7xl mx-auto grid xl:grid-cols-5 lg:grid-cols-3 gap-8 p-4 md:p-8 min-h-screen">
+        <main className="max-w-7xl mx-auto grid gap-8 p-4 md:p-8 min-h-screen">
           <TShirtCanvas
             apparelColor={apparelColor}
             decalTexture={decalTexture}
