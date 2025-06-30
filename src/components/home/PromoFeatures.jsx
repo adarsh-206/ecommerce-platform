@@ -1,18 +1,18 @@
 "use client";
 
-import { Percent, Truck, Headphones, Shield } from "lucide-react";
+import { Percent, ShieldCheck, Headphones, Shield } from "lucide-react";
 
 export default function PromoFeatures() {
   const features = [
     {
       icon: Percent,
-      title: "Get 10% Off Instantly",
+      title: "Get an Instant Discount",
       subtitle: "Enjoy your first order with a special discount!",
     },
     {
-      icon: Truck,
-      title: "Lightning-Fast Delivery",
-      subtitle: "Free shipping on every order — no minimum required!",
+      icon: ShieldCheck,
+      title: "Secure Payment Guarantee",
+      subtitle: "Your payments are 100% secure with our encryption.",
     },
     {
       icon: Headphones,
@@ -27,7 +27,7 @@ export default function PromoFeatures() {
   ];
 
   return (
-    <section className="bg-[#7c533e] hover:bg-[#6b432f] py-8">
+    <section className="bg-gradient-to-r from-[#7c533e] to-[#6b432f] backdrop-blur-lg py-8">
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => (
