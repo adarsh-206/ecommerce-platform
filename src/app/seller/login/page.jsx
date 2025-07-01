@@ -226,6 +226,15 @@ export default function SellerLogin() {
                         )}
                       </button>
 
+                      <div className="mt-4 text-sm">
+                        <span>Are you an admin? </span>
+                        <Link href="/super-admin/login" passHref>
+                          <a className="text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                            Login here
+                          </a>
+                        </Link>
+                      </div>
+
                       {/* <div className="relative my-8">
                         <div className="absolute inset-0 flex items-center">
                           <div className="w-full border-t border-gray-200"></div>
