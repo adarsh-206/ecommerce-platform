@@ -205,9 +205,9 @@ export default function EditBlogPage() {
   if (fetchLoading) {
     return (
       <AdminLayout>
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-orange-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
             <p className="text-slate-600">Loading blog data...</p>
           </div>
         </div>
@@ -217,7 +217,7 @@ export default function EditBlogPage() {
 
   return (
     <AdminLayout>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-orange-50">
         <div className="container mx-auto px-6 py-8 max-w-6xl">
           <div className="mb-8">
             <button
@@ -240,7 +240,7 @@ export default function EditBlogPage() {
               <div className="space-y-6">
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <Type className="w-5 h-5 text-indigo-600" />
+                    <Type className="w-5 h-5 text-orange-600" />
                     <h2 className="font-semibold text-slate-900">
                       Basic Information
                     </h2>
@@ -257,7 +257,7 @@ export default function EditBlogPage() {
                         value={form.title}
                         onChange={handleChange}
                         required
-                        className="w-full text-gray-600 text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                        className="w-full text-gray-600 text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         placeholder="Enter blog title"
                       />
                     </div>
@@ -272,7 +272,7 @@ export default function EditBlogPage() {
                         value={form.slug}
                         onChange={handleChange}
                         required
-                        className="w-full text-gray-600 text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                        className="w-full text-gray-600 text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         placeholder="url-friendly-slug"
                       />
                     </div>
@@ -287,7 +287,7 @@ export default function EditBlogPage() {
                       rows={3}
                       value={form.excerpt}
                       onChange={handleChange}
-                      className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+                      className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none"
                       placeholder="Brief description of your blog post"
                     />
                   </div>
@@ -295,13 +295,13 @@ export default function EditBlogPage() {
 
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <Image className="w-5 h-5 text-indigo-600" />
+                    <Image className="w-5 h-5 text-orange-600" />
                     <h2 className="font-semibold text-slate-900">
                       Cover Image
                     </h2>
                   </div>
 
-                  <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-indigo-400 transition-colors">
+                  <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-orange-400 transition-colors">
                     {imagePreview ? (
                       <div className="relative">
                         <img
@@ -312,7 +312,7 @@ export default function EditBlogPage() {
                         <button
                           type="button"
                           onClick={() => fileInputRef.current?.click()}
-                          className="text-indigo-600 hover:text-indigo-700 font-medium"
+                          className="text-orange-600 hover:text-orange-700 font-medium"
                         >
                           Change Image
                         </button>
@@ -323,7 +323,7 @@ export default function EditBlogPage() {
                         <button
                           type="button"
                           onClick={() => fileInputRef.current?.click()}
-                          className="text-indigo-600 hover:text-indigo-700 font-medium"
+                          className="text-orange-600 hover:text-orange-700 font-medium"
                         >
                           Upload Cover Image
                         </button>
@@ -344,7 +344,7 @@ export default function EditBlogPage() {
 
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <AlignLeft className="w-5 h-5 text-indigo-600" />
+                    <AlignLeft className="w-5 h-5 text-orange-600" />
                     <h2 className="font-semibold text-slate-900">Content</h2>
                   </div>
 
@@ -355,7 +355,7 @@ export default function EditBlogPage() {
 
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <Tag className="w-5 h-5 text-indigo-600" />
+                    <Tag className="w-5 h-5 text-orange-600" />
                     <h2 className="font-semibold text-slate-900">
                       Categories & Tags
                     </h2>
@@ -371,7 +371,7 @@ export default function EditBlogPage() {
                         name="category"
                         value={form.category}
                         onChange={handleChange}
-                        className="w-full text-gray-600 text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                        className="w-full text-gray-600 text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         placeholder="Technology, Design, Business..."
                       />
                     </div>
@@ -385,7 +385,7 @@ export default function EditBlogPage() {
                         name="tags"
                         value={form.tags}
                         onChange={handleChange}
-                        className="w-full text-gray-600 text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                        className="w-full text-gray-600 text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         placeholder="react, javascript, tutorial"
                       />
                       <p className="text-xs text-slate-500 mt-1">
@@ -397,7 +397,7 @@ export default function EditBlogPage() {
 
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <Globe className="w-5 h-5 text-indigo-600" />
+                    <Globe className="w-5 h-5 text-orange-600" />
                     <h2 className="font-semibold text-slate-900">
                       SEO Settings
                     </h2>
@@ -414,7 +414,7 @@ export default function EditBlogPage() {
                         value={form.metaTitle}
                         onChange={handleChange}
                         maxLength={60}
-                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         placeholder="SEO optimized title"
                       />
                       <p className="text-xs text-slate-500 mt-1">
@@ -432,7 +432,7 @@ export default function EditBlogPage() {
                         value={form.metaDescription}
                         onChange={handleChange}
                         maxLength={160}
-                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none"
                         placeholder="Brief description for search engines"
                       />
                       <p className="text-xs text-slate-500 mt-1">
@@ -470,7 +470,7 @@ export default function EditBlogPage() {
                           onChange={handleChange}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
                         <span className="ml-3 text-sm font-medium text-slate-700">
                           {form.isPublished ? "Published" : "Draft"}
                         </span>
@@ -487,7 +487,7 @@ export default function EditBlogPage() {
                       type="button"
                       onClick={handleSubmit}
                       disabled={loading}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-orange-500 to-purple-600 text-white rounded-lg hover:from-orange-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
                     >
                       <Save className="w-4 h-4" />
                       {loading ? "Updating..." : "Update Blog"}

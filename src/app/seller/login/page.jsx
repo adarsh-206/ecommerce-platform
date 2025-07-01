@@ -231,9 +231,9 @@ export default function SellerLogin() {
                           Are you an admin?{" "}
                         </span>
                         <Link href="/super-admin/login" passHref>
-                          <a className="text-orange-600 hover:text-orange-800 hover:underline font-medium">
+                          <p className="text-orange-600 hover:text-orange-800 hover:underline font-medium">
                             Login here
-                          </a>
+                          </p>
                         </Link>
                       </div>
 
