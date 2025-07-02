@@ -6,6 +6,7 @@ import apiService from "@/app/utils/apiService";
 import BrandLogo from "@/components/common/BrandLogo";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export const buyerLoginMetadata = {
   title: "Login | Chaka-Chak - Access Your Fashion Account",
@@ -35,7 +36,9 @@ export default function BuyerLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const { login } = useAuth();
-  const { cartItems } = useCart();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect") || "/";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -85,9 +88,7 @@ export default function BuyerLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsLoading(true);
     setLoginError("");
@@ -99,14 +100,15 @@ export default function BuyerLogin() {
       });
 
       if (response.data && response.data.token) {
-        // localStorage.setItem("token", response.data.token);
         login(response.data.token);
+
         if (rememberMe) {
           localStorage.setItem("rememberedUser", form.email_or_phone);
         } else {
           localStorage.removeItem("rememberedUser");
         }
-        window.location.href = "/";
+
+        router.push(redirectPath);
       } else {
         setLoginError("Login failed. Please check your credentials.");
       }
@@ -275,23 +277,7 @@ export default function BuyerLogin() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-amber-300 rounded"
-                  />
-                  <label
-                    htmlFor="remember-me"
-                    className="ml-2 block text-sm text-gray-700"
-                  >
-                    Remember me
-                  </label>
-                </div>
+              <div className="flex items-center justify-end">
                 <Link
                   href="/forgot-password"
                   className="text-sm font-semibold text-amber-600 hover:text-orange-700 transition-colors duration-200"

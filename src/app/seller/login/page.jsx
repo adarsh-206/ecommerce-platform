@@ -226,7 +226,7 @@ export default function SellerLogin() {
                         )}
                       </button>
 
-                      <div className="mt-4 text-sm">
+                      <div className="mt-4 text-sm text-center">
                         <span className="p-0 m-0 text-gray-800">
                           Are you an admin?{" "}
                         </span>

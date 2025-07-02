@@ -17,7 +17,7 @@ export default function ProductCard({ product }) {
   const cardRef = useRef(null);
   const [cardHeight, setCardHeight] = useState(0);
 
-  const { addItem, updateItem, getItemQuantity } = useCart();
+  const { getItemQuantity } = useCart();
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
   useEffect(() => {
@@ -61,20 +61,6 @@ export default function ProductCard({ product }) {
   const defaultSize = product?.priceBySize?.[0]?.size || "";
   const defaultColor = product?.availableColors?.[0] || "";
   const quantity = getItemQuantity(product.id, defaultSize, defaultColor);
-
-  // const handleAddToCart = async () => {
-  //   try {
-  //     await addItem(product.id, defaultSize, defaultColor);
-  //     showToast.success("Added to cart");
-  //   } catch {
-  //     showToast.error("Failed to add to cart");
-  //   }
-  // };
-
-  // const handleQuantityChange = async (delta) => {
-  //   const newQty = quantity + delta;
-  //   await updateItem(product.id, defaultSize, defaultColor, newQty);
-  // };
 
   const toggleWishlist = async () => {
     setIsInWishlist(!isInWishlist);
@@ -154,16 +140,11 @@ export default function ProductCard({ product }) {
 
         <div className="mt-3 flex items-center">
           {[0, 1, 2, 3, 4].map((rating) => {
-            const actualRating =
-              product.rating === 0
-                ? Math.floor(Math.random() * 3) + 3 // Random number between 3 and 5
-                : product.rating;
-
             return (
               <svg
                 key={rating}
                 className={`h-4 w-4 ${
-                  actualRating > rating ? "text-amber-400" : "text-amber-200"
+                  rating ? "text-amber-400" : "text-amber-200"
                 }`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -173,9 +154,7 @@ export default function ProductCard({ product }) {
             );
           })}
           <span className="ml-2 text-sm text-amber-600 font-medium">
-            {product.rating === 0
-              ? Math.floor(Math.random() * 3) + 3
-              : product.rating}
+            {product.rating}
           </span>
         </div>
 
@@ -183,45 +162,6 @@ export default function ProductCard({ product }) {
           <p className="text-xl font-bold text-amber-800">
             ₹{product.price.toFixed(2)}
           </p>
-          {/*
-  {quantity > 0 ? (
-    <div className="flex items-center gap-2">
-      <button
-        onClick={() => handleQuantityChange(-1)}
-        className="bg-amber-100 text-amber-700 hover:bg-amber-200 px-2 py-1 rounded-full text-lg font-bold"
-      >
-        −
-      </button>
-      <span className="text-amber-800 font-semibold">{quantity}</span>
-      <button
-        onClick={() => handleQuantityChange(1)}
-        className="bg-orange-100 text-orange-700 hover:bg-orange-200 px-2 py-1 rounded-full text-lg font-bold"
-      >
-        +
-      </button>
-    </div>
-  ) : (
-    <button
-      onClick={handleAddToCart}
-      className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-amber-200"
-      aria-label={`Add ${product.name} to cart`}
-    >
-      <svg
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-        />
-      </svg>
-    </button>
-  )}
-  */}
           <Link
             href={productLink}
             className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-amber-200"

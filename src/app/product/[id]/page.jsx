@@ -9,6 +9,7 @@ import ProductImageGallery from "@/components/product/ProductImageGallery";
 import { useCart } from "@/context/CartContext";
 import apiService from "@/app/utils/apiService";
 import { ShoppingCart } from "lucide-react";
+import Reviews from "./Reviews";
 
 export default function ProductInfoPage() {
   const params = useParams();
@@ -414,10 +415,7 @@ export default function ProductInfoPage() {
                 <div className="flex items-center space-x-4 mb-4">
                   <div className="flex items-center">
                     {(() => {
-                      const avgRating =
-                        product.ratings?.avg && product.ratings.avg > 0
-                          ? product.ratings.avg
-                          : (Math.random() * 1.5 + 3.5).toFixed(1); // Random between 3.5 - 5.0
+                      const avgRating = product.ratings?.avg || 0;
 
                       return (
                         <>
@@ -436,17 +434,14 @@ export default function ProductInfoPage() {
                             </svg>
                           ))}
                           <span className="ml-2 text-amber-600 font-medium">
-                            {avgRating}
+                            {avgRating.toFixed(1)}
                           </span>
                         </>
                       );
                     })()}
                   </div>
                   <span className="text-amber-600">
-                    (
-                    {product.ratings?.count ||
-                      Math.floor(Math.random() * 100 + 10)}{" "}
-                    reviews)
+                    ({product.ratings?.count || 0} reviews)
                   </span>
                 </div>
 
@@ -806,6 +801,10 @@ export default function ProductInfoPage() {
                 )}
               </div>
             </div>
+          </div>
+
+          <div className="mt-12">
+            <Reviews productId={product?.id} />
           </div>
         </div>
       </div>

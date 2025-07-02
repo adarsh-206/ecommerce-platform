@@ -487,7 +487,7 @@ export default function EditBlogPage() {
                       type="button"
                       onClick={handleSubmit}
                       disabled={loading}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-orange-500 to-purple-600 text-white rounded-lg hover:from-orange-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
                     >
                       <Save className="w-4 h-4" />
                       {loading ? "Updating..." : "Update Blog"}

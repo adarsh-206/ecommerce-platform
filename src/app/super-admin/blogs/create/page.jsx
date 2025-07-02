@@ -33,40 +33,81 @@ export default function CreateBlogPage() {
   const [error, setError] = useState("");
   const [preview, setPreview] = useState(false);
   const [imagePreview, setImagePreview] = useState("");
+  const [quillLoaded, setQuillLoaded] = useState(false);
   const quillRef = useRef(null);
   const fileInputRef = useRef(null);
   const editorRef = useRef(null);
   const { userDetails } = useUser();
 
+  // Load Quill dynamically
   useEffect(() => {
-    if (editorRef.current) return;
+    let scriptElement = null;
+    let linkElement = null;
 
-    const script = document.createElement("script");
-    script.src =
-      "https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js";
-    script.onload = () => {
-      if (!editorRef.current && window.Quill && quillRef.current) {
-        editorRef.current = new Quill(quillRef.current, {
-          theme: "snow",
-        });
+    const loadQuill = async () => {
+      // Check if Quill is already loaded
+      if (window.Quill) {
+        setQuillLoaded(true);
+        return;
+      }
+
+      try {
+        // Load CSS first
+        linkElement = document.createElement("link");
+        linkElement.rel = "stylesheet";
+        linkElement.href =
+          "https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.css";
+        document.head.appendChild(linkElement);
+
+        // Load JS
+        scriptElement = document.createElement("script");
+        scriptElement.src =
+          "https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js";
+
+        scriptElement.onload = () => {
+          setQuillLoaded(true);
+        };
+
+        scriptElement.onerror = () => {
+          console.error("Failed to load Quill.js");
+          setError("Failed to load editor. Please refresh the page.");
+        };
+
+        document.head.appendChild(scriptElement);
+      } catch (err) {
+        console.error("Error loading Quill:", err);
+        setError("Failed to load editor. Please refresh the page.");
       }
     };
-    document.head.appendChild(script);
 
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href =
-      "https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.css";
-    document.head.appendChild(link);
+    loadQuill();
 
+    // Cleanup function
     return () => {
-      document.head.removeChild(script);
-      document.head.removeChild(link);
+      if (scriptElement && scriptElement.parentNode) {
+        scriptElement.parentNode.removeChild(scriptElement);
+      }
+      if (linkElement && linkElement.parentNode) {
+        linkElement.parentNode.removeChild(linkElement);
+      }
+      if (editorRef.current) {
+        editorRef.current = null;
+      }
     };
   }, []);
 
-  const initializeQuill = () => {
-    if (window.Quill && quillRef.current) {
+  // Initialize Quill editor once it's loaded and DOM ref is available
+  useEffect(() => {
+    if (
+      !quillLoaded ||
+      !window.Quill ||
+      !quillRef.current ||
+      editorRef.current
+    ) {
+      return;
+    }
+
+    try {
       const quill = new window.Quill(quillRef.current, {
         theme: "snow",
         modules: {
@@ -85,14 +126,23 @@ export default function CreateBlogPage() {
         placeholder: "Write your blog content here...",
       });
 
+      // Store the editor instance
+      editorRef.current = quill;
+
+      // Listen for content changes
       quill.on("text-change", () => {
         setForm((prev) => ({
           ...prev,
           content: quill.root.innerHTML,
         }));
       });
+
+      console.log("Quill editor initialized successfully");
+    } catch (err) {
+      console.error("Error initializing Quill editor:", err);
+      setError("Failed to initialize editor. Please refresh the page.");
     }
-  };
+  }, [quillLoaded]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -192,7 +242,7 @@ export default function CreateBlogPage() {
                         value={form.title}
                         onChange={handleChange}
                         required
-                        className="w-full text-gray-600 text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         placeholder="Enter blog title"
                       />
                     </div>
@@ -283,8 +333,20 @@ export default function CreateBlogPage() {
                     <h2 className="font-semibold text-slate-900">Content</h2>
                   </div>
 
-                  <div className="border text-gray-600 border-slate-300 rounded-lg overflow-hidden">
-                    <div ref={quillRef} className="min-h-[400px]" />
+                  <div className="border border-slate-300 rounded-lg overflow-hidden">
+                    {!quillLoaded ? (
+                      <div className="min-h-[400px] flex items-center justify-center bg-slate-50">
+                        <div className="text-center">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-2"></div>
+                          <p className="text-slate-600">Loading editor...</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        ref={quillRef}
+                        className="min-h-[400px] text-gray-600"
+                      />
+                    )}
                   </div>
                 </div>
 
@@ -421,11 +483,15 @@ export default function CreateBlogPage() {
                     <button
                       type="submit"
                       onClick={handleSubmit}
-                      disabled={loading}
+                      disabled={loading || !quillLoaded}
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
                     >
                       <Save className="w-4 h-4" />
-                      {loading ? "Creating..." : "Create Blog"}
+                      {loading
+                        ? "Creating..."
+                        : !quillLoaded
+                        ? "Loading..."
+                        : "Create Blog"}
                     </button>
                   </div>
                 </div>

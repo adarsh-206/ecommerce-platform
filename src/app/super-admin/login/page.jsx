@@ -49,6 +49,7 @@ export default function SuperAdminLogin() {
       });
       if (response.data?.token) {
         login(response.data.token);
+        localStorage.setItem("userType", "super-admin");
         router.push("/super-admin/dashboard");
       } else {
         setLoginError("Invalid credentials");

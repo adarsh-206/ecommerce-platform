@@ -9,7 +9,7 @@ export const Instructions = () => (
     initial={{ y: 30, opacity: 0 }}
     animate={{ y: 0, opacity: 1 }}
     transition={{ type: "spring", stiffness: 80, damping: 18, delay: 0.5 }}
-    className="col-span-full w-full bg-white/40 backdrop-blur-2xl rounded-2xl p-6 md:my-24"
+    className="col-span-full max-w-7xl bg-white/40 backdrop-blur-2xl rounded-2xl p-6 md:my-24"
   >
     <div className="grid md:grid-cols-2 gap-6">
       <div>

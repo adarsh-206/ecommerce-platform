@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import BrandLogo from "@/components/common/BrandLogo";
 import apiService from "@/app/utils/apiService";
+import Link from "next/link";
 
 export const buyerRegisterMetadata = {
   title:
@@ -563,19 +564,19 @@ export default function BuyerRegistration() {
                     />
                     <span className="ml-3 text-gray-600 text-sm">
                       I agree to the{" "}
-                      <a
-                        href="#"
+                      <Link
+                        href="/terms-and-conditions"
                         className="text-amber-600 hover:text-amber-800"
                       >
                         Terms and Conditions
-                      </a>{" "}
+                      </Link>{" "}
                       and{" "}
-                      <a
-                        href="#"
+                      <Link
+                        href="/privacy-policy"
                         className="text-amber-600 hover:text-amber-800"
                       >
                         Privacy Policy
-                      </a>
+                      </Link>
                     </span>
                   </label>
                 </div>

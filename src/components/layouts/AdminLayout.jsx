@@ -54,9 +54,11 @@ export const AdminLayout = ({ children }) => {
         } bg-gradient-to-br from-amber-100 via-orange-100 to-rose-100 text-amber-900 transition-all duration-300`}
       >
         <div className="flex items-center justify-between p-4 border-b border-orange-300">
-          <h1 className={`font-bold text-xl ${!isSidebarOpen && "hidden"}`}>
-            Chaka-Chak
-          </h1>
+          <Link href="/">
+            <h1 className={`font-bold text-xl ${!isSidebarOpen && "hidden"}`}>
+              Chaka-Chak
+            </h1>
+          </Link>
           <button onClick={toggleSidebar} className="p-1 rounded-md">
             <Menu size={24} />
           </button>

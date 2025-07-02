@@ -44,8 +44,11 @@ export default function CartPage() {
   };
 
   const handleCheckout = () => {
-    showToast.success("Taking you to checkout...");
-    router.push(isAuthenticated ? "/checkout" : "/buyer/login");
+    if (isAuthenticated) {
+      router.push("/checkout");
+    } else {
+      router.push("/buyer/login?redirect=/checkout");
+    }
   };
 
   const totalPrice = cartItems.reduce(

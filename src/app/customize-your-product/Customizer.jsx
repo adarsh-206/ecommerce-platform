@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Palette, Sparkles, ShoppingCart, X } from "lucide-react";
 import { SubmitStep } from "./SubmitStep";
+import { useRouter } from "next/navigation";
 
 const TabButton = ({ SvgIcon, label, isActive, onClick, disabled }) => (
   <motion.button
@@ -92,17 +93,20 @@ const FileUpload = ({ onFileSelect, selectedFile, clearDesign }) => {
 
   return (
     <div className="flex flex-col items-center gap-4 w-full">
-      <motion.button
-        onClick={() => fileInputRef.current?.click()}
-        whileHover={{
-          scale: 1.05,
-          boxShadow: "0 10px 20px -5px rgba(245, 158, 11, 0.4)",
-        }}
-        whileTap={{ scale: 0.95 }}
-        className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg transition-all duration-300"
-      >
-        Upload Design
-      </motion.button>
+      {!selectedFile && (
+        <motion.button
+          onClick={() => fileInputRef.current?.click()}
+          whileHover={{
+            scale: 1.05,
+            boxShadow: "0 10px 20px -5px rgba(245, 158, 11, 0.4)",
+          }}
+          whileTap={{ scale: 0.95 }}
+          className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg transition-all duration-300"
+        >
+          Upload Design
+        </motion.button>
+      )}
+
       <input
         ref={fileInputRef}
         type="file"
@@ -110,6 +114,7 @@ const FileUpload = ({ onFileSelect, selectedFile, clearDesign }) => {
         onChange={onFileSelect}
         className="hidden"
       />
+
       <AnimatePresence>
         {selectedFile && (
           <motion.div
@@ -170,7 +175,7 @@ export const FormField = ({
         placeholder={placeholder}
         required={required}
         rows={4}
-        className="w-full text-gray-500 px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-200 resize-none bg-white/80 backdrop-blur-sm"
+        className="w-full text-gray-500 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-200 resize-none bg-white/80 backdrop-blur-sm"
       />
     ) : (
       <input
@@ -179,7 +184,7 @@ export const FormField = ({
         onChange={onChange}
         placeholder={placeholder}
         required={required}
-        className="w-full text-gray-500 px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-200 bg-white/80 backdrop-blur-sm"
+        className="w-full text-gray-500 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-200 bg-white/80 backdrop-blur-sm"
       />
     )}
   </div>
@@ -200,16 +205,83 @@ export const Customizer = ({
   setDecalPosition,
 }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = (formData) => {
-    console.log("Form submitted:", formData);
     setIsSubmitted(true);
 
     setTimeout(() => {
       setIsSubmitted(false);
       setActiveTab("color");
+      clearDesign();
+      localStorage.removeItem("pendingDesign");
     }, 5000);
   };
+
+  const handleLoginRedirect = useCallback(() => {
+    const designData = {
+      apparelColor,
+      decalScale,
+      decalPosition,
+      selectedFileName: selectedFile?.name || null,
+    };
+
+    const redirectPath = encodeURIComponent(window.location.pathname);
+
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        localStorage.setItem(
+          "pendingDesign",
+          JSON.stringify({
+            ...designData,
+            selectedFileData: reader.result,
+          })
+        );
+        router.push(`/buyer/login?redirect=${redirectPath}`);
+      };
+      reader.readAsDataURL(selectedFile);
+    } else {
+      localStorage.setItem("pendingDesign", JSON.stringify(designData));
+      router.push(`/buyer/login?redirect=${redirectPath}`);
+    }
+  }, [apparelColor, decalScale, decalPosition, selectedFile, router]);
+
+  function dataURLtoFile(dataUrl, filename) {
+    const arr = dataUrl.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
+  }
+
+  useEffect(() => {
+    const saved = localStorage.getItem("pendingDesign");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setApparelColor(parsed.apparelColor || "#ffffff");
+      setDecalScale(parsed.decalScale || 0.2);
+      setDecalPosition(parsed.decalPosition || [0, 0, 0]);
+
+      if (parsed.selectedFileData && parsed.selectedFileName) {
+        const file = dataURLtoFile(
+          parsed.selectedFileData,
+          parsed.selectedFileName
+        );
+        onFileSelect({ target: { files: [file] } });
+      }
+
+      setActiveTab("submit");
+
+      localStorage.removeItem("pendingDesign");
+    }
+  }, [onFileSelect]);
 
   const hasDesign = selectedFile !== null;
 
@@ -250,7 +322,7 @@ export const Customizer = ({
           <div className="space-y-2">
             <h3 className="font-semibold text-gray-800">Design Required</h3>
             <p className="text-sm text-gray-600">
-              Please upload a design first before submitting your order.
+              Please upload a design first before submitting your design.
             </p>
           </div>
           <motion.button
@@ -333,7 +405,34 @@ export const Customizer = ({
           )}
 
           {activeTab === "submit" && hasDesign && (
-            <SubmitStep onSubmit={handleSubmit} isSubmitted={isSubmitted} />
+            <>
+              {localStorage.getItem("token") ? (
+                <SubmitStep onSubmit={handleSubmit} isSubmitted={isSubmitted} />
+              ) : (
+                <div className="px-2 py-8 text-center space-y-4">
+                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+                    <ShoppingCart className="w-6 h-6 text-red-600" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="font-semibold text-gray-800">
+                      Login Required
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Login to submit your design — we’ll send a personalized
+                      quote with colors, sizes, and order options.
+                    </p>
+                  </div>
+                  <motion.button
+                    onClick={handleLoginRedirect}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="bg-gradient-to-r from-amber-500 to-rose-500 text-white px-6 py-2 rounded-lg font-medium shadow-md"
+                  >
+                    Login
+                  </motion.button>
+                </div>
+              )}
+            </>
           )}
         </motion.div>
       </AnimatePresence>
