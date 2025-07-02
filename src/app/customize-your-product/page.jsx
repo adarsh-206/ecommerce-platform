@@ -19,11 +19,46 @@ export default function YourProduct() {
   const [decalPosition, setDecalPosition] = useState([0, 0.1, 0.15]);
 
   const [colors, setColors] = useState([]);
+  const [fileError, setFileError] = useState("");
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
+    setFileError("");
+
     if (!file) return;
-    setSelectedFile(file);
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    const minWidth = 300;
+    const minHeight = 300;
+
+    if (!allowedTypes.includes(file.type)) {
+      setFileError("Only JPG, PNG, or WEBP images are allowed.");
+      return;
+    }
+
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    img.onload = () => {
+      if (img.width < minWidth || img.height < minHeight) {
+        setFileError(
+          `Image is too small. Minimum recommended resolution is ${minWidth}×${minHeight}px for high-quality print.`
+        );
+        URL.revokeObjectURL(objectUrl);
+        return;
+      }
+
+      setSelectedFile(file);
+      setFileError("");
+      URL.revokeObjectURL(objectUrl);
+    };
+
+    img.onerror = () => {
+      setFileError("Invalid image file.");
+      URL.revokeObjectURL(objectUrl);
+    };
+
+    img.src = objectUrl;
   };
 
   const clearDesign = () => {
@@ -85,6 +120,7 @@ export default function YourProduct() {
               setDecalScale={setDecalScale}
               decalPosition={decalPosition}
               setDecalPosition={setDecalPosition}
+              fileError={fileError}
             />
           </div>
           <Instructions className="col-span-full" />

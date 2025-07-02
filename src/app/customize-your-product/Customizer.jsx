@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Palette, Sparkles, ShoppingCart, X } from "lucide-react";
 import { SubmitStep } from "./SubmitStep";
 import { useRouter } from "next/navigation";
+import apiService from "../utils/apiService";
 
 const TabButton = ({ SvgIcon, label, isActive, onClick, disabled }) => (
   <motion.button
@@ -88,7 +89,7 @@ const CustomSlider = ({ label, value, min, max, step, onChange }) => (
   </div>
 );
 
-const FileUpload = ({ onFileSelect, selectedFile, clearDesign }) => {
+const FileUpload = ({ onFileSelect, selectedFile, clearDesign, fileError }) => {
   const fileInputRef = useRef(null);
 
   return (
@@ -114,6 +115,12 @@ const FileUpload = ({ onFileSelect, selectedFile, clearDesign }) => {
         onChange={onFileSelect}
         className="hidden"
       />
+
+      {fileError && (
+        <p className="text-sm text-red-600 w-full text-center -mt-2">
+          {fileError}
+        </p>
+      )}
 
       <AnimatePresence>
         {selectedFile && (
@@ -203,19 +210,44 @@ export const Customizer = ({
   setDecalScale,
   decalPosition,
   setDecalPosition,
+  fileError,
 }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (formData) => {
-    setIsSubmitted(true);
+  const handleSubmit = async (formData) => {
+    try {
+      setIsSubmitted(true);
 
-    setTimeout(() => {
+      const payload = new FormData();
+
+      payload.append("productType", formData.productType);
+      payload.append("quantity", formData.quantity);
+      payload.append("notes", formData.notes || "");
+
+      formData.sizes.forEach((size) => {
+        payload.append("sizes", size);
+      });
+
+      if (selectedFile) {
+        payload.append("image", selectedFile);
+      }
+
+      const response = await apiService.post("/quote/", payload, true, true);
+
+      if (response?.data?.message === "Quote submitted") {
+        setTimeout(() => {
+          setIsSubmitted(false);
+          setActiveTab("color");
+          clearDesign();
+          localStorage.removeItem("pendingDesign");
+        }, 5000);
+      } else {
+        setIsSubmitted(false);
+      }
+    } catch (error) {
       setIsSubmitted(false);
-      setActiveTab("color");
-      clearDesign();
-      localStorage.removeItem("pendingDesign");
-    }, 5000);
+    }
   };
 
   const handleLoginRedirect = useCallback(() => {
@@ -359,6 +391,7 @@ export const Customizer = ({
                 onFileSelect={onFileSelect}
                 selectedFile={selectedFile}
                 clearDesign={clearDesign}
+                fileError={fileError}
               />
               <div className="w-full space-y-6 pt-6 border-t border-gray-900/10">
                 <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wider text-center">

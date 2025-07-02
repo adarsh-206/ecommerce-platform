@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import {
   Package,
   ShoppingCart,
-  Settings,
   LogOut,
   Menu,
   Bell,
   Search,
   Home,
+  FileText,
 } from "lucide-react";
 import BrandLogo from "../common/BrandLogo";
 
@@ -50,7 +50,7 @@ export const SellerLayout = ({ children }) => {
     { name: "Dashboard", href: "/seller/dashboard", icon: Home },
     { name: "Products", href: "/seller/products", icon: Package },
     { name: "Orders", href: "/seller/orders", icon: ShoppingCart },
-    // { name: "Settings", href: "/seller/settings", icon: Settings },
+    { name: "Quotes", href: "/seller/quotes", icon: FileText },
   ];
 
   if (!isLoggedIn) {
