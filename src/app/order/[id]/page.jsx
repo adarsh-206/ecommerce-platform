@@ -17,6 +17,7 @@ import {
   Home,
   ChevronRight,
   Download,
+  XCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { getColorName } from "@/constants/color";
@@ -588,6 +589,24 @@ export default function OrderPage({ params }) {
                     ))}
                   </div>
                 </div>
+
+                {order.orderStatus === "cancelled" &&
+                  order.cancellationNote && (
+                    <div className="mt-6 bg-rose-100 border border-rose-300 text-rose-800 rounded-lg p-4 shadow-inner">
+                      <h2 className="font-bold text-rose-700 text-lg mb-2 flex items-center gap-2">
+                        <XCircle className="w-5 h-5" />
+                        Order Cancelled
+                      </h2>
+                      <p className="text-sm leading-relaxed mb-2">
+                        {order.cancellationNote}
+                      </p>
+                      <p className="text-sm text-rose-700">
+                        Your amount will be refunded within{" "}
+                        <span className="font-semibold">3–5 business days</span>
+                        . We’re sorry for the inconvenience caused.
+                      </p>
+                    </div>
+                  )}
 
                 <div className="mt-8 bg-gradient-to-r from-amber-500 to-orange-500 p-6 rounded-xl text-white">
                   <div className="flex justify-between items-center">
