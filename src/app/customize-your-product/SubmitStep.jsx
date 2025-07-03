@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 import { FormField } from "./Customizer";
 import { showToast } from "@/utils/showToast";
+import { Camera } from "lucide-react";
+import productTypes from "./productTypes";
 
 export const SubmitStep = ({ onSubmit, isSubmitted }) => {
   const [formData, setFormData] = useState({
@@ -14,10 +16,20 @@ export const SubmitStep = ({ onSubmit, isSubmitted }) => {
     notes: "",
   });
 
+  const [selectedProductImage, setSelectedProductImage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const availableSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
   const updateField = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+
+    if (field === "productType") {
+      const selectedProduct = productTypes.find(
+        (product) => product.name === value
+      );
+      setSelectedProductImage(selectedProduct ? selectedProduct.image : "");
+    }
   };
 
   const handleSizeChange = (size) => {
@@ -50,15 +62,6 @@ export const SubmitStep = ({ onSubmit, isSubmitted }) => {
       setIsSubmitting(false);
     }
   };
-
-  const productTypes = [
-    "T-Shirt",
-    "Hoodie",
-    "Tank Top",
-    "Long Sleeve",
-    "Polo Shirt",
-  ];
-  const availableSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
   if (isSubmitted) {
     return (
@@ -109,6 +112,26 @@ export const SubmitStep = ({ onSubmit, isSubmitted }) => {
       </div>
 
       <div className="grid grid-cols-1 gap-6">
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          className="mb-4 flex justify-center"
+        >
+          <div className="w-full max-w-md h-64 flex items-center justify-center">
+            {selectedProductImage ? (
+              <img
+                src={selectedProductImage}
+                alt="Selected Product"
+                className="w-full h-full object-contain rounded-lg"
+              />
+            ) : (
+              <div className="border border-gray-300 rounded-lg p-4">
+                <Camera className="w-8 h-8 text-gray-400" />
+              </div>
+            )}
+          </div>
+        </motion.div>
+
         <div className="grid grid-cols-2 gap-4">
           <FormField
             label="Product Type"
@@ -171,7 +194,7 @@ export const SubmitStep = ({ onSubmit, isSubmitted }) => {
         disabled={isSubmitting || !isFormValid}
         whileHover={{ scale: isSubmitting || !isFormValid ? 1 : 1.02 }}
         whileTap={{ scale: isSubmitting || !isFormValid ? 1 : 0.98 }}
-        className={`w-full px-6 py-4 rounded-xl font-bold transition-all duration-300 
+        className={`w-full px-6 py-4 rounded-xl font-bold transition-all duration-300
     ${
       isSubmitting || !isFormValid
         ? "bg-gray-300 text-gray-500 cursor-not-allowed"

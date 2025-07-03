@@ -166,12 +166,13 @@ export const FormField = ({
         value={value}
         onChange={onChange}
         required={required}
-        className="w-full text-gray-500 px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-200 bg-white/80 backdrop-blur-sm"
+        className="w-full text-gray-500 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-200 bg-white/80 backdrop-blur-sm"
       >
         <option value="">Select</option>
+        {/* Corrected this map function */}
         {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
+          <option key={option.name} value={option.name}>
+            {option.name}
           </option>
         ))}
       </select>

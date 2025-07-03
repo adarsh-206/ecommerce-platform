@@ -109,7 +109,7 @@ export default function BuyerLoginForm() {
             placeholder="Enter your email or phone number"
             className={`pl-10 pr-3 py-3 w-full border ${
               errors.email_or_phone ? "border-red-300" : "border-amber-200"
-            } rounded-lg focus:ring-amber-500 focus:ring-2`}
+            } rounded-lg focus:outline-none focus:ring-amber-500 focus:ring-2 text-gray-700`}
           />
         </div>
         {errors.email_or_phone && (
@@ -131,7 +131,7 @@ export default function BuyerLoginForm() {
             placeholder="Enter your password"
             className={`pl-10 pr-10 py-3 w-full border ${
               errors.password ? "border-red-300" : "border-amber-200"
-            } rounded-lg focus:ring-amber-500 focus:ring-2`}
+            } rounded-lg focus:outline-none focus:ring-amber-500 focus:ring-2 text-gray-700`}
           />
           <button
             type="button"

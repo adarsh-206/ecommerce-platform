@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import apiService from "@/app/utils/apiService";
 import {
   Loader,
@@ -43,7 +44,6 @@ const QuotePage = () => {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading image:", error);
-      // Fallback: open in new tab if download fails
       window.open(imageUrl, "_blank");
     }
   };
@@ -132,112 +132,124 @@ const QuotePage = () => {
 
               <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
                 {quotes.map((quote) => (
-                  <div
+                  <Link
+                    href={`/seller/quotes/${quote._id}`}
                     key={quote._id}
-                    className="bg-amber-50 border border-amber-100 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 group"
+                    className="block"
                   >
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h2 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-amber-700 transition-colors">
-                          {quote.productType}
-                        </h2>
-                        <p className="text-sm text-gray-500">Product Request</p>
-                      </div>
-                      <div className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-sm font-semibold">
-                        Qty: {quote.quantity}
-                      </div>
-                    </div>
-
-                    <div className="space-y-3 mb-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-gray-700">
-                          Sizes:
-                        </span>
-                        <div className="flex flex-wrap gap-1">
-                          {quote.sizes.map((size, index) => (
-                            <span
-                              key={index}
-                              className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs font-medium"
-                            >
-                              {size}
-                            </span>
-                          ))}
+                    <div className="bg-amber-50 border border-amber-100 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-6 group h-full cursor-pointer">
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex-1 min-w-0">
+                          <h2 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-amber-700 transition-colors truncate">
+                            {quote.productType}
+                          </h2>
+                          <p className="text-sm text-gray-500">
+                            Product Request
+                          </p>
+                        </div>
+                        <div className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-sm font-semibold ml-4 shrink-0">
+                          Qty: {quote.quantity}
                         </div>
                       </div>
 
-                      {quote.notes && (
-                        <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-amber-300">
-                          <p className="text-sm text-gray-700 italic">
-                            "{quote.notes}"
-                          </p>
+                      <div className="space-y-3 mb-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-gray-700">
+                            Sizes:
+                          </span>
+                          <div className="flex flex-wrap gap-1">
+                            {quote.sizes.map((size, index) => (
+                              <span
+                                key={index}
+                                className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs font-medium"
+                              >
+                                {size}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {quote.notes && (
+                          <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-amber-300">
+                            <p className="text-sm text-gray-700 italic">
+                              "{quote.notes}"
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {quote.image?.length > 0 && (
+                        <div className="mb-4">
+                          <div className="flex items-center gap-2 mb-3">
+                            <ImageIcon className="w-4 h-4 text-gray-500" />
+                            <span className="text-sm font-medium text-gray-700">
+                              Design References
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-3 gap-2">
+                            {quote.image.map((imgUrl, index) => (
+                              <div key={index} className="relative group/image">
+                                <img
+                                  src={imgUrl}
+                                  alt={`Design ${index + 1}`}
+                                  className="w-full h-20 object-cover rounded-lg border border-gray-200 group-hover/image:scale-105 transition-transform duration-200"
+                                />
+                                <div className="absolute inset-0 bg-black/0 hover:bg-black/50 rounded-lg opacity-0 group-hover/image:opacity-100 transition-all duration-200 flex items-center justify-center gap-2">
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      window.open(imgUrl, "_blank");
+                                    }}
+                                    className="bg-white/90 hover:bg-white text-gray-700 p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                                    title="View Image"
+                                  >
+                                    <Eye className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      downloadImage(
+                                        imgUrl,
+                                        `${quote.productType}-design-${
+                                          index + 1
+                                        }`
+                                      );
+                                    }}
+                                    className="bg-white/90 hover:bg-white text-gray-700 p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                                    title="Download Image"
+                                  >
+                                    <Download className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {quote.user && (
+                        <div className="pt-4 border-t border-gray-100">
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center">
+                              <span className="text-white text-sm font-semibold">
+                                {quote.user.fullName
+                                  ?.charAt(0)
+                                  ?.toUpperCase() || "U"}
+                              </span>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">
+                                {quote.user.fullName}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {quote.user.email}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
-
-                    {quote.image?.length > 0 && (
-                      <div className="mb-4">
-                        <div className="flex items-center gap-2 mb-3">
-                          <ImageIcon className="w-4 h-4 text-gray-500" />
-                          <span className="text-sm font-medium text-gray-700">
-                            Design References
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-3 gap-2">
-                          {quote.image.map((imgUrl, index) => (
-                            <div key={index} className="relative group/image">
-                              <img
-                                src={imgUrl}
-                                alt={`Design ${index + 1}`}
-                                className="w-full h-20 object-cover rounded-lg border border-gray-200 group-hover/image:scale-105 transition-transform duration-200"
-                              />
-                              <div className="absolute inset-0 bg-black/0 hover:bg-black/50 rounded-lg opacity-0 group-hover/image:opacity-100 transition-all duration-200 flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => window.open(imgUrl, "_blank")}
-                                  className="bg-white/90 hover:bg-white text-gray-700 p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
-                                  title="View Image"
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() =>
-                                    downloadImage(
-                                      imgUrl,
-                                      `${quote.productType}-design-${index + 1}`
-                                    )
-                                  }
-                                  className="bg-white/90 hover:bg-white text-gray-700 p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
-                                  title="Download Image"
-                                >
-                                  <Download className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {quote.user && (
-                      <div className="pt-4 border-t border-gray-100">
-                        <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center">
-                            <span className="text-white text-sm font-semibold">
-                              {quote.user.fullName?.charAt(0)?.toUpperCase() ||
-                                "U"}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-gray-900">
-                              {quote.user.fullName}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {quote.user.email}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  </Link>
                 ))}
               </div>
             </>

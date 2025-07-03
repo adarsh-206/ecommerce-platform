@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { User, LogOut, ShoppingBag, Heart, Settings } from "lucide-react";
+import { User, LogOut, ShoppingBag, Heart, Shirt } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function UserMenu({ userDetails, getUserDetails }) {
@@ -101,13 +101,13 @@ export default function UserMenu({ userDetails, getUserDetails }) {
                   <Heart size={18} className="mr-3 text-amber-600" />
                   <span>Wishlist</span>
                 </Link>
-                {/* <Link
-                  href="/settings"
+                <Link
+                  href="/my-customizations"
                   className="flex items-center px-4 py-3 text-sm text-amber-800 hover:bg-amber-100/60 hover:text-orange-700 transition-all duration-200 rounded-lg mx-2"
                 >
-                  <Settings size={18} className="mr-3 text-amber-600" />
-                  <span>Settings</span>
-                </Link> */}
+                  <Shirt size={18} className="mr-3 text-amber-600" />
+                  <span>My Customizations</span>
+                </Link>
                 <button
                   className="flex items-center w-full px-4 py-3 text-sm text-amber-700 hover:bg-amber-100/60 hover:text-orange-700 transition-all duration-200 rounded-lg mx-2"
                   onClick={handleLogout}
