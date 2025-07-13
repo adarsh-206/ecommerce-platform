@@ -4,7 +4,6 @@ import { Providers } from "./providers";
 import ToastProvider from "@/components/common/ToastProvider";
 import Head from "next/head";
 import Chatbot from "@/components/chatbot/Chatbot";
-import "quill/dist/quill.snow.css";
 
 const poppins = Poppins({
   subsets: ["latin"],
