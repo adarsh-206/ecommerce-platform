@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Send,
   X,
@@ -24,26 +24,7 @@ export default function Chatbot() {
     },
   ]);
   const [input, setInput] = useState("");
-  const [showTrigger, setShowTrigger] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const fullHeight = document.body.scrollHeight;
-
-      const scrollPosition = scrollY + windowHeight;
-      const scrollThreshold = fullHeight * 0.7;
-
-      setShowTrigger(scrollPosition >= scrollThreshold);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const quickOptions = [
     {
@@ -84,18 +65,15 @@ export default function Chatbot() {
     },
   ];
 
-  // Enhanced conversation logic
   const getConversationalResponse = (userMessage) => {
     const message = userMessage.toLowerCase().trim();
 
-    // Greeting responses
     if (
       message.match(/^(hi|hello|hey|good morning|good afternoon|good evening)/)
     ) {
       return "Hello! 😊 Thanks for reaching out to Chaka-Chak! How can I make your shopping experience better today?";
     }
 
-    // Order tracking
     if (
       message.includes("track") ||
       message.includes("order status") ||
@@ -104,7 +82,6 @@ export default function Chatbot() {
       return "🔍 I'd be happy to help you track your order! You can check your order status in the 'My Orders' section of your account. If you need your order ID or have trouble finding it, please share your registered email or phone number.";
     }
 
-    // Delivery and shipping
     if (
       message.includes("delivery") ||
       message.includes("shipping") ||
@@ -114,7 +91,6 @@ export default function Chatbot() {
       return "📦 Great question! Our standard delivery time is 7-10 business days across India. We'll send you tracking details once your order is dispatched. Is there a specific delivery concern I can help with?";
     }
 
-    // Payment related
     if (
       message.includes("payment") ||
       message.includes("pay") ||
@@ -125,7 +101,6 @@ export default function Chatbot() {
       return "💳 We accept multiple payment options: Credit/Debit Cards, UPI, Net Banking, Digital Wallets, and Cash on Delivery. All transactions are 100% secure. Which payment method would you like to know more about?";
     }
 
-    // Returns and refunds
     if (
       message.includes("return") ||
       message.includes("refund") ||
@@ -136,7 +111,6 @@ export default function Chatbot() {
       return "⚠️ I understand your concern! We accept returns only for defective products. If you received a damaged item, please share a photo and your order details. We'll arrange a replacement or refund if the same item isn't available.";
     }
 
-    // Product inquiries
     if (
       message.includes("product") ||
       message.includes("item") ||
@@ -146,7 +120,6 @@ export default function Chatbot() {
       return "🛍️ I'd love to help you find what you're looking for! Could you tell me the specific product name or category you're interested in? I can check availability for you.";
     }
 
-    // Size and fit
     if (
       message.includes("size") ||
       message.includes("fit") ||
@@ -155,7 +128,6 @@ export default function Chatbot() {
       return "📏 Size questions are important! Each product page has a detailed size chart. If you're unsure, I recommend checking the measurements. What specific item are you looking to size?";
     }
 
-    // Discount and offers
     if (
       message.includes("discount") ||
       message.includes("offer") ||
@@ -165,7 +137,6 @@ export default function Chatbot() {
       return "🎉 We love giving our customers great deals! Check our homepage for current offers and use code 'CHAKACHAK10' for 10% off on orders above ₹999. Any specific category you're shopping for?";
     }
 
-    // Contact and support
     if (
       message.includes("contact") ||
       message.includes("support") ||
@@ -175,7 +146,6 @@ export default function Chatbot() {
       return "📞 I'm here to help! For urgent matters, DM us on Instagram @chakachakteam or email chakachakteam@gmail.com. What specific issue can I assist you with right now?";
     }
 
-    // Pincode and delivery area
     if (
       message.includes("pincode") ||
       message.includes("area") ||
@@ -185,7 +155,6 @@ export default function Chatbot() {
       return "🌍 We deliver across India! Please share your pincode and I can confirm if we deliver in your area. You can also check this at checkout.";
     }
 
-    // Thanks and positive feedback
     if (
       message.includes("thank") ||
       message.includes("thanks") ||
@@ -195,7 +164,6 @@ export default function Chatbot() {
       return "😊 You're so welcome! I'm glad I could help. Is there anything else you'd like to know about your Chaka-Chak shopping experience?";
     }
 
-    // Complaint or negative feedback
     if (
       message.includes("bad") ||
       message.includes("worst") ||
@@ -205,7 +173,6 @@ export default function Chatbot() {
       return "😔 I'm really sorry to hear about your experience. Your feedback is valuable to us. Could you please share more details so I can help resolve this issue? You can also reach our support team directly.";
     }
 
-    // Default conversational response
     return `I understand you're asking about "${userMessage}". While I try my best to help with common queries, I might need to connect you with our support team for detailed assistance. You can reach us at chakachakteam@gmail.com or Instagram @chakachakteam. Is there a specific topic from the quick options that might help?`;
   };
 
@@ -218,13 +185,12 @@ export default function Chatbot() {
     setShowOptions(false);
     setIsTyping(true);
 
-    // Simulate typing delay for more natural conversation
     setTimeout(() => {
       const response = getConversationalResponse(userMessage);
       setIsTyping(false);
       setMessages((prev) => [...prev, { sender: "bot", text: response }]);
       setTimeout(() => setShowOptions(true), 1500);
-    }, 1000 + Math.random() * 1000); // Random delay between 1-2 seconds
+    }, 1000 + Math.random() * 1000);
   };
 
   const handleOptionClick = (option) => {
@@ -240,8 +206,10 @@ export default function Chatbot() {
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {isOpen ? (
-        <div className="w-full max-w-xs sm:max-w-sm bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-orange-200 h-[80vh] sm:h-[75vh]">
-          {/* Header */}
+        <div
+          className="w-80 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-orange-200"
+          style={{ height: "500px" }}
+        >
           <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white px-6 py-4 flex justify-between items-center">
             <div>
               <h2 className="text-lg font-bold">Chaka-Chak Support</h2>
@@ -258,7 +226,6 @@ export default function Chatbot() {
             </button>
           </div>
 
-          {/* Messages */}
           <div className="flex-1 p-4 space-y-3 overflow-y-auto bg-gradient-to-b from-orange-50/30 to-white">
             {messages.map((msg, index) => (
               <div
@@ -307,8 +274,14 @@ export default function Chatbot() {
                   <div className="bg-white text-gray-700 border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm">
                     <div className="flex space-x-1">
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div
+                        className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.1s" }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -340,7 +313,6 @@ export default function Chatbot() {
             )}
           </div>
 
-          {/* Input */}
           <div className="p-4 border-t border-gray-200 bg-white">
             <div className="flex gap-3">
               <input
@@ -366,17 +338,13 @@ export default function Chatbot() {
           </div>
         </div>
       ) : (
-        <>
-          {!isOpen && showTrigger && (
-            <button
-              className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-105 animate-pulse"
-              onClick={() => setIsOpen(true)}
-              aria-label="Open Support Chat"
-            >
-              <Headphones className="w-6 h-6" />
-            </button>
-          )}
-        </>
+        <button
+          className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center hover:scale-105"
+          onClick={() => setIsOpen(true)}
+          aria-label="Open Support Chat"
+        >
+          <Headphones className="w-6 h-6" />
+        </button>
       )}
     </div>
   );

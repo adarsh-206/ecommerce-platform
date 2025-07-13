@@ -112,7 +112,7 @@ const ProductImages = ({
 
       <div>
         <label className="block font-medium mb-2 text-gray-700">
-          Additional Images (Max 4)
+          Additional Images
         </label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[0, 1, 2, 3].map((index) => {

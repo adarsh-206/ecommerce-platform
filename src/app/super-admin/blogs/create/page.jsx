@@ -1,18 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import {
-  Upload,
-  Eye,
-  Save,
-  Globe,
-  Tag,
-  Hash,
-  Image,
-  Type,
-  AlignLeft,
-} from "lucide-react";
+import { useState, useRef } from "react";
+import { Upload, Save, Tag, Image, Type } from "lucide-react";
 import AdminLayout from "@/components/layouts/AdminLayout";
+import ContentEditor from "./ContentEditor";
 import apiService from "@/app/utils/apiService";
 import { useUser } from "@/context/UserContext";
 
@@ -31,133 +22,38 @@ export default function CreateBlogPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [preview, setPreview] = useState(false);
   const [imagePreview, setImagePreview] = useState("");
-  const [quillLoaded, setQuillLoaded] = useState(false);
-  const quillRef = useRef(null);
   const fileInputRef = useRef(null);
-  const editorRef = useRef(null);
   const { userDetails } = useUser();
-
-  // Load Quill dynamically
-  useEffect(() => {
-    let scriptElement = null;
-    let linkElement = null;
-
-    const loadQuill = async () => {
-      // Check if Quill is already loaded
-      if (window.Quill) {
-        setQuillLoaded(true);
-        return;
-      }
-
-      try {
-        // Load CSS first
-        linkElement = document.createElement("link");
-        linkElement.rel = "stylesheet";
-        linkElement.href =
-          "https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.css";
-        document.head.appendChild(linkElement);
-
-        // Load JS
-        scriptElement = document.createElement("script");
-        scriptElement.src =
-          "https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js";
-
-        scriptElement.onload = () => {
-          setQuillLoaded(true);
-        };
-
-        scriptElement.onerror = () => {
-          console.error("Failed to load Quill.js");
-          setError("Failed to load editor. Please refresh the page.");
-        };
-
-        document.head.appendChild(scriptElement);
-      } catch (err) {
-        console.error("Error loading Quill:", err);
-        setError("Failed to load editor. Please refresh the page.");
-      }
-    };
-
-    loadQuill();
-
-    // Cleanup function
-    return () => {
-      if (scriptElement && scriptElement.parentNode) {
-        scriptElement.parentNode.removeChild(scriptElement);
-      }
-      if (linkElement && linkElement.parentNode) {
-        linkElement.parentNode.removeChild(linkElement);
-      }
-      if (editorRef.current) {
-        editorRef.current = null;
-      }
-    };
-  }, []);
-
-  // Initialize Quill editor once it's loaded and DOM ref is available
-  useEffect(() => {
-    if (
-      !quillLoaded ||
-      !window.Quill ||
-      !quillRef.current ||
-      editorRef.current
-    ) {
-      return;
-    }
-
-    try {
-      const quill = new window.Quill(quillRef.current, {
-        theme: "snow",
-        modules: {
-          toolbar: [
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            ["bold", "italic", "underline", "strike"],
-            [{ color: [] }, { background: [] }],
-            [{ list: "ordered" }, { list: "bullet" }],
-            [{ indent: "-1" }, { indent: "+1" }],
-            [{ align: [] }],
-            ["link", "image", "video"],
-            ["blockquote", "code-block"],
-            ["clean"],
-          ],
-        },
-        placeholder: "Write your blog content here...",
-      });
-
-      // Store the editor instance
-      editorRef.current = quill;
-
-      // Listen for content changes
-      quill.on("text-change", () => {
-        setForm((prev) => ({
-          ...prev,
-          content: quill.root.innerHTML,
-        }));
-      });
-
-      console.log("Quill editor initialized successfully");
-    } catch (err) {
-      console.error("Error initializing Quill editor:", err);
-      setError("Failed to initialize editor. Please refresh the page.");
-    }
-  }, [quillLoaded]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm({
-      ...form,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    const updatedValue = type === "checkbox" ? checked : value;
 
-    if (name === "title" && !form.slug) {
-      const generatedSlug = value
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
-      setForm((prev) => ({ ...prev, slug: generatedSlug }));
-    }
+    setForm((prev) => {
+      const newForm = {
+        ...prev,
+        [name]: updatedValue,
+      };
+
+      if (name === "title") {
+        newForm.slug = value
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "");
+        newForm.metaTitle = value.slice(0, 60);
+      }
+
+      if (name === "excerpt") {
+        newForm.metaDescription = value.slice(0, 160);
+      }
+
+      return newForm;
+    });
+  };
+
+  const handleContentChange = (content) => {
+    setForm((prev) => ({ ...prev, content }));
   };
 
   const handleImageUpload = (e) => {
@@ -190,7 +86,6 @@ export default function CreateBlogPage() {
 
       if (response.status === 201 || response.status === 200) {
         alert("Blog created successfully!");
-        // Optional: redirect to blogs list
         window.location.href = "/super-admin/blogs";
       } else {
         throw new Error("Unexpected response");
@@ -201,10 +96,6 @@ export default function CreateBlogPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const togglePreview = () => {
-    setPreview(!preview);
   };
 
   return (
@@ -242,23 +133,8 @@ export default function CreateBlogPage() {
                         value={form.title}
                         onChange={handleChange}
                         required
-                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         placeholder="Enter blog title"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Slug *
-                      </label>
-                      <input
-                        type="text"
-                        name="slug"
-                        value={form.slug}
-                        onChange={handleChange}
-                        required
-                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                        placeholder="url-friendly-slug"
                       />
                     </div>
                   </div>
@@ -272,7 +148,7 @@ export default function CreateBlogPage() {
                       rows={3}
                       value={form.excerpt}
                       onChange={handleChange}
-                      className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none"
+                      className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none"
                       placeholder="Brief description of your blog post"
                     />
                   </div>
@@ -329,29 +205,6 @@ export default function CreateBlogPage() {
 
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <AlignLeft className="w-5 h-5 text-orange-600" />
-                    <h2 className="font-semibold text-slate-900">Content</h2>
-                  </div>
-
-                  <div className="border border-slate-300 rounded-lg overflow-hidden">
-                    {!quillLoaded ? (
-                      <div className="min-h-[400px] flex items-center justify-center bg-slate-50">
-                        <div className="text-center">
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-2"></div>
-                          <p className="text-slate-600">Loading editor...</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div
-                        ref={quillRef}
-                        className="min-h-[400px] text-gray-600"
-                      />
-                    )}
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                  <div className="flex items-center gap-2 mb-4">
                     <Tag className="w-5 h-5 text-orange-600" />
                     <h2 className="font-semibold text-slate-900">
                       Categories & Tags
@@ -368,7 +221,7 @@ export default function CreateBlogPage() {
                         name="category"
                         value={form.category}
                         onChange={handleChange}
-                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         placeholder="Technology, Design, Business..."
                       />
                     </div>
@@ -382,7 +235,7 @@ export default function CreateBlogPage() {
                         name="tags"
                         value={form.tags}
                         onChange={handleChange}
-                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                         placeholder="react, javascript, tutorial"
                       />
                       <p className="text-xs text-slate-500 mt-1">
@@ -392,52 +245,10 @@ export default function CreateBlogPage() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Globe className="w-5 h-5 text-orange-600" />
-                    <h2 className="font-semibold text-slate-900">
-                      SEO Settings
-                    </h2>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Meta Title
-                      </label>
-                      <input
-                        type="text"
-                        name="metaTitle"
-                        value={form.metaTitle}
-                        onChange={handleChange}
-                        maxLength={60}
-                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                        placeholder="SEO optimized title"
-                      />
-                      <p className="text-xs text-slate-500 mt-1">
-                        {form.metaTitle.length}/60 characters
-                      </p>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Meta Description
-                      </label>
-                      <textarea
-                        name="metaDescription"
-                        rows={3}
-                        value={form.metaDescription}
-                        onChange={handleChange}
-                        maxLength={160}
-                        className="w-full text-gray-600 border border-slate-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none"
-                        placeholder="Brief description for search engines"
-                      />
-                      <p className="text-xs text-slate-500 mt-1">
-                        {form.metaDescription.length}/160 characters
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <ContentEditor
+                  value={form.content}
+                  onChange={handleContentChange}
+                />
 
                 {error && (
                   <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
@@ -483,15 +294,11 @@ export default function CreateBlogPage() {
                     <button
                       type="submit"
                       onClick={handleSubmit}
-                      disabled={loading || !quillLoaded}
+                      disabled={loading}
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
                     >
                       <Save className="w-4 h-4" />
-                      {loading
-                        ? "Creating..."
-                        : !quillLoaded
-                        ? "Loading..."
-                        : "Create Blog"}
+                      {loading ? "Creating..." : "Create Blog"}
                     </button>
                   </div>
                 </div>
