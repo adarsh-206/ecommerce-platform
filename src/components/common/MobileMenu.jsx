@@ -52,12 +52,22 @@ export default function MobileMenu({
             >
               Create Account
             </Link>
-            <Link
+            {/* <Link
               href="/seller/register"
               className="block p-3 bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white rounded-lg text-center font-bold shadow-lg hover:from-amber-700 hover:via-orange-700 hover:to-rose-700 transition-all duration-200 transform hover:scale-105"
             >
               Start Selling
-            </Link>
+            </Link> */}
+            <div className="flex justify-center">
+              <a
+                href="/customize-your-product"
+                className="group text-sm relative inline-flex items-center justify-center gap-2 px-4 py-2 w-full sm:w-auto text-lg font-bold text-white rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 shadow-xl transition-transform duration-300 hover:scale-110 focus:outline-none shiny-button"
+              >
+                <Shirt className="w-3 h-3 text-white transition-transform duration-300 group-hover:rotate-6" />
+                Customize Your Apparel
+                <span className="absolute inset-0 rounded-xl ring-2 ring-transparent group-hover:ring-white/40 transition duration-300 pointer-events-none" />
+              </a>
+            </div>
           </>
         ) : (
           <>
