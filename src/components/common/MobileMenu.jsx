@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import SearchBar from "./SearchBar";
 import categories from "@/constants/categories";
+import { Sparkles, Shirt } from "lucide-react";
 
 export default function MobileMenu({
   userDetails,
