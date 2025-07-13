@@ -85,7 +85,7 @@ export default function RootLayout({ children }) {
       <body className={poppins.className}>
         <ToastProvider />
         <Providers>{children}</Providers>
-        <Chatbot />
+        {/* <Chatbot /> */}
       </body>
     </html>
   );
