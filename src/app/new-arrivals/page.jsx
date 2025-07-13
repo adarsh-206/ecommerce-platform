@@ -29,7 +29,6 @@ const LoadingCard = () => (
 );
 
 export default function NewArrivals() {
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const isMounted = useRef(false);
@@ -65,14 +64,6 @@ export default function NewArrivals() {
     };
   }, []);
 
-  useEffect(() => {
-    if (products.length === 0 || loading) return;
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % products.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [products, loading]);
-
   return (
     <MainLayout>
       <section className="p-12 pb-24 bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50">
@@ -93,42 +84,17 @@ export default function NewArrivals() {
           </div>
 
           {loading ? (
-            <>
-              <div className="sm:hidden">
-                <LoadingCard />
-              </div>
-              <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <LoadingCard key={index} />
-                ))}
-              </div>
-            </>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <LoadingCard key={index} />
+              ))}
+            </div>
           ) : products.length > 0 ? (
-            <>
-              <div className="sm:hidden">
-                <div className="overflow-hidden rounded-xl">
-                  <div
-                    className="flex transition-transform duration-500 ease-in-out"
-                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                  >
-                    {products.map((product) => (
-                      <div
-                        key={product.id}
-                        className="w-full flex-shrink-0 px-2"
-                      >
-                        <ProductCard product={product} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            </>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
           ) : null}
         </div>
       </section>

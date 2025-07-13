@@ -80,7 +80,9 @@ export default function ProductCard({ product }) {
   return (
     <div
       ref={cardRef}
-      className="group relative bg-gradient-to-br from-white via-amber-50 to-orange-50 rounded-xl shadow-lg overflow-hidden border border-amber-200 hover:shadow-2xl transition-all duration-500 hover:scale-105 flex flex-col h-full"
+      className={`group relative bg-gradient-to-br from-white via-amber-50 to-orange-50 rounded-xl shadow-lg overflow-hidden border border-amber-200 hover:shadow-2xl transition-all duration-500 flex flex-col h-full ${
+        isDesktop ? "md:hover:scale-102" : ""
+      }`}
       onMouseEnter={() => isDesktop && setIsHovered(true)}
       onMouseLeave={() => isDesktop && setIsHovered(false)}
       style={{ minHeight: cardHeight }}
@@ -91,10 +93,10 @@ export default function ProductCard({ product }) {
             src={product.image}
             alt={product.name}
             className={`w-full h-full object-cover transform transition-transform duration-500 ${
-              isHovered ? "scale-105" : ""
+              isHovered && isDesktop ? "scale-105" : ""
             }`}
           />
-          {isHovered && (
+          {isHovered && isDesktop && (
             <div className="absolute inset-0 bg-gradient-to-t from-amber-900/40 via-orange-800/20 to-transparent flex justify-center items-center">
               <span className="bg-gradient-to-r from-amber-600 to-orange-600 text-white py-3 px-6 rounded-full font-semibold shadow-lg transform transition-all duration-300 hover:scale-105">
                 Quick View
@@ -164,7 +166,9 @@ export default function ProductCard({ product }) {
           </p>
           <Link
             href={productLink}
-            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-amber-200"
+            className={`bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-amber-200 ${
+              isDesktop ? "md:hover:scale-105" : ""
+            }`}
           >
             <svg
               className="h-5 w-5"
