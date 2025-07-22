@@ -48,6 +48,9 @@ export const metadata = {
     apple: "/chaka-chak-logo.png",
     shortcut: "/chaka-chak-logo.ico",
   },
+  other: {
+    "google-adsense-account": "ca-pub-1717608415698213",
+  },
 };
 
 export default function RootLayout({ children }) {
