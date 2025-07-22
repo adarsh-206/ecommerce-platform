@@ -71,6 +71,11 @@ export default function RootLayout({ children }) {
         />
         <meta property="og:site_name" content="Chaka-Chak" />
 
+        <meta
+          name="google-adsense-account"
+          content="ca-pub-1717608415698213"
+        ></meta>
+
         {/* Twitter Card Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={metadata.title} />
