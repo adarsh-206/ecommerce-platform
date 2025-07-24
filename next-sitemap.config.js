@@ -1,35 +1,25 @@
-// next-sitemap.config.js (ES6 version)
+import { getStaticAppRoutes } from "./scripts/getStaticRoutes.js";
+
+const siteUrl = "https://chaka-chak.in";
 
 const getBlogSlugs = async () => {
   const res = await fetch("https://api.chaka-chak.in/blogs/get-slugs");
-  if (!res.ok) {
-    console.error("Failed to fetch blog slugs. Status:", res.status);
-    return [];
-  }
-  const data = await res.json();
-  return data;
+  if (!res.ok) return [];
+  return res.json();
 };
 
 const getProductSlugs = async () => {
   const res = await fetch("https://api.chaka-chak.in/common/products-get-ids");
-  if (!res.ok) {
-    console.error("Failed to fetch product IDs. Status:", res.status);
-    return [];
-  }
-  const data = await res.json();
-  return data;
+  if (!res.ok) return [];
+  return res.json();
 };
-
-const siteUrl = "https://chaka-chak.in";
 
 const config = {
   siteUrl,
   generateRobotsTxt: true,
   sitemapSize: 5000,
-  changefreq: "daily",
-  priority: 0.7,
 
-  additionalPaths: async (config) => {
+  additionalPaths: async () => {
     const blogSlugs = await getBlogSlugs();
     const productIds = await getProductSlugs();
 
@@ -47,7 +37,14 @@ const config = {
       lastmod: new Date().toISOString(),
     }));
 
-    return [...blogPaths, ...productPaths];
+    const staticRoutes = getStaticAppRoutes().map((route) => ({
+      loc: route,
+      changefreq: "weekly",
+      priority: 0.6,
+      lastmod: new Date().toISOString(),
+    }));
+
+    return [...staticRoutes, ...blogPaths, ...productPaths];
   },
 };
 
