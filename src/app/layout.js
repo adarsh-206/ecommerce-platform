@@ -48,7 +48,7 @@ export const metadata = {
     shortcut: "/chaka-chak-logo.ico",
   },
   other: {
-    "google-adsense-account": "ca-pub-15698213",
+    "google-adsense-account": "ca-pub-1717608415698213",
   },
 };
 
@@ -79,7 +79,7 @@ export default function RootLayout({ children }) {
         />
         <meta name="twitter:site" content="@chakachakteam" />
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-KPM0"
+          src="https://www.googletagmanager.com/gtag/js?id=G-KQ7R8F7PM0"
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -87,7 +87,7 @@ export default function RootLayout({ children }) {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-KPM0');
+            gtag('config', 'G-KQ7R8F7PM0');
           `}
         </Script>
       </head>
