@@ -1,3 +1,5 @@
+// next-sitemap.config.js (ES6 version)
+
 const getBlogSlugs = async () => {
   const res = await fetch("https://api.chaka-chak.in/blogs/get-slugs");
   if (!res.ok) {
@@ -18,12 +20,15 @@ const getProductSlugs = async () => {
   return data;
 };
 
-module.exports = {
-  siteUrl: "https://chaka-chak.in",
+const siteUrl = "https://chaka-chak.in";
+
+const config = {
+  siteUrl,
   generateRobotsTxt: true,
   sitemapSize: 5000,
   changefreq: "daily",
   priority: 0.7,
+
   additionalPaths: async (config) => {
     const blogSlugs = await getBlogSlugs();
     const productIds = await getProductSlugs();
@@ -45,3 +50,5 @@ module.exports = {
     return [...blogPaths, ...productPaths];
   },
 };
+
+export default config;
