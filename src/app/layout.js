@@ -4,6 +4,7 @@ import { Providers } from "./providers";
 import ToastProvider from "@/components/common/ToastProvider";
 import Head from "next/head";
 import Chatbot from "@/components/chatbot/Chatbot";
+import Script from "next/script";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -88,6 +89,19 @@ export default function RootLayout({ children }) {
           content="https://chaka-chak.in/chaka-chak-logo.png"
         />
         <meta name="twitter:site" content="@chakachakteam" />
+
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-KQ7R8F7PM0"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-KQ7R8F7PM0');
+          `}
+        </Script>
       </Head>
 
       <body className={poppins.className}>
