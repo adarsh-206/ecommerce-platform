@@ -2,8 +2,6 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import ToastProvider from "@/components/common/ToastProvider";
-import Head from "next/head";
-import Chatbot from "@/components/chatbot/Chatbot";
 import Script from "next/script";
 
 const poppins = Poppins({
@@ -50,21 +48,18 @@ export const metadata = {
     shortcut: "/chaka-chak-logo.ico",
   },
   other: {
-    "google-adsense-account": "ca-pub-1717608415698213",
+    "google-adsense-account": "ca-pub-15698213",
   },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <Head>
-        {/* Primary Meta Tags */}
+      <head>
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
         <link rel="icon" href={metadata.icons.icon} />
         <link rel="apple-touch-icon" href={metadata.icons.apple} />
-
-        {/* Open Graph Tags */}
         <meta property="og:title" content={metadata.title} />
         <meta property="og:description" content={metadata.description} />
         <meta property="og:type" content="website" />
@@ -74,13 +69,7 @@ export default function RootLayout({ children }) {
           content="https://chaka-chak.in/chaka-chak-logo.png"
         />
         <meta property="og:site_name" content="Chaka-Chak" />
-
-        <meta
-          name="google-adsense-account"
-          content="ca-pub-1717608415698213"
-        ></meta>
-
-        {/* Twitter Card Tags */}
+        <meta name="google-adsense-account" content="ca-pub-1717608415698213" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={metadata.title} />
         <meta name="twitter:description" content={metadata.description} />
@@ -89,9 +78,8 @@ export default function RootLayout({ children }) {
           content="https://chaka-chak.in/chaka-chak-logo.png"
         />
         <meta name="twitter:site" content="@chakachakteam" />
-
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-KQ7R8F7PM0"
+          src="https://www.googletagmanager.com/gtag/js?id=G-KPM0"
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -99,15 +87,13 @@ export default function RootLayout({ children }) {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-KQ7R8F7PM0');
+            gtag('config', 'G-KPM0');
           `}
         </Script>
-      </Head>
-
+      </head>
       <body className={poppins.className}>
         <ToastProvider />
         <Providers>{children}</Providers>
-        {/* <Chatbot /> */}
       </body>
     </html>
   );
