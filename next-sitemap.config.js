@@ -11,7 +11,7 @@ const getBlogSlugs = async () => {
 };
 
 const getProductSlugs = async () => {
-  const res = await fetch("https://api.chaka-chak.in/products-get-ids");
+  const res = await fetch("https://api.chaka-chak.in/common/products-get-ids");
   if (!res.ok) {
     console.error("Failed to fetch product IDs. Status:", res.status);
     return [];
