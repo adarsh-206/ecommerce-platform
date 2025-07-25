@@ -10,8 +10,7 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title:
-    "Chaka-Chak | India's #1 Destination for Clean, Quirky Fashion & Lifestyle",
+  title: "Chaka-Chak | Unique Fashion and Lifestyle for Clean Living",
   description:
     "Welcome to Chaka-Chak – India’s favourite online store to buy t-shirts, fashion accessories, home items, and customized gifts. Everything here is clean, quirky, and full of fun. Looking for stylish t-shirts, trendy clothes, or cool gifts? At Chaka-Chak, we have a big collection of graphic t-shirts, unisex and oversized tees, fun accessories, and unique home decor to match your style. Want to buy customized gifts in India? We make it easy! You’ll find special designs for birthdays, anniversaries, or any special moment. From casual wear to eye-catching pieces, Chaka-Chak is perfect for people who love to be different. We also offer fast delivery across India, easy returns, secure payments, and great customer support. Thousands of happy buyers trust Chaka-Chak for affordable, stylish, and unique products. So next time you search for “buy t-shirts online,” “Chaka-Chak fashion,” or “quirky gifts India,” think of us. Whether it’s for yourself or someone special, we have something just right for you. Chaka-Chak is not just a shop – it’s a fresh and fun way to shop smart and stay stylish. Try Chaka-Chak today and feel the clean, quirky vibe!",
   keywords:
@@ -43,10 +42,15 @@ export const metadata = {
     images: ["/chaka-chak-logo.png"],
   },
   icons: {
-    icon: "/chaka-chak-logo.ico",
-    apple: "/chaka-chak-logo.png",
-    shortcut: "/chaka-chak-logo.ico",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    shortcut: [{ url: "/favicon.ico" }],
   },
+  manifest: "/site.webmanifest",
   other: {
     "google-adsense-account": "ca-pub-1717608415698213",
   },
