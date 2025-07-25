@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BookOpen, Code2 } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -34,6 +35,7 @@ export default function Footer() {
               })}
             </ul>
           </div>
+
           <div>
             <h3 className="text-lg font-bold mb-4 text-amber-700">
               Quick Links
@@ -49,10 +51,7 @@ export default function Footer() {
                   name: "Shipping & Delivery Policy",
                   path: "/shipping-delivery-policy",
                 },
-                {
-                  name: "Terms & Conditions",
-                  path: "/terms-and-conditions",
-                },
+                { name: "Terms & Conditions", path: "/terms-and-conditions" },
               ].map((item, idx) => (
                 <li key={idx}>
                   <Link
@@ -65,9 +64,10 @@ export default function Footer() {
               ))}
             </ul>
           </div>
+
           <div>
             <h3 className="text-lg font-bold mb-3 text-amber-700">
-              Customer Support
+              Connect With Us
             </h3>
             <p className="text-amber-600 text-sm leading-relaxed">
               Need help? Write to
@@ -79,12 +79,7 @@ export default function Footer() {
                 chakachakteam@gmail.com
               </a>
             </p>
-          </div>
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-amber-700">
-              Connect With Us
-            </h3>
-            <div className="flex space-x-5">
+            <div className="flex space-x-5 mt-3">
               {[
                 {
                   name: "Instagram",
@@ -148,9 +143,39 @@ export default function Footer() {
               ))}
             </div>
           </div>
+
+          <div>
+            <h3 className="text-lg font-bold mb-4 text-amber-700">
+              More from Chaka-Chak
+            </h3>
+            <p className="text-amber-600 text-sm leading-relaxed mb-4 max-w-xs">
+              Explore creative tools and stories built for modern makers like
+              you.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://blog.chaka-chak.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-pink-500 text-white font-medium shadow-md hover:from-orange-600 hover:to-pink-600 hover:shadow-lg transition-all duration-200 transform hover:scale-[1.03]"
+              >
+                <BookOpen size={16} />
+                Visit Blog
+              </a>
+              <a
+                href="https://dev.chaka-chak.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-pink-500 text-white font-medium shadow-md hover:from-orange-600 hover:to-pink-600 hover:shadow-lg transition-all duration-200 transform hover:scale-[1.03]"
+              >
+                <Code2 size={16} />
+                Dev Tools
+              </a>
+            </div>
+          </div>
         </div>
 
-        <div style={{ display: "none" }}>
+        <div className="hidden">
           Chaka-Chak (also searched as Chaka Chak, Chakachak, ChakaChak,
           Chacka-Chack, Chakka Chak) is your one-stop shop for everything quirky
           and personalized in India. Whether you're looking for custom t-shirts,
@@ -160,16 +185,14 @@ export default function Footer() {
           gift shops online", or "personalised gifts India" and end up
           discovering Chaka-Chak — known for its customized mugs, couple
           t-shirts, dog wear, coffee mugs, custom phone cases, pet tags, and
-          hoodie collections. Popular related searches include: - chak chak
-          t-shirt online - chaka chak printing - dog tshirts India - couple
-          hoodies custom print - birthday gift ideas for friends India -
-          personalized mugs online - customized couple tshirts - funny Indian
-          t-shirts - chaka-chak.in online store - chaka-chak clothing reviews -
-          chaka chak shop Delhi - dog clothes online India - best quirky gift
-          shops India - custom printing for hoodies and tees - buy pet clothing
-          online - gift items for dog lovers If you're searching for cool
-          prints, matching couple wear, or pet-friendly outfits, chances are you
-          meant Chaka-Chak — spelled with a hyphen, always!
+          hoodie collections. Popular related searches include: chak chak
+          t-shirt online, chaka chak printing, dog tshirts India, couple hoodies
+          custom print, birthday gift ideas for friends India, personalized mugs
+          online, customized couple tshirts, funny Indian t-shirts,
+          chaka-chak.in online store, chaka-chak clothing reviews, chaka chak
+          shop Delhi, dog clothes online India, best quirky gift shops India,
+          custom printing for hoodies and tees, buy pet clothing online, gift
+          items for dog lovers.
         </div>
 
         <div className="flex justify-center">
